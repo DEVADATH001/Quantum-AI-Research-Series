@@ -1,0 +1,27 @@
+{
+  "random_state": 7,
+  "train_size": 112,
+  "test_size": 38,
+  "pca_explained_variance_ratio": [
+    0.9221741508976368,
+    0.05332645600561176
+  ],
+  "grid_resolution": {
+    "classical": 140,
+    "quantum": 30
+  },
+  "quantum_kernel_eval_estimate": 113344,
+  "quantum_max_kernel_evals_budget": 120000,
+  "metrics": {
+    "Logistic Regression": {
+      "test_accuracy": 0.973684
+    },
+    "Classical RBF-SVM": {
+      "test_accuracy": 0.973684
+    },
+    "Quantum SVC (ZZ-Map)": {
+      "test_accuracy": 0.631579
+    }
+  },
+  "plot_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\01-Classical-vs-Quantum-Visualization\\assets\\classical_vs_quantum_boundaries.png"
+}

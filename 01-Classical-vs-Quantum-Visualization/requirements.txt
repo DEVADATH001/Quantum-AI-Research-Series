@@ -6,4 +6,5 @@ notebook>=7.0
 qiskit>=1.0
 qiskit-ibm-runtime>=0.23
 qiskit-aer>=0.14
+qiskit-machine-learning>=0.7
 pylatexenc>=2.10

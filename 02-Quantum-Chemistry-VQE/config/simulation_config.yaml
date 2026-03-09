@@ -1,0 +1,47 @@
+general:
+  random_seed: 7
+  allow_synthetic_fallback: true
+
+molecules:
+  H2:
+    distances:
+      start: 0.5
+      end: 2.5
+      step: 0.1
+    charge: 0
+    spin: 0
+    basis: "sto3g"
+    active_space: null
+
+  LiH:
+    distances:
+      start: 1.0
+      end: 3.5
+      step: 0.1
+    charge: 0
+    spin: 0
+    basis: "sto3g"
+    active_space:
+      freeze_core: true
+      active_electrons: 2
+      active_spatial_orbitals: 2
+
+vqe:
+  ansatz:
+    - name: "UCCSD"
+      reps: 1
+    - name: "EfficientSU2"
+      reps: 3
+      entanglement: "circular"
+  optimizer:
+    name: "SPSA"
+    maxiter: 40
+
+runtime:
+  backend: "local"
+  resilience_level: 1
+  optimization_level: 1
+  shots: 4096
+
+analysis:
+  chemical_accuracy_mhartree: 1.6

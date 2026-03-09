@@ -1,79 +1,148 @@
 # 01-Classical-vs-Quantum-Visualization
 
-## Research Abstract
+## What This Module Does
 
-This project builds a practical bridge between classical and quantum representations of the Iris dataset.
-It compares classical decision boundaries (Logistic Regression and RBF-SVM) against quantum state encoding intuition using `ZZFeatureMap`, Bell-state entanglement, and a 127-qubit GHZ construction.
+This module contains two separate experiments:
 
-The central question is not whether Iris needs quantum computing. It is how feature mapping changes the geometry of data representations as dimensionality grows.
+1. Iris classification with classical baselines and QSVC.
+2. GHZ-127 hardware/noise benchmark (local ideal vs noisy simulation vs optional real IBM run).
 
-## Project Structure
+These are intentionally independent. GHZ benchmark outcomes do not improve Iris
+classification accuracy, and Iris metrics do not validate large-scale GHZ
+hardware fidelity.
+
+## Folder Layout
 
 ```text
 01-Classical-vs-Quantum-Visualization/
 |-- README.md
+|-- Quantum_ML_-_Iris_Classification.py
 |-- compare_ghz_three_way.py
-|-- requirements.txt
+|-- Hardware_Noise_&_Decoherence_Benchmark.py
+|-- iris_qml_classification.ipynb
+|-- ghz_127_noise_benchmark.ipynb
 |-- iris_quantum_bridge.ipynb
+|-- requirements.txt
 `-- assets/
-    |-- classical_boundaries.png
-    |-- ghz_127_circuit.png
-    |-- quantum_feature_map.png
+    |-- classical_vs_quantum_boundaries.png
+    |-- qml_iris_report.json
     |-- three_way_ghz127_comparison.json
     `-- three_way_ghz127_comparison.png
 ```
 
-## Technical Scope
-
-- Dataset: Scikit-Learn Iris (3 classes, 4 features)
-- Classical baselines:
-  - Logistic Regression
-  - SVM (RBF kernel)
-- Classical visualization:
-  - PCA projection to 2D
-  - Side-by-side decision boundaries
-- Quantum visualization:
-  - Bell state circuit
-  - 127-qubit GHZ state (sparse visual view + full circuit construction)
-  - `ZZFeatureMap(feature_dimension=4)` for Iris encoding
-- Runtime stack:
-  - Qiskit 1.x
-  - Qiskit Runtime Primitives V2 (`SamplerV2`)
-  - Aer local backend for reproducible SamplerV2 execution
-  - ISA-aware transpilation via
-    `generate_preset_pass_manager(optimization_level=3, backend=backend)`
-
-## Why Quantum For Iris?
-
-Iris is classically solvable and is not a quantum advantage benchmark.
-
-This notebook uses Iris as a controlled, explainable substrate to demonstrate Hilbert space mapping and the conceptual transition needed for high-dimensional datasets where fixed classical kernels can struggle under the curse of dimensionality.
-
-## Running The Notebook
+## Environment Setup
 
 ```powershell
 cd 01-Classical-vs-Quantum-Visualization
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-jupyter notebook iris_quantum_bridge.ipynb
 ```
 
-## 3-Way GHZ Comparison (Local vs Simulated vs IBM Quantum)
+## Run Iris Classification
 
-Run this from the project folder:
+```powershell
+python Quantum_ML_-_Iris_Classification.py --no-show
+```
+
+Useful CLI options:
+
+- `--random-state 7`
+- `--test-size 0.25`
+- `--classical-grid 140`
+- `--quantum-grid 30`
+- `--quantum-max-kernel-evals 120000`
+- `--output-plot assets/classical_vs_quantum_boundaries.png`
+- `--output-report assets/qml_iris_report.json`
+
+Runtime behavior:
+
+- If `--quantum-grid` is omitted, the script automatically chooses a safe grid
+  resolution under the kernel-evaluation budget.
+- Output paths are resolved relative to this module directory.
+
+## Run GHZ-127 Benchmark
+
+Default command:
 
 ```powershell
 python compare_ghz_three_way.py --local-shots 1024 --sim-shots 512 --real-shots 256
 ```
 
-Outputs:
+Real execution policy:
+
+1. If `--skip-real` is passed, real IBM execution is skipped.
+2. Otherwise, if backend queue is above `--max-pending-jobs` (default `0`),
+   real execution is skipped.
+3. Otherwise, script attempts real execution with
+   `--real-timeout-seconds` (default `900`).
+4. If real execution fails or times out, script skips real unless
+   `--strict-real` is enabled.
+
+Examples:
+
+```powershell
+# Explicitly skip real run
+python compare_ghz_three_way.py --skip-real
+
+# Auto-skip when queue is above 2 jobs
+python compare_ghz_three_way.py --max-pending-jobs 2
+
+# Fail hard on real-run failures
+python compare_ghz_three_way.py --strict-real --real-timeout-seconds 900
+```
+
+Compatibility entrypoint:
+
+```powershell
+python "Hardware_Noise_&_Decoherence_Benchmark.py" --local-shots 1024 --sim-shots 512 --real-shots 256
+```
+
+## Notebook Workflows
+
+Execute split notebooks:
+
+```powershell
+python -m nbconvert --to notebook --execute --inplace iris_qml_classification.ipynb
+python -m nbconvert --to notebook --execute --inplace ghz_127_noise_benchmark.ipynb
+```
+
+Notebook notes:
+
+- `iris_qml_classification.ipynb` covers only Iris/QSVC workflow.
+- `ghz_127_noise_benchmark.ipynb` covers only GHZ benchmark workflow.
+- `ghz_127_noise_benchmark.ipynb` has `RUN_BENCHMARK = False` by default and
+  reads saved benchmark artifacts.
+- `iris_quantum_bridge.ipynb` is a legacy mixed notebook kept for reference.
+
+## Generated Outputs
+
+Iris:
+
+- `assets/classical_vs_quantum_boundaries.png`
+- `assets/qml_iris_report.json`
+
+GHZ:
 
 - `assets/three_way_ghz127_comparison.json`
 - `assets/three_way_ghz127_comparison.png`
 
-## IBM Runtime Note
+## Current Baseline Snapshot
 
-The notebook transpiles to a 127-qubit backend target (ISA workflow) and executes SamplerV2 locally on Aer for reproducibility.
-If you configure `IBM_QUANTUM_TOKEN`, you can switch to a live IBM backend directly inside the notebook.
-If your account requires an explicit instance, also set `IBM_QUANTUM_INSTANCE`.
+From `assets/qml_iris_report.json`:
+
+- Logistic Regression test accuracy: `0.973684`
+- Classical RBF-SVM test accuracy: `0.973684`
+- Quantum SVC (ZZ-Map) test accuracy: `0.631579`
+- Quantum grid: `30`
+
+From `assets/three_way_ghz127_comparison.json`:
+
+- `generated_utc`: `2026-03-08T23:49:54.568282+00:00`
+- ISA circuit depth: `382`
+- `p_ghz_subspace` local/simulated/real: `1.0 / 0.0 / 0.0`
+
+Interpretation:
+
+- Iris is used as a controlled QML workflow demo, not quantum-advantage proof.
+- GHZ-127 result demonstrates NISQ noise/decoherence limitations at this depth.

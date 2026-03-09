@@ -89,11 +89,20 @@ def choose_backend(service: QiskitRuntimeService, min_qubits: int, backend_name:
     return sorted(candidates, key=pending_jobs)[0]
 
 
-def run_sampler(mode_label: str, mode_object, circuit: QuantumCircuit, shots: int) -> dict:
+def run_sampler(
+    mode_label: str,
+    mode_object,
+    circuit: QuantumCircuit,
+    shots: int,
+    result_timeout_seconds: float | None = None,
+) -> dict:
     sampler = Sampler(mode=mode_object)
     t0 = time.perf_counter()
     job = sampler.run([(circuit, [])], shots=shots)
-    pub_result = job.result()[0]
+    if result_timeout_seconds is None:
+        pub_result = job.result()[0]
+    else:
+        pub_result = job.result(timeout=result_timeout_seconds)[0]
     elapsed = time.perf_counter() - t0
 
     counts = normalize_counts(extract_counts(pub_result), circuit.num_clbits)
@@ -109,6 +118,7 @@ def run_sampler(mode_label: str, mode_object, circuit: QuantumCircuit, shots: in
         job_id = None
 
     return {
+        "status": "completed",
         "mode": mode_label,
         "job_id": job_id,
         "shots": shots,
@@ -129,6 +139,22 @@ def run_sampler(mode_label: str, mode_object, circuit: QuantumCircuit, shots: in
     }
 
 
+def skipped_result(mode_label: str, shots: int, reason: str) -> dict:
+    return {
+        "status": "skipped",
+        "skip_reason": reason,
+        "mode": mode_label,
+        "job_id": None,
+        "shots": shots,
+        "elapsed_seconds": 0.0,
+        "unique_states": 0,
+        "p_all_zero": 0.0,
+        "p_all_one": 0.0,
+        "p_ghz_subspace": 0.0,
+        "top_states": [],
+    }
+
+
 def build_noisy_simulator(real_backend):
     try:
         simulator = AerSimulator.from_backend(real_backend)
@@ -141,7 +167,8 @@ def build_noisy_simulator(real_backend):
 
 
 def save_chart(report: dict, out_path: Path) -> None:
-    labels = ["Local Ideal", "Simulated Noisy", "Real IBM"]
+    real_label = "Real IBM" if report["real"].get("status") != "skipped" else "Real IBM (Skipped)"
+    labels = ["Local Ideal", "Simulated Noisy", real_label]
     ghz_subspace = [
         report["local"]["p_ghz_subspace"],
         report["simulated"]["p_ghz_subspace"],
@@ -185,6 +212,28 @@ def main() -> None:
     parser.add_argument("--sim-shots", type=int, default=512, help="Shots for noisy simulation.")
     parser.add_argument("--real-shots", type=int, default=256, help="Shots for real hardware.")
     parser.add_argument(
+        "--skip-real",
+        action="store_true",
+        help="Skip real IBM execution and only run local + noisy simulation.",
+    )
+    parser.add_argument(
+        "--max-pending-jobs",
+        type=int,
+        default=0,
+        help="Auto-skip real run if selected backend pending jobs exceed this value. Set -1 to disable.",
+    )
+    parser.add_argument(
+        "--real-timeout-seconds",
+        type=float,
+        default=900.0,
+        help="Timeout while waiting for real backend result; <=0 disables timeout.",
+    )
+    parser.add_argument(
+        "--strict-real",
+        action="store_true",
+        help="Fail instead of auto-skipping if real execution errors/times out.",
+    )
+    parser.add_argument(
         "--output",
         default="assets/three_way_ghz127_comparison.json",
         help="Path to JSON output report.",
@@ -198,6 +247,7 @@ def main() -> None:
 
     service, channel = build_service()
     backend = choose_backend(service, min_qubits=127, backend_name=args.backend)
+    selected_pending_jobs = pending_jobs(backend)
 
     candidates = service.backends(simulator=False, operational=True)
     candidates = sorted([b for b in candidates if b.num_qubits >= 127], key=pending_jobs)
@@ -229,20 +279,61 @@ def main() -> None:
         args.sim_shots,
     )
 
-    real_result = run_sampler(
-        f"real_{backend.name}",
-        backend,
-        isa_ghz,
-        args.real_shots,
-    )
+    skip_reason = None
+    if args.skip_real:
+        skip_reason = "Skipped due to explicit --skip-real flag."
+    elif (
+        args.max_pending_jobs >= 0
+        and selected_pending_jobs >= 0
+        and selected_pending_jobs > args.max_pending_jobs
+    ):
+        skip_reason = (
+            f"Skipped because backend queue is busy: pending_jobs={selected_pending_jobs}, "
+            f"threshold={args.max_pending_jobs}."
+        )
+
+    if skip_reason is not None:
+        real_result = skipped_result(
+            mode_label=f"real_{backend.name}",
+            shots=args.real_shots,
+            reason=skip_reason,
+        )
+    else:
+        real_timeout = None if args.real_timeout_seconds <= 0 else args.real_timeout_seconds
+        try:
+            real_result = run_sampler(
+                f"real_{backend.name}",
+                backend,
+                isa_ghz,
+                args.real_shots,
+                result_timeout_seconds=real_timeout,
+            )
+        except Exception as exc:
+            if args.strict_real:
+                raise
+            real_result = skipped_result(
+                mode_label=f"real_{backend.name}",
+                shots=args.real_shots,
+                reason=f"Skipped because real execution failed: {type(exc).__name__}: {exc}",
+            )
+            print(f"[warn] {real_result['skip_reason']}")
 
     report = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "runtime_channel": channel,
+        "real_execution": {
+            "requested": not args.skip_real,
+            "status": real_result["status"],
+            "queue_threshold": args.max_pending_jobs,
+            "pending_jobs_at_selection": selected_pending_jobs,
+            "reason": real_result.get("skip_reason"),
+            "strict_real": args.strict_real,
+            "real_timeout_seconds": args.real_timeout_seconds,
+        },
         "isa_backend_target": {
             "name": backend.name,
             "num_qubits": backend.num_qubits,
-            "pending_jobs_at_selection": pending_jobs(backend),
+            "pending_jobs_at_selection": selected_pending_jobs,
         },
         "candidate_backends": candidate_snapshot,
         "isa_circuit": {
@@ -279,10 +370,11 @@ def main() -> None:
     print(f"Local job: {local_result['job_id']}")
     print(f"Simulated job: {simulated_result['job_id']}")
     print(f"Real job: {real_result['job_id']}")
+    if real_result["status"] == "skipped":
+        print(f"Real execution: {real_result['status']} ({real_result['skip_reason']})")
     print(f"Wrote JSON: {output_path}")
     print(f"Wrote chart: {chart_path}")
 
 
 if __name__ == "__main__":
     main()
-
