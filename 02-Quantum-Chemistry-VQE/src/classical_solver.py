@@ -16,7 +16,10 @@ def get_exact_energy_from_qubit_operator(qubit_operator: SparsePauliOp) -> float
 
 
 def get_exact_energy(problem: ElectronicStructureProblem) -> float:
-    """Compatibility helper returning exact energy from mapped problem."""
+    """Compatibility helper returning exact total energy (electronic + constants)."""
     mapper = ParityMapper(num_particles=problem.num_particles)
     qubit_operator = mapper.map(problem.hamiltonian.second_q_op())
-    return get_exact_energy_from_qubit_operator(qubit_operator)
+    electronic_energy = get_exact_energy_from_qubit_operator(qubit_operator)
+    # Sum all constants (nuclear repulsion, frozen core shift, etc.)
+    total_constant = sum(problem.hamiltonian.constants.values())
+    return float(electronic_energy + total_constant)

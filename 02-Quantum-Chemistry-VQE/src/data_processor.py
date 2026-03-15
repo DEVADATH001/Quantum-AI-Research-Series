@@ -51,3 +51,17 @@ def save_energy_table(rows: Iterable[Dict], filename: str, output_dir: str = "re
         writer.writeheader()
         writer.writerows(rows_list)
     return path
+
+
+from qiskit.qasm2 import dumps as dump_qasm2
+
+
+def save_qasm_circuit(circuit: Any, filename: str, output_dir: str = "results/figures") -> str:
+    """Export a Qiskit circuit to OpenQASM format using qasm2.dumps."""
+    os.makedirs(output_dir, exist_ok=True)
+    if not filename.endswith(".qasm"):
+        filename += ".qasm"
+    path = os.path.join(output_dir, filename)
+    with open(path, "w", encoding="utf-8") as handle:
+        handle.write(dump_qasm2(circuit))
+    return path

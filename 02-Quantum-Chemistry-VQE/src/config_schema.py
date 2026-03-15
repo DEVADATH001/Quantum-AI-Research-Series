@@ -49,18 +49,21 @@ class AnsatzConfig(BaseModel):
     name: str
     reps: int = 3
     entanglement: str = "circular"
+    su2_gates: List[str] = ["ry"]
 
 
 class OptimizerConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    name: str = "SPSA"
-    maxiter: int = 40
+    name: str = "SLSQP"
+    maxiter: int = 100
 
 
 class VQEConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     ansatz: List[AnsatzConfig]
     optimizer: OptimizerConfig = Field(default_factory=OptimizerConfig)
+    mapping: str = "parity"  # parity, jordan_wigner, bravyi_kitaev
+    warm_start: bool = True  # Use previous optimal parameters as next initial point
 
 
 class RuntimeConfig(BaseModel):

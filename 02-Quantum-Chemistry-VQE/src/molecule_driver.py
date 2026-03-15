@@ -48,35 +48,47 @@ def generate_distances(start: float, end: float, step: float) -> List[float]:
 def _synthetic_problem(
     molecule_name: str, bond_length: float, num_particles: Tuple[int, int], num_spatial_orbitals: int
 ) -> ElectronicStructureProblem:
-    """Build deterministic synthetic fallback Hamiltonians for smoke testing."""
-    # These are lightweight surrogate Hamiltonians for environments without PySCF.
-    # They are not substitutes for publication-grade molecular integrals.
+    """Build deterministic synthetic fallback Hamiltonians for smoke testing.
+    
+    WARNING: These are lightweight surrogate Hamiltonians used strictly for 
+    environment validation when PySCF is unavailable. They lack physical 
+    scaling properties (R-dependency) and are not intended for research-grade 
+    simulations or publication.
+    """
     if molecule_name.upper() == "H2":
-        h1 = np.array([[-1.10, -0.15], [-0.15, -0.35]], dtype=float)
-        h2 = np.zeros((2, 2, 2, 2), dtype=float)
-        h2[0, 0, 0, 0] = 0.72
-        h2[1, 1, 1, 1] = 0.66
-        h2[0, 1, 1, 0] = 0.61
-        h2[1, 0, 0, 1] = 0.61
+        h1_mat = np.array([[-1.10, -0.15], [-0.15, -0.35]], dtype=float)
+        h2_mat = np.zeros((2, 2, 2, 2), dtype=float)
+        h2_mat[0, 0, 0, 0] = 0.72
+        h2_mat[1, 1, 1, 1] = 0.66
+        h2_mat[0, 1, 1, 0] = 0.61
+        h2_mat[1, 0, 0, 1] = 0.61
         scale = 0.74 / bond_length
     else:
-        # Effective LiH-valence surrogate with the same active-space dimensionality
-        # as a heavily reduced valence model.
-        h1 = np.array([[-0.95, -0.10], [-0.10, -0.25]], dtype=float)
-        h2 = np.zeros((2, 2, 2, 2), dtype=float)
-        h2[0, 0, 0, 0] = 0.80
-        h2[1, 1, 1, 1] = 0.58
-        h2[0, 1, 1, 0] = 0.47
-        h2[1, 0, 0, 1] = 0.47
+        # Effective LiH-valence surrogate
+        h1_mat = np.array([[-0.95, -0.10], [-0.10, -0.25]], dtype=float)
+        h2_mat = np.zeros((2, 2, 2, 2), dtype=float)
+        h2_mat[0, 0, 0, 0] = 0.80
+        h2_mat[1, 1, 1, 1] = 0.58
+        h2_mat[0, 1, 1, 0] = 0.47
+        h2_mat[1, 0, 0, 1] = 0.47
         scale = 1.6 / bond_length
 
-    h1 = h1 * scale
-    h2 = h2 * (scale ** 1.1)
+    h1_mat = h1_mat * scale
+    h2_mat = h2_mat * (scale ** 1.1)
     nuclear_repulsion = 0.529177 / max(bond_length, 1e-6)
 
-    one_body = PolynomialTensor({"+-": h1})
-    two_body = PolynomialTensor({"++--": h2})
-    integrals = ElectronicIntegrals(alpha=one_body, beta=None, beta_alpha=two_body)
+    # Correctly map spatial integrals to all required spin sectors (alpha, beta, etc.)
+    # We combine one-body and two-body terms into PolynomialTensors for each spin sector.
+    alpha_tensor = PolynomialTensor({"+-": h1_mat, "++--": h2_mat})
+    beta_tensor = PolynomialTensor({"+-": h1_mat, "++--": h2_mat})
+    beta_alpha_tensor = PolynomialTensor({"++--": h2_mat})
+    
+    integrals = ElectronicIntegrals(
+        alpha=alpha_tensor, 
+        beta=beta_tensor, 
+        beta_alpha=beta_alpha_tensor
+    )
+    
     hamiltonian = ElectronicEnergy(integrals, constants={"nuclear_repulsion_energy": nuclear_repulsion})
     problem = ElectronicStructureProblem(hamiltonian)
     problem.num_particles = num_particles

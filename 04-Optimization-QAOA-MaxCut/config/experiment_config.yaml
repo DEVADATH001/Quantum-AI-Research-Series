@@ -1,0 +1,164 @@
+# Experiment Configuration for QAOA Max-Cut Research
+
+# ============================================================================
+# Graph Generation Settings
+# ============================================================================
+graph:
+  # Number of nodes in the robot communication mesh
+  n_nodes: 15
+  
+  # Degree for D-regular graph (each node connects to D neighbors)
+  degree: 3
+  
+  # Random seed for reproducibility
+  seed: 42
+  
+  # Graph type: "d_regular", "erdos_renyi", "barabasi_albert"
+  type: "d_regular"
+  
+  # Edge probability for Erdős-Rényi graphs
+  edge_probability: 0.5
+
+# ============================================================================
+# QAOA Circuit Parameters
+# ============================================================================
+qaoa:
+  # Number of QAOA layers (p parameter)
+  p_layers: [1, 2, 3]
+  
+  # Initial parameter strategy: "random", "linear", "custom"
+  initial_strategy: "random"
+  
+  # Number of random initial points to try
+  n_initial_points: 3
+  
+  # Maximum iterations for classical optimizer
+  max_iterations: 500
+  
+  # Tolerance for convergence
+  tolerance: 1e-6
+
+# ============================================================================
+# Classical Optimizer Settings
+# ============================================================================
+optimizer:
+  # Optimizer type: "COBYLA", "SPSA", "Nelder-Mead", "L-BFGS-B"
+  type: "COBYLA"
+  
+  # Maximum function evaluations
+  maxiter: 500
+  
+  # Step size for SPSA
+  sarsa_step_size: 0.1
+  
+  # SPSA perturbation
+  sarsa_perturbation: 0.1
+  
+  # Random seed for optimizer
+  seed: 42
+
+# ============================================================================
+# Quantum Execution Settings
+# ============================================================================
+quantum:
+  # Execution mode: "local", "noisy_simulator", "ibm_hardware"
+  mode: "local"
+  
+  # Backend name for IBM Quantum
+  backend_name: "ibm_brisbane"
+  
+  # Number of shots for sampling (None for exact expectation)
+  shots: 1024
+  
+  # Resilience level for Qiskit Runtime
+  # 0: No mitigation
+  # 1: Light mitigation (T-REX)
+  # 2: Heavy mitigation
+  resilience_level: 1
+  
+  # Optimization level for transpilation
+  optimization_level: 1
+  
+  # Enable noise simulation
+  simulate_noise: false
+  
+  # Noise model path (optional)
+  noise_model_path: null
+
+# ============================================================================
+# Recursive QAOA Settings
+# ============================================================================
+rqaoa:
+  # Enable recursive QAOA
+  enabled: true
+  
+  # Number of variables to eliminate per iteration
+  eliminate_per_step: 1
+  
+  # Maximum recursion depth
+  max_depth: 5
+  
+  # Correlation threshold for variable elimination
+  correlation_threshold: 0.8
+  
+  # Stopping criteria: problem size
+  min_problem_size: 4
+
+# ============================================================================
+# Visualization Settings
+# ============================================================================
+visualization:
+  # Enable interactive plots
+  interactive: false
+  
+  # Figure DPI
+  dpi: 150
+  
+  # Figure format
+  format: "png"
+  
+  # Color scheme
+  style: "seaborn-v0_8-darkgrid"
+  
+  # Generate all plots
+  generate_all: true
+
+# ============================================================================
+# Results Settings
+# ============================================================================
+results:
+  # Save results to CSV
+  save_csv: true
+  
+  # Save figures
+  save_figures: true
+  
+  # Results directory
+  output_dir: "results"
+  
+  # Verbose output
+  verbose: true
+  
+  # Log level: "DEBUG", "INFO", "WARNING", "ERROR"
+  log_level: "INFO"
+
+# ============================================================================
+# Hardware-Aware Mapping
+# ============================================================================
+hardware:
+  # Enable hardware-aware qubit mapping
+  enable_mapping: false
+  
+  # Target backend coupling map
+  coupling_map:
+    - [0, 1]
+    - [1, 2]
+    - [2, 3]
+    - [3, 4]
+    - [4, 5]
+    - [5, 6]
+    - [6, 7]
+  
+  # Number of qubits to use
+  n_qubits: 8
+

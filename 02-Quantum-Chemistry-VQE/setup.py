@@ -12,7 +12,7 @@ def _requirements() -> list[str]:
 
 setup(
     name="quantum-chemistry-vqe",
-    version="0.2.0",
+    version="0.3.0",
     description="Modular VQE PES benchmarking platform for quantum chemistry.",
     packages=find_packages(),
     include_package_data=True,

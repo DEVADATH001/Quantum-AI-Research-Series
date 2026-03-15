@@ -1,0 +1,104 @@
+# Experiment Configuration for Quantum Kernel SVM on MNIST
+# ==========================================================
+
+# Dataset Configuration
+dataset:
+  name: "MNIST"
+  digits: [4, 9]  # Binary classification: digit 4 vs 9
+  test_size: 0.25
+  random_state: 42
+  stratify: true
+
+# Preprocessing Configuration
+preprocessing:
+  normalize: true
+  standardize: true
+  pca:
+    n_components: 8
+    variance_threshold: 0.95
+    random_state: 42
+  # Scale features to [0, pi] for angle encoding
+  quantum_scaling: true
+
+# Classical Model Configuration
+classical_model:
+  kernel: "rbf"
+  grid_search:
+    enabled: true
+    cv: 3
+    scoring: "accuracy"
+    param_grid:
+      C: [0.1, 1, 10, 100]
+      gamma: ["scale", "auto", 0.1, 0.01]
+    n_jobs: 1
+  random_state: 42
+
+# Quantum Feature Map Configuration
+quantum_feature_map:
+  type: "ZZFeatureMap"
+  feature_dimension: 8
+  reps: 2
+  entanglement: "linear"
+  # Optional: parameter prefix for circuit visualization
+  parameter_prefix: "x"
+
+# Quantum Kernel Configuration
+quantum_kernel:
+  type: "FidelityQuantumKernel"
+  sampler: "SamplerV2"
+  # Number of shots for sampling (None for statevector)
+  shots: null
+  # Cache kernel evaluations for efficiency
+  cache: true
+
+# Exact QSVC Configuration
+qsvc:
+  C: 1.0
+  random_state: 42
+
+# Noise Simulation Configuration
+noise_simulation:
+  enabled: true
+  backend: "ibm_brisbane"
+  # Noise parameters
+  noise_model:
+    readout_error: 0.01
+    gate_error: 0.001
+  # Number of shots for noisy simulation
+  shots: 1000
+  # Simulation method
+  method: "density_matrix"
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+  confusion_matrix: true
+  save_results: true
+  results_dir: "results"
+
+# Visualization Configuration
+visualization:
+  figures:
+    pca_scatter: true
+    pca_variance: true
+    class_distribution: true
+    kernel_heatmap: true
+    metrics_comparison: true
+    confusion_matrix: true
+  save_format: "png"
+  dpi: 150
+  style: "seaborn-v0_8-darkgrid"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "experiment.log"
+
+# Reproducibility
+random_seed: 42
+

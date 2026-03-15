@@ -48,15 +48,26 @@ def get_estimator(
 
     service = QiskitRuntimeService()
     backend = service.backend(backend_name)
+    
+    # Advanced NISQ hardware settings: 
+    # resilience_level=2 enables Zero-Noise Extrapolation (ZNE)
+    # optimization_level=3 enables aggressive gate-folding and swap reduction
     options = {
-        "resilience_level": resilience_level,
-        "optimization_level": optimization_level,
-        "default_shots": shots,
+        "resilience_level": max(1, resilience_level),
+        "optimization_level": max(1, optimization_level),
+        "default_shots": max(1, shots),
     }
+    
+    mitigation_text = f"resilience_level={options['resilience_level']}"
+    if options['resilience_level'] == 1:
+        mitigation_text += " (Readout/T-REX)"
+    elif options['resilience_level'] >= 2:
+        mitigation_text += " (ZNE/Gate Error)"
+        
     estimator = EstimatorV2(mode=backend, options=options)
     return EstimatorContext(
         estimator=estimator,
         mode="ibm_runtime",
         backend=backend_name,
-        mitigation="resilience_level=1 enables T-REX readout mitigation.",
+        mitigation=mitigation_text,
     )

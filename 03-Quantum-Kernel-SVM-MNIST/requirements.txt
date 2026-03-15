@@ -1,0 +1,30 @@
+# Quantum Kernel SVM for MNIST
+# Requirements for the project
+
+# Core scientific computing
+numpy>=1.26
+scipy>=1.12
+matplotlib>=3.8
+scikit-learn>=1.4
+
+# Data and visualization
+pandas>=2.0
+seaborn>=0.12
+
+# Jupyter
+jupyter>=1.0
+notebook>=7.0
+ipykernel>=6.0
+
+# Qiskit ecosystem
+qiskit>=1.1
+qiskit-aer>=0.17
+qiskit-ibm-runtime>=0.28
+qiskit-machine-learning>=0.9
+
+# Optional: For advanced visualizations
+plotly>=5.0
+
+# Optional: For configuration management
+pyyaml>=6.0
+

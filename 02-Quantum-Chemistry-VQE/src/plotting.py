@@ -101,3 +101,31 @@ def plot_error(
     plt.savefig(path, dpi=300)
     plt.close()
     return path
+
+
+def plot_pareto_front(
+    errors: List[float],
+    costs: List[int],
+    labels: List[str],
+    molecule_name: str,
+    output_dir: str = "results/figures",
+) -> str:
+    """Plot Accuracy (Error) vs. Cost (CNOT count) Pareto front for research ablation."""
+    plt.figure(figsize=(10, 6))
+    plt.scatter(costs, errors, c='blue', marker='o', s=100, alpha=0.6)
+    for i, label in enumerate(labels):
+        plt.annotate(label, (costs[i], errors[i]), xytext=(5, 5), textcoords='offset points', fontsize=9)
+    
+    plt.axhline(0.0016, color='red', linestyle='--', label='Chemical Accuracy')
+    plt.yscale('log')
+    plt.xlabel('Hardware Cost (CNOT Count)')
+    plt.ylabel('Absolute Error (Hartree)')
+    plt.title(f"VQE Pareto Front: Accuracy vs. Complexity ({molecule_name})")
+    plt.grid(alpha=0.3, which='both')
+    plt.legend()
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, f"pareto_front_{molecule_name}.png")
+    plt.tight_layout()
+    plt.savefig(path, dpi=300)
+    plt.close()
+    return path

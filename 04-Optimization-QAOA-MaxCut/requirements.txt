@@ -1,0 +1,31 @@
+# Core Scientific Computing
+numpy>=1.26
+scipy>=1.12
+matplotlib>=3.8
+seaborn>=0.13
+pandas>=2.0
+
+# Graph Networks
+networkx>=3.2
+
+# Quantum Computing - Qiskit Stack
+qiskit>=1.1
+qiskit-aer>=0.14
+qiskit-ibm-runtime>=0.23
+qiskit-optimization>=0.6
+qiskit-machine-learning>=0.7
+qiskit-nature>=0.7
+
+# Classical Optimization
+scikit-learn>=1.4
+
+# Jupyter
+jupyter>=1.0
+notebook>=7.0
+
+# Utilities
+PyYAML>=6.0
+tqdm>=4.65
+
+qiskit-algorithms>=0.3.0
+cvxpy>=1.4.1
