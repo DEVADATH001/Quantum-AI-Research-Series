@@ -1,3 +1,10 @@
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: Unit tests for the quantum pipeline."""
+
 import unittest
 import numpy as np
 from src.preprocessing import normalize_pixels, scale_for_quantum

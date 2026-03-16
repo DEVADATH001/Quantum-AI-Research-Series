@@ -1,4 +1,9 @@
-"""Data preprocessing utilities for the MNIST kernel experiments."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: Data preprocessing utilities for the MNIST kernel experiments."""
 
 from __future__ import annotations
 
@@ -11,11 +16,9 @@ from sklearn.preprocessing import StandardScaler
 
 logger = logging.getLogger(__name__)
 
-
 def normalize_pixels(X: np.ndarray) -> np.ndarray:
     """Normalize pixel values to [0, 1] range."""
     return X / 255.0
-
 
 def standardize_features(
     X_train: np.ndarray,
@@ -30,7 +33,6 @@ def standardize_features(
         return X_train_scaled, X_test_scaled, scaler
 
     return X_train_scaled, scaler
-
 
 def apply_pca(
     X_train: np.ndarray,
@@ -54,7 +56,6 @@ def apply_pca(
         return X_train_pca, X_test_pca, pca
 
     return X_train_pca, pca
-
 
 def scale_for_quantum(
     X: np.ndarray,
@@ -82,7 +83,6 @@ def scale_for_quantum(
     if return_params:
         return X_scaled, data_min, data_max
     return X_scaled
-
 
 def preprocess_data(
     X_train: np.ndarray,
@@ -125,7 +125,6 @@ def preprocess_data(
         "quantum_scale_min": q_min,
         "quantum_scale_max": q_max,
     }
-
 
 def get_preprocessing_summary(preprocessed_data: dict) -> str:
     """Generate a formatted preprocessing summary."""

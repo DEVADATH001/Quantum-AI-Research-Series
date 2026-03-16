@@ -1,4 +1,9 @@
-"""PES orchestration for exact and VQE energy scans."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: PES orchestration for exact and VQE energy scans."""
 
 from __future__ import annotations
 
@@ -29,7 +34,6 @@ from .runtime_executor import get_estimator
 from .vqe_engine import VQEEngine
 
 warnings.filterwarnings("ignore", category=SparseEfficiencyWarning)
-
 
 class PESGenerator:
     """Generates potential energy surfaces for configured molecules."""
@@ -338,18 +342,15 @@ class PESGenerator:
 
 from .data_processor import NumpyEncoder
 
-
 def _load_config(path: Path) -> Dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         return yaml.safe_load(handle)
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run PES generation.")
     parser.add_argument("--config", type=Path, default=Path("config/simulation_config.yaml"))
     parser.add_argument("--molecule", type=str, default="H2")
     return parser.parse_args()
-
 
 def main() -> int:
     args = parse_args()
@@ -358,7 +359,6 @@ def main() -> int:
     results = generator.run(args.molecule)
     print(json.dumps({"molecule": results["molecule"], "status": "completed"}, indent=2))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

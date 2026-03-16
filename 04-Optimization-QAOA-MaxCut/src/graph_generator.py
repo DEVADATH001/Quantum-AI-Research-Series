@@ -1,13 +1,11 @@
-"""
+"""Author: DEVADATH H K
+
 Graph Generator Module
 
 Generates graph structures for the Max-Cut problem, including:
 - D-regular graphs (robot communication mesh networks)
 - Erdős-Rényi random graphs
-- Barabási-Albert scale-free graphs
-
-Author: Quantum AI Research Team
-"""
+- Barabási-Albert scale-free graphs"""
 
 import logging
 from typing import Optional, Tuple, List
@@ -15,7 +13,6 @@ import networkx as nx
 import numpy as np
 
 logger = logging.getLogger(__name__)
-
 
 class GraphGenerator:
     """

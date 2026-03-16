@@ -1,10 +1,9 @@
-"""Evaluation Metrics Module.
+"""Author: DEVADATH H K
 
-This module provides comprehensive evaluation metrics for comparing
-classical and quantum SVM models.
+Quantum AI Research Series
 
-Author: Quantum ML Research Lab
-"""
+Project 03: Quantum Kernel SVM MNIST
+Task: Evaluation Metrics Module."""
 
 from __future__ import annotations
 
@@ -12,18 +11,17 @@ import logging
 from typing import Any, Optional
 
 import numpy as np
+import pandas as pd
 from sklearn.metrics import (
     accuracy_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
     precision_score,
     recall_score,
-    f1_score,
-    confusion_matrix,
-    classification_report,
 )
-import pandas as pd
 
 logger = logging.getLogger(__name__)
-
 
 def compute_metrics(
     y_true: np.ndarray,
@@ -64,7 +62,6 @@ def compute_metrics(
     
     return metrics
 
-
 def compute_confusion_matrix(
     y_true: np.ndarray,
     y_pred: np.ndarray,
@@ -89,7 +86,6 @@ def compute_confusion_matrix(
     
     return cm
 
-
 def generate_classification_report(
     y_true: np.ndarray,
     y_pred: np.ndarray,
@@ -112,7 +108,6 @@ def generate_classification_report(
     logger.info(f"Classification Report:\n{report}")
     
     return report
-
 
 def evaluate_models(
     classical_model_results: dict[str, Any],
@@ -179,7 +174,6 @@ def evaluate_models(
     
     return results
 
-
 def create_metrics_dataframe(
     results: dict[str, Any],
 ) -> pd.DataFrame:
@@ -217,7 +211,6 @@ def create_metrics_dataframe(
     
     return df
 
-
 def save_metrics_to_csv(
     results: dict[str, Any],
     filepath: str,
@@ -232,7 +225,6 @@ def save_metrics_to_csv(
     df.to_csv(filepath, index=False)
     
     logger.info(f"Metrics saved to {filepath}")
-
 
 def compute_metric_differences(
     results: dict[str, Any],

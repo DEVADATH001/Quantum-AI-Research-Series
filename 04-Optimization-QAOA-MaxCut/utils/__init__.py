@@ -1,8 +1,6 @@
-"""
-Utility functions for QAOA Max-Cut research.
+"""Author: DEVADATH H K
 
-Author: Quantum AI Research Team
-"""
+Utility functions for QAOA Max-Cut research."""
 
 from .qiskit_helpers import (
     get_backend_info,

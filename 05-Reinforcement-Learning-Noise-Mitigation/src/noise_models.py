@@ -1,4 +1,8 @@
-"""Noise model utilities for ideal/noisy/mitigated execution modes."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Noise model utilities for ideal/noisy/mitigated execution modes."""
 
 from __future__ import annotations
 
@@ -11,7 +15,6 @@ from qiskit_aer.noise import NoiseModel, ReadoutError, depolarizing_error, therm
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass(slots=True)
 class NoiseConfig:
     """Noise configuration with IBM-backend defaults."""
@@ -22,7 +25,6 @@ class NoiseConfig:
     t1_ns: float = 100_000.0
     t2_ns: float = 50_000.0
     gate_time_ns: float = 100.0
-
 
 def _resolve_fake_backend(backend_name: str) -> Any | None:
     backend_name = backend_name.lower().replace("-", "_")
@@ -39,7 +41,6 @@ def _resolve_fake_backend(backend_name: str) -> Any | None:
     if backend_cls is None:
         return None
     return backend_cls()
-
 
 def _derive_noise_config_from_backend(fake_backend: Any, backend_name: str) -> NoiseConfig:
     """Build compact noise parameters from fake-backend calibration data."""
@@ -93,7 +94,6 @@ def _derive_noise_config_from_backend(fake_backend: Any, backend_name: str) -> N
         else 100.0,
     )
 
-
 def load_ibm_noise_model(backend_name: str = "ibm_osaka", compact: bool = True) -> NoiseModel:
     """
     Load realistic noise model from IBM fake backend.
@@ -120,7 +120,6 @@ def load_ibm_noise_model(backend_name: str = "ibm_osaka", compact: bool = True) 
     )
     return build_custom_noise_model(NoiseConfig(backend_name=backend_name))
 
-
 def build_custom_noise_model(config: NoiseConfig) -> NoiseModel:
     """Build a lightweight custom noise model for research experimentation."""
     noise_model = NoiseModel()
@@ -146,7 +145,6 @@ def build_custom_noise_model(config: NoiseConfig) -> NoiseModel:
     readout = ReadoutError([[1.0 - p10, p10], [p01, 1.0 - p01]])
     noise_model.add_all_qubit_readout_error(readout)
     return noise_model
-
 
 def infer_readout_error_probability(noise_model: NoiseModel | None) -> float:
     """Estimate average symmetric readout error for TREX-style correction."""

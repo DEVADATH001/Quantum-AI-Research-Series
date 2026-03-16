@@ -1,4 +1,9 @@
-"""Pydantic schemas for simulation configuration validation."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: Pydantic schemas for simulation configuration validation."""
 
 from __future__ import annotations
 
@@ -6,12 +11,10 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-
 class GeneralConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     random_seed: int = 7
     allow_synthetic_fallback: bool = True
-
 
 class DistanceConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -27,13 +30,11 @@ class DistanceConfig(BaseModel):
             raise ValueError("distances.end must be >= distances.start")
         return self
 
-
 class ActiveSpaceConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     freeze_core: bool = False
     active_electrons: Optional[int] = None
     active_spatial_orbitals: Optional[int] = None
-
 
 class MoleculeConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
@@ -43,7 +44,6 @@ class MoleculeConfig(BaseModel):
     basis: str = "sto3g"
     active_space: Optional[ActiveSpaceConfig] = None
 
-
 class AnsatzConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     name: str
@@ -51,12 +51,10 @@ class AnsatzConfig(BaseModel):
     entanglement: str = "circular"
     su2_gates: List[str] = ["ry"]
 
-
 class OptimizerConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str = "SLSQP"
     maxiter: int = 100
-
 
 class VQEConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -65,7 +63,6 @@ class VQEConfig(BaseModel):
     mapping: str = "parity"  # parity, jordan_wigner, bravyi_kitaev
     warm_start: bool = True  # Use previous optimal parameters as next initial point
 
-
 class RuntimeConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     backend: str = "local"
@@ -73,11 +70,9 @@ class RuntimeConfig(BaseModel):
     optimization_level: int = 1
     shots: int = 4096
 
-
 class AnalysisConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     chemical_accuracy_mhartree: float = 1.6
-
 
 class SimulationConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -86,7 +81,6 @@ class SimulationConfig(BaseModel):
     vqe: VQEConfig
     runtime: RuntimeConfig = Field(default_factory=RuntimeConfig)
     analysis: AnalysisConfig = Field(default_factory=AnalysisConfig)
-
 
 def validate_config(config: Dict[str, Any]) -> Dict[str, Any]:
     """Validate and normalize config dictionary."""

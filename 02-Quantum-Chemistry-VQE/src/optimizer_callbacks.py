@@ -1,9 +1,13 @@
-"""Optimizer callback storage."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: Optimizer callback storage."""
 
 from __future__ import annotations
 
 from typing import Any, Dict, List
-
 
 class VQECallback:
     """Collects iteration-level metrics from Qiskit VQE callback."""

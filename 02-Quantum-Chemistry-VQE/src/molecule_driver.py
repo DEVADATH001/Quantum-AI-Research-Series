@@ -1,4 +1,9 @@
-"""Molecule construction utilities for quantum chemistry problems."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: Molecule construction utilities for quantum chemistry problems."""
 
 from __future__ import annotations
 
@@ -20,7 +25,6 @@ HAS_PYSCF = importlib.util.find_spec("pyscf") is not None
 if HAS_PYSCF:
     from qiskit_nature.second_q.drivers import PySCFDriver
 
-
 @dataclass
 class MoleculeMetadata:
     """Metadata describing how a molecular problem was produced."""
@@ -32,7 +36,6 @@ class MoleculeMetadata:
     freeze_core_applied: bool
     active_space_applied: bool
 
-
 def generate_distances(start: float, end: float, step: float) -> List[float]:
     """Return a closed bond-length grid."""
     if step <= 0:
@@ -43,7 +46,6 @@ def generate_distances(start: float, end: float, step: float) -> List[float]:
         values.append(round(current, 10))
         current += step
     return values
-
 
 def _synthetic_problem(
     molecule_name: str, bond_length: float, num_particles: Tuple[int, int], num_spatial_orbitals: int
@@ -95,7 +97,6 @@ def _synthetic_problem(
     problem.num_spatial_orbitals = num_spatial_orbitals
     return problem
 
-
 def _build_atom_string(molecule_name: str, bond_length: float) -> str:
     name = molecule_name.upper()
     if name == "H2":
@@ -103,7 +104,6 @@ def _build_atom_string(molecule_name: str, bond_length: float) -> str:
     if name == "LIH":
         return f"Li 0 0 0; H 0 0 {bond_length}"
     raise ValueError(f"Unsupported molecule {molecule_name}")
-
 
 def get_molecule_problem(
     molecule_name: str,
@@ -174,12 +174,10 @@ def get_molecule_problem(
         active_space_applied=active_electrons is not None and active_spatial_orbitals is not None,
     )
 
-
 def get_h2_problem(distance: float) -> ElectronicStructureProblem:
     """Compatibility wrapper used by legacy code paths."""
     problem, _ = get_molecule_problem("H2", distance, allow_synthetic_fallback=True)
     return problem
-
 
 def get_lih_problem(distance: float) -> ElectronicStructureProblem:
     """Compatibility wrapper used by legacy code paths."""
@@ -192,7 +190,6 @@ def get_lih_problem(distance: float) -> ElectronicStructureProblem:
         allow_synthetic_fallback=True,
     )
     return problem
-
 
 class MoleculeDriver(AbstractMoleculeDriver):
     """Class-based molecule driver for extensibility."""

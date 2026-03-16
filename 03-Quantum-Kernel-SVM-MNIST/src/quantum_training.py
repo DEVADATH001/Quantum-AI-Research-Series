@@ -1,4 +1,9 @@
-"""Training helpers for Pegasos quantum kernel SVM."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: Training helpers for Pegasos quantum kernel SVM."""
 
 from __future__ import annotations
 
@@ -21,7 +26,6 @@ except ImportError as e:  # pragma: no cover - environment-specific
     QML_IMPORT_ERROR = e
 
 logger = logging.getLogger(__name__)
-
 
 def create_pegasos_qsvc(
     quantum_kernel: FidelityQuantumKernel,
@@ -74,7 +78,6 @@ def create_pegasos_qsvc(
         num_steps=max_iter,
         seed=random_state,
     )
-
 
 from sklearn.model_selection import GridSearchCV
 
@@ -142,7 +145,6 @@ def train_qsvc(
         
     return model, results
 
-
 def train_pegasos_qsvc(
     quantum_kernel: FidelityQuantumKernel,
     X_train: np.ndarray,
@@ -195,16 +197,13 @@ def train_pegasos_qsvc(
     logger.info("PegasosQSVC training completed in %.3fs", train_time)
     return model, results
 
-
 def predict_with_qsvc(model: PegasosQSVC, X_test: np.ndarray) -> np.ndarray:
     """Predict labels with a trained PegasosQSVC model."""
     return model.predict(X_test)
 
-
 def get_qsvc_decision_scores(model: PegasosQSVC, X: np.ndarray) -> np.ndarray:
     """Return decision function scores."""
     return model.decision_function(X)
-
 
 def describe_pegasos_algorithm() -> str:
     """Return a short algorithm note."""
@@ -215,11 +214,3 @@ def describe_pegasos_algorithm() -> str:
         "Qiskit ML versions this is exposed as PegasosQSVC(C, num_steps).\n"
     )
 
-
-def compare_qsvc_methods() -> dict[str, str]:
-    """Provide qualitative differences between quantum SVM APIs."""
-    return {
-        "PegasosQSVC": "Stochastic optimization; practical for larger datasets.",
-        "QSVC": "Quadratic programming; useful for smaller datasets.",
-        "QuantumKernelClassifier": "Hybrid approach with trainable components.",
-    }

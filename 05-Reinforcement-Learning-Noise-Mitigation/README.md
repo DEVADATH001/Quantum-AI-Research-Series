@@ -137,3 +137,6 @@ To execute on real hardware, configure IBM Quantum credentials (`QiskitRuntimeSe
 - Real-device closed-loop robotics experiments
 - Quantum meta-learning for transferable control policies
 
+---
+
+Author: DEVADATH H K

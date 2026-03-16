@@ -1,10 +1,13 @@
-"""Simple 2-state navigation environment for Quantum RL."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Simple 2-state navigation environment for Quantum RL."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
-
 
 @dataclass(slots=True)
 class EnvironmentConfig:
@@ -13,7 +16,6 @@ class EnvironmentConfig:
     max_episode_steps: int = 20
     correct_reward: float = 1.0
     incorrect_penalty: float = -0.1
-
 
 class SimpleNavigationEnv:
     """
@@ -93,7 +95,6 @@ class SimpleNavigationEnv:
     def render(self) -> str:
         """Text render for quick debugging."""
         return f"State={self._state} ({self.STATE_MEANINGS[self._state]}), step={self._step_count}"
-
 
 class SimpleNavigationGymEnv:
     """Thin Gymnasium-style wrapper."""

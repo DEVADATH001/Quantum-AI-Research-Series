@@ -1,4 +1,9 @@
-"""VQE execution wrapper."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: VQE execution wrapper."""
 
 from __future__ import annotations
 
@@ -12,7 +17,6 @@ from qiskit_algorithms import VQE
 from qiskit_algorithms.optimizers import SPSA, SLSQP
 
 from .optimizer_callbacks import VQECallback
-
 
 @dataclass
 class VQEResultRecord:
@@ -28,7 +32,6 @@ class VQEResultRecord:
     def total_energies(self) -> List[float]:
         """Compatibility property with legacy result handling."""
         return [self.energy]
-
 
 class VQEEngine:
     """Reusable VQE runner with hybrid system monitoring."""

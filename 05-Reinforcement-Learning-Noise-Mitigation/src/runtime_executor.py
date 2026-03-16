@@ -1,4 +1,8 @@
-"""Execution engine for ideal, noisy, mitigated, and hardware QRL modes."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Execution engine for ideal, noisy, mitigated, and hardware QRL modes."""
 
 from __future__ import annotations
 
@@ -16,7 +20,6 @@ from src.noise_models import infer_readout_error_probability, load_ibm_noise_mod
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass(slots=True)
 class RuntimeConfig:
     """Runtime execution configuration."""
@@ -27,7 +30,6 @@ class RuntimeConfig:
     optimization_level: int = 1
     resilience_level: int = 0
     seed: int = 42
-
 
 class QuantumRuntimeExecutor:
     """Unified expectation-value executor for the QRL training loop."""

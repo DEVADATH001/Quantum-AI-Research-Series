@@ -1,4 +1,9 @@
-"""Noise simulation helpers for quantum kernel experiments."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: Noise simulation helpers for quantum kernel experiments."""
 
 from __future__ import annotations
 
@@ -23,7 +28,6 @@ except ImportError:  # pragma: no cover - unexpected environment
 from src.quantum_kernel_engine import create_quantum_kernel
 
 logger = logging.getLogger(__name__)
-
 
 def create_ibm_noise_model(
     backend_name: str = "ibm_brisbane",
@@ -65,7 +69,6 @@ def create_ibm_noise_model(
     logger.info("Noise model created: gate_error=%s readout_error=%s with T1/T2 thermal relaxation", gate_error, readout_error)
     return noise_model
 
-
 def create_aer_simulator(
     noise_model: Optional[NoiseModel] = None,
     seed: int = 42,
@@ -74,7 +77,6 @@ def create_aer_simulator(
     simulator = AerSimulator(noise_model=noise_model, seed_simulator=seed)
     logger.info("AerSimulator created (noise=%s)", noise_model is not None)
     return simulator
-
 
 def create_noisy_sampler(
     noise_model: NoiseModel,
@@ -97,7 +99,6 @@ def create_noisy_sampler(
         )
 
     raise RuntimeError("No compatible noisy sampler implementation found.")
-
 
 def simulate_noisy_kernel(
     feature_map: QuantumCircuit,
@@ -130,7 +131,6 @@ def simulate_noisy_kernel(
     logger.info("Noisy kernel computed: shape=%s", K_noisy.shape)
     return K_noisy, noise_model
 
-
 def analyze_noise_effects(
     noiseless_kernel: np.ndarray,
     noisy_kernel: np.ndarray,
@@ -162,7 +162,6 @@ def analyze_noise_effects(
     logger.info("Noise analysis: %s", analysis)
     return analysis
 
-
 def describe_nisq_noise_effects() -> str:
     """Return a brief text description of NISQ noise effects."""
     return (
@@ -171,7 +170,6 @@ def describe_nisq_noise_effects() -> str:
         "Noise perturbs kernel entries, can break PSD, and generally degrades\n"
         "classification performance.\n"
     )
-
 
 def create_noisy_kernel_comparison(
     feature_map: QuantumCircuit,

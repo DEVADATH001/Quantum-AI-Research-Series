@@ -1,4 +1,8 @@
-"""Quick verification runner for local development."""
+"""Author: DEVADATH H K
+
+Project: Quantum Chemistry VQE
+
+Quick verification runner for local development."""
 
 from __future__ import annotations
 
@@ -14,7 +18,6 @@ if str(ROOT) not in sys.path:
 
 from src.pes_generator import PESGenerator
 from src.plotting import plot_error, plot_pes_curve, plot_vqe_convergence
-
 
 def main() -> None:
     root = ROOT
@@ -51,7 +54,6 @@ def main() -> None:
     plot_vqe_convergence(history, first_ansatz, results["distances"][0], "H2_Verification")
 
     print("Verification complete. See results/raw_data and results/figures.")
-
 
 if __name__ == "__main__":
     main()

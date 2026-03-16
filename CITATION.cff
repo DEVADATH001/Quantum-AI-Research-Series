@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: Quantum AI Research Series
+message: "Preferred citation: DEVADATH H K, Quantum AI Research Series, 2026."
+type: software
+authors:
+  - given-names: DEVADATH
+    family-names: H K
+    alias: DEVADATH H K
+version: 2026.3.16
+date-released: 2026-03-16
+license: MIT
+preferred-citation:
+  type: generic
+  title: Quantum AI Research Series
+  authors:
+    - given-names: DEVADATH
+      family-names: H K
+      alias: DEVADATH H K
+  year: 2026

@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 QAOA Circuit Builder Module
 
 Constructs parameterized QAOA quantum circuits for Max-Cut optimization.
@@ -6,16 +7,13 @@ Constructs parameterized QAOA quantum circuits for Max-Cut optimization.
 A QAOA circuit consists of:
 1. Initial state (uniform superposition)
 2. p layers of:
-   - Cost Hamiltonian unitary: U_C(γ) = exp(-iγH_C)
-   - Mixer Hamiltonian unitary: U_M(β) = exp(-iβH_M)
+- Cost Hamiltonian unitary: U_C(γ) = exp(-iγH_C)
+- Mixer Hamiltonian unitary: U_M(β) = exp(-iβH_M)
 
 Where:
-   - H_C = Σ w_ij (1 - Z_i Z_j) / 2  (Cost Hamiltonian)
-   - H_M = Σ X_i  (Mixer Hamiltonian)
-   - γ, β are variational parameters
-
-Author: Quantum AI Research Team
-"""
+- H_C = Σ w_ij (1 - Z_i Z_j) / 2  (Cost Hamiltonian)
+- H_M = Σ X_i  (Mixer Hamiltonian)
+- γ, β are variational parameters"""
 
 import logging
 from typing import List, Optional, Tuple
@@ -26,7 +24,6 @@ from qiskit.circuit import ParameterVector
 from qiskit.quantum_info import SparsePauliOp
 
 logger = logging.getLogger(__name__)
-
 
 class QAOACircuitBuilder:
     """
@@ -315,7 +312,6 @@ class QAOACircuitBuilder:
             gate_counts[gate_name] += 1
         
         return dict(gate_counts)
-
 
 class QAOACircuitFactory:
     """

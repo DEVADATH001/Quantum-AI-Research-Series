@@ -1,4 +1,9 @@
-"""Ansatz builders for VQE experiments."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: Ansatz builders for VQE experiments."""
 
 from __future__ import annotations
 
@@ -9,7 +14,6 @@ from qiskit_nature.second_q.mappers import QubitMapper
 from qiskit_nature.second_q.problems import ElectronicStructureProblem
 
 from .interfaces import AbstractAnsatzFactory
-
 
 def build_uccsd_ansatz(problem: ElectronicStructureProblem, mapper: QubitMapper) -> QuantumCircuit:
     """Build UCCSD with Hartree-Fock initial state."""
@@ -24,7 +28,6 @@ def build_uccsd_ansatz(problem: ElectronicStructureProblem, mapper: QubitMapper)
         qubit_mapper=mapper,
         initial_state=hf,
     )
-
 
 def build_hardware_efficient_ansatz(
     num_qubits: int, 
@@ -43,7 +46,6 @@ def build_hardware_efficient_ansatz(
     if initial_state is not None:
         return initial_state.compose(su2)
     return su2
-
 
 def get_ansatz(
     name: str, problem: ElectronicStructureProblem, mapper: QubitMapper, **kwargs
@@ -67,7 +69,6 @@ def get_ansatz(
             num_qubits, reps=reps, entanglement=entanglement, su2_gates=su2_gates, initial_state=hf
         )
     raise ValueError(f"Unknown ansatz name: {name}")
-
 
 class AnsatzFactory(AbstractAnsatzFactory):
     """Class-based ansatz factory for extension by inheritance."""

@@ -1,17 +1,14 @@
-"""
+"""Author: DEVADATH H K
+
 Qiskit Helper Functions
 
-Utility functions for working with Qiskit primitives and backends.
-
-Author: Quantum AI Research Team
-"""
+Utility functions for working with Qiskit primitives and backends."""
 
 import logging
 from typing import Dict, Optional, List, Any
 import numpy as np
 
 logger = logging.getLogger(__name__)
-
 
 def get_backend_info(backend) -> Dict[str, Any]:
     """
@@ -44,7 +41,6 @@ def get_backend_info(backend) -> Dict[str, Any]:
     
     return info
 
-
 def create_sampler(
     backend: Optional[Any] = None,
     options: Optional[Dict] = None
@@ -67,7 +63,6 @@ def create_sampler(
     
     return Sampler(options=options or {})
 
-
 def create_estimator(
     backend: Optional[Any] = None,
     options: Optional[Dict] = None
@@ -89,7 +84,6 @@ def create_estimator(
         return BackendEstimator(backend=backend, options=options or {})
     
     return Estimator(options=options or {})
-
 
 def transpile_circuit(
     circuit,
@@ -126,7 +120,6 @@ def transpile_circuit(
     
     return transpiled
 
-
 def evaluate_circuit_expectation(
     circuit,
     hamiltonian,
@@ -160,7 +153,6 @@ def evaluate_circuit_expectation(
     
     raise ValueError("Provided estimator does not support the .run() interface.")
 
-
 def get_quantum_resources(circuit) -> Dict[str, int]:
     """
     Get resource estimates for a circuit.
@@ -190,7 +182,6 @@ def get_quantum_resources(circuit) -> Dict[str, int]:
     
     return resources
 
-
 def create_noisy_backend(
     backend_name: str,
     noise_model: Optional[Any] = None,
@@ -218,7 +209,6 @@ def create_noisy_backend(
         coupling_map=coupling_map
     )
 
-
 def format_qubit_mapping(
     mapping: Dict[int, int]
 ) -> str:
@@ -237,7 +227,6 @@ def format_qubit_mapping(
         lines.append(f"  Logical Qubit {logical} → Physical Qubit {physical}")
     
     return "\n".join(lines)
-
 
 def calculate_trex_mitigation(
     counts: Dict[str, int],

@@ -1,3 +1,7 @@
+"""Author: DEVADATH H K
+
+Project: QAOA Max-Cut Optimization"""
+
 import pytest
 import numpy as np
 import networkx as nx

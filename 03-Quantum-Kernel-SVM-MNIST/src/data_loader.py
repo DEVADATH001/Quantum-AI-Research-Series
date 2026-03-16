@@ -1,10 +1,9 @@
-"""MNIST Data Loader Module.
+"""Author: DEVADATH H K
 
-This module provides functionality for loading and filtering the MNIST dataset
-for binary classification (digits 4 vs 9).
+Quantum AI Research Series
 
-Author: Quantum ML Research Lab
-"""
+Project 03: Quantum Kernel SVM MNIST
+Task: MNIST Data Loader Module."""
 
 from __future__ import annotations
 
@@ -18,7 +17,6 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
-
 
 def load_mnist_digits(
     digits: Optional[list[int]] = None,
@@ -124,7 +122,6 @@ def load_mnist_digits(
     
     return X_train, X_test, y_train, y_test
 
-
 def get_digit_statistics(
     X: np.ndarray,
     y: np.ndarray,
@@ -157,8 +154,3 @@ def get_digit_statistics(
     # Per-class statistics
     for digit in digits:
         mask = y == digit
-        stats[f"class_{digit}_count"] = int(np.sum(mask))
-        stats[f"class_{digit}_mean"] = float(np.mean(X[mask]))
-    
-    return stats
-

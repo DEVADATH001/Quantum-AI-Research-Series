@@ -1,7 +1,9 @@
-"""
+"""Author: DEVADATH H K
+
+Project: Quantum Chemistry VQE
+
 Optional extensions for advanced VQE research.
-Includes stubs and placeholders for ADAPT-VQE, Qubit Tapering, Noise simulation, etc.
-"""
+Includes stubs and placeholders for ADAPT-VQE, Qubit Tapering, Noise simulation, etc."""
 
 def apply_qubit_tapering(problem, qubit_op):
     """

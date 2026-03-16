@@ -1,3 +1,7 @@
+"""Author: DEVADATH H K
+
+Project: QAOA Max-Cut Optimization"""
+
 import pytest
 import networkx as nx
 from src.classical_solver import ClassicalSolver, ApproximateSolver

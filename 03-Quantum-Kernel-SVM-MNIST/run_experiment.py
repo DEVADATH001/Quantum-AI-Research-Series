@@ -1,4 +1,9 @@
-"""End-to-end experiment runner for Classical vs Quantum Kernel SVM."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: End-to-end experiment runner for Classical vs Quantum Kernel SVM."""
 
 from __future__ import annotations
 
@@ -44,7 +49,6 @@ from sklearn.model_selection import train_test_split
 
 LOGGER = logging.getLogger("run_experiment")
 
-
 def _stratified_subset(
     X: np.ndarray,
     y: np.ndarray,
@@ -58,13 +62,11 @@ def _stratified_subset(
     )
     return X_sub, y_sub
 
-
 def _load_config(path: Path) -> dict:
     if not path.exists():
         return {}
     with path.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
-
 
 def _save_json(path: Path, payload: dict) -> None:
     def _to_jsonable(obj):
@@ -87,7 +89,6 @@ def _save_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         json.dump(_to_jsonable(payload), f, indent=2)
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run classical vs quantum kernel SVM experiment.")
@@ -394,7 +395,6 @@ def main() -> int:
     print("Metrics:")
     print(comparison_df.to_string(index=False))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -1,4 +1,9 @@
-"""Fermion-to-qubit mapping utilities."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: Fermion-to-qubit mapping utilities."""
 
 from __future__ import annotations
 
@@ -8,7 +13,6 @@ from qiskit.quantum_info import SparsePauliOp
 from qiskit_nature.second_q.mappers import ParityMapper, JordanWignerMapper, BravyiKitaevMapper, QubitMapper
 from qiskit_nature.second_q.operators import SparseLabelOp
 from qiskit_nature.second_q.problems import ElectronicStructureProblem
-
 
 @dataclass
 class HamiltonianMapping:
@@ -21,7 +25,6 @@ class HamiltonianMapping:
     qubits_reduced: int
     two_qubit_reduction_used: bool
 
-
 def get_mapper_by_name(name: str, num_particles: Optional[Tuple[int, int]] = None) -> QubitMapper:
     """Return configured QubitMapper by name for research benchmarking."""
     name_norm = name.lower().strip()
@@ -32,7 +35,6 @@ def get_mapper_by_name(name: str, num_particles: Optional[Tuple[int, int]] = Non
     if name_norm == "bravyi_kitaev":
         return BravyiKitaevMapper()
     raise ValueError(f"Unknown mapping: {name}")
-
 
 def build_mapped_hamiltonian(
     problem: ElectronicStructureProblem, two_qubit_reduction: bool = True, mapping_name: str = "parity"
@@ -58,11 +60,9 @@ def build_mapped_hamiltonian(
         two_qubit_reduction_used=two_qubit_reduction and mapping_name.lower() == "parity",
     )
 
-
 def get_qubit_operator(problem: ElectronicStructureProblem) -> SparsePauliOp:
     """Compatibility wrapper returning mapped qubit operator."""
     return build_mapped_hamiltonian(problem).qubit_operator
-
 
 def get_mapper(problem: ElectronicStructureProblem) -> ParityMapper:
     """Compatibility wrapper returning configured parity mapper."""

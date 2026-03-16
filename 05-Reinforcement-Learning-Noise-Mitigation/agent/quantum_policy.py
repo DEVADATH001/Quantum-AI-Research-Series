@@ -1,4 +1,8 @@
-"""Parameterized quantum policy network for REINFORCE."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Parameterized quantum policy network for REINFORCE."""
 
 from __future__ import annotations
 
@@ -17,7 +21,6 @@ if TYPE_CHECKING:
 
     from src.runtime_executor import QuantumRuntimeExecutor
 
-
 @dataclass(slots=True)
 class PolicyConfig:
     """Configuration for the quantum policy network."""
@@ -28,7 +31,6 @@ class PolicyConfig:
     ansatz: str = "RealAmplitudes"
     temperature: float = 1.0
     seed: int = 42
-
 
 class QuantumPolicyNetwork:
     """Quantum policy with angle embedding and variational ansatz using Data Re-uploading."""

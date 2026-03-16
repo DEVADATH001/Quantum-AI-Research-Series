@@ -1,4 +1,8 @@
-"""Utility helpers for the Quantum RL noise-mitigation project."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Utility helpers for the Quantum RL noise-mitigation project."""
 
 from __future__ import annotations
 
@@ -11,7 +15,6 @@ from typing import Any
 import numpy as np
 from qiskit.quantum_info import SparsePauliOp
 
-
 def configure_logging(level: str = "INFO") -> None:
     """Configure process-wide logging for scripts and notebooks."""
     logging.basicConfig(
@@ -21,20 +24,17 @@ def configure_logging(level: str = "INFO") -> None:
     logging.getLogger("qiskit").setLevel(logging.WARNING)
     logging.getLogger("matplotlib").setLevel(logging.WARNING)
 
-
 def ensure_dir(path: str | Path) -> Path:
     """Create a directory if needed and return its resolved path."""
     directory = Path(path).resolve()
     directory.mkdir(parents=True, exist_ok=True)
     return directory
 
-
 def set_global_seed(seed: int) -> np.random.Generator:
     """Set deterministic seeds across random libraries."""
     random.seed(seed)
     np.random.seed(seed)
     return np.random.default_rng(seed)
-
 
 def build_state_angles(state: int, num_qubits: int) -> np.ndarray:
     """
@@ -55,7 +55,6 @@ def build_state_angles(state: int, num_qubits: int) -> np.ndarray:
         return np.pad(angles, (0, num_qubits - len(angles)), "constant")
     return angles
 
-
 def make_z_observables(num_qubits: int, num_actions: int) -> list[SparsePauliOp]:
     """Build Pauli-Z observables used as action logits."""
     if num_actions > num_qubits:
@@ -69,7 +68,6 @@ def make_z_observables(num_qubits: int, num_actions: int) -> list[SparsePauliOp]
         observables.append(SparsePauliOp.from_list([("".join(pauli), 1.0)]))
     return observables
 
-
 def softmax(values: np.ndarray, temperature: float = 1.0) -> np.ndarray:
     """Numerically stable softmax."""
     logits = np.asarray(values, dtype=float) / max(temperature, 1e-8)
@@ -78,7 +76,6 @@ def softmax(values: np.ndarray, temperature: float = 1.0) -> np.ndarray:
     probs = exp_values / np.sum(exp_values)
     return np.clip(probs, 1e-9, 1.0)
 
-
 def _json_default(value: Any) -> Any:
     """JSON serialization helper for numpy objects."""
     if isinstance(value, np.ndarray):
@@ -86,7 +83,6 @@ def _json_default(value: Any) -> Any:
     if isinstance(value, (np.floating, np.integer)):
         return value.item()
     raise TypeError(f"Unsupported value type for JSON serialization: {type(value)!r}")
-
 
 def save_json(path: str | Path, payload: dict[str, Any]) -> None:
     """Save dictionary payload as JSON with numpy support."""

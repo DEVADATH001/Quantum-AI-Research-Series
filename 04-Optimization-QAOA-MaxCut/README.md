@@ -548,4 +548,6 @@ MIT License - see LICENSE file for details.
 <p align="center">
   <b>Built with Qiskit 💜</b>
 </p>
+---
 
+Author: DEVADATH H K

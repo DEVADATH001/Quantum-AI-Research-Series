@@ -1,7 +1,9 @@
-"""Utilities package for Quantum Kernel SVM project.
+"""Author: DEVADATH H K
 
-This package provides utility functions for quantum ML experiments.
-"""
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: Utilities package for Quantum Kernel SVM project."""
 
 from utils.q_utils import (
     set_random_seed,

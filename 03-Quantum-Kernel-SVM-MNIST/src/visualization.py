@@ -1,15 +1,9 @@
-"""Visualization Module.
+"""Author: DEVADATH H K
 
-This module provides comprehensive visualization utilities for:
-- PCA scatter plots
-- Variance explained plots
-- Class distribution charts
-- Kernel heatmaps
-- Metrics comparison
-- Confusion matrices
+Quantum AI Research Series
 
-Author: Quantum ML Research Lab
-"""
+Project 03: Quantum Kernel SVM MNIST
+Task: Visualization Module."""
 
 from __future__ import annotations
 
@@ -28,7 +22,6 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-
 def setup_plot_style(style: str = "seaborn-v0_8-darkgrid") -> None:
     """Setup matplotlib plot style.
 
@@ -45,7 +38,6 @@ def setup_plot_style(style: str = "seaborn-v0_8-darkgrid") -> None:
     plt.rcParams["font.size"] = 12
     plt.rcParams["axes.titlesize"] = 14
     plt.rcParams["axes.labelsize"] = 12
-
 
 def _plot_heatmap(
     data: np.ndarray,
@@ -87,7 +79,6 @@ def _plot_heatmap(
         for row in range(data.shape[0]):
             for col in range(data.shape[1]):
                 ax.text(col, row, format(data[row, col], fmt), ha="center", va="center")
-
 
 def plot_pca_scatter(
     X: np.ndarray,
@@ -165,7 +156,6 @@ def plot_pca_scatter(
     
     return fig
 
-
 def plot_pca_variance(
     pca: PCA,
     title: str = "PCA Variance Explained",
@@ -230,7 +220,6 @@ def plot_pca_variance(
     
     return fig
 
-
 def plot_class_distribution(
     y: np.ndarray,
     classes: Optional[list[int]] = None,
@@ -294,7 +283,6 @@ def plot_class_distribution(
     
     return fig
 
-
 def plot_kernel_heatmap(
     kernel_matrix: np.ndarray,
     title: str = "Quantum Kernel Matrix",
@@ -347,7 +335,6 @@ def plot_kernel_heatmap(
         logger.info(f"Kernel heatmap saved to {save_path}")
     
     return fig
-
 
 def plot_metrics_comparison(
     results: dict,
@@ -410,7 +397,6 @@ def plot_metrics_comparison(
     
     return fig
 
-
 def plot_confusion_matrix(
     cm: np.ndarray,
     title: str = "Confusion Matrix",
@@ -459,7 +445,6 @@ def plot_confusion_matrix(
         logger.info(f"Confusion matrix saved to {save_path}")
     
     return fig
-
 
 def plot_noisy_vs_noiseless_kernel(
     noiseless_kernel: np.ndarray,

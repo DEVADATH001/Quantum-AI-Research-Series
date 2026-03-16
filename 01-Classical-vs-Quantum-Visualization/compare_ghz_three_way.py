@@ -1,3 +1,10 @@
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 01: Classical vs Quantum Visualization
+Task: Three-way GHZ-127 benchmark (Ideal vs Noisy Sim vs Real)."""
+
 from __future__ import annotations
 
 import argparse
@@ -13,7 +20,6 @@ from qiskit_aer import AerSimulator
 from qiskit_aer.noise import NoiseModel
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 
-
 def build_ghz(num_qubits: int) -> QuantumCircuit:
     qc = QuantumCircuit(num_qubits, num_qubits)
     qc.h(0)
@@ -21,7 +27,6 @@ def build_ghz(num_qubits: int) -> QuantumCircuit:
         qc.cx(i, i + 1)
     qc.measure(range(num_qubits), range(num_qubits))
     return qc
-
 
 def extract_counts(pub_result):
     data = pub_result.data
@@ -40,7 +45,6 @@ def extract_counts(pub_result):
 
     raise RuntimeError("No classical register counts found in SamplerV2 result.")
 
-
 def normalize_counts(raw_counts, width: int) -> dict[str, int]:
     out: dict[str, int] = {}
     for key, val in raw_counts.items():
@@ -51,19 +55,16 @@ def normalize_counts(raw_counts, width: int) -> dict[str, int]:
         out[bitstring] = out.get(bitstring, 0) + int(val)
     return out
 
-
 def short_state(state: str, keep: int = 8) -> str:
     if len(state) <= 2 * keep:
         return state
     return f"{state[:keep]}...{state[-keep:]}"
-
 
 def pending_jobs(backend) -> int:
     try:
         return int(getattr(backend.status(), "pending_jobs", -1))
     except Exception:
         return -1
-
 
 def build_service() -> tuple[QiskitRuntimeService, str]:
     last_error = None
@@ -73,7 +74,6 @@ def build_service() -> tuple[QiskitRuntimeService, str]:
         except Exception as exc:
             last_error = exc
     raise RuntimeError("Unable to build QiskitRuntimeService from saved credentials.") from last_error
-
 
 def choose_backend(service: QiskitRuntimeService, min_qubits: int, backend_name: str | None):
     if backend_name:
@@ -87,7 +87,6 @@ def choose_backend(service: QiskitRuntimeService, min_qubits: int, backend_name:
     if not candidates:
         raise RuntimeError(f"No operational IBM backend with >= {min_qubits} qubits.")
     return sorted(candidates, key=pending_jobs)[0]
-
 
 def run_sampler(
     mode_label: str,
@@ -138,7 +137,6 @@ def run_sampler(
         ],
     }
 
-
 def skipped_result(mode_label: str, shots: int, reason: str) -> dict:
     return {
         "status": "skipped",
@@ -154,7 +152,6 @@ def skipped_result(mode_label: str, shots: int, reason: str) -> dict:
         "top_states": [],
     }
 
-
 def build_noisy_simulator(real_backend):
     try:
         simulator = AerSimulator.from_backend(real_backend)
@@ -164,7 +161,6 @@ def build_noisy_simulator(real_backend):
         noise_model = NoiseModel.from_backend(real_backend)
         simulator = AerSimulator(method="matrix_product_state", noise_model=noise_model)
         return simulator, "noise_model_fallback"
-
 
 def save_chart(report: dict, out_path: Path) -> None:
     real_label = "Real IBM" if report["real"].get("status") != "skipped" else "Real IBM (Skipped)"
@@ -203,7 +199,6 @@ def save_chart(report: dict, out_path: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=220, bbox_inches="tight")
     plt.close(fig)
-
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run GHZ-127 local vs simulated vs real IBM comparison.")
@@ -374,7 +369,6 @@ def main() -> None:
         print(f"Real execution: {real_result['status']} ({real_result['skip_reason']})")
     print(f"Wrote JSON: {output_path}")
     print(f"Wrote chart: {chart_path}")
-
 
 if __name__ == "__main__":
     main()

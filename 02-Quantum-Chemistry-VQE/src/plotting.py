@@ -1,4 +1,9 @@
-"""Plotting utilities."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: Plotting utilities."""
 
 from __future__ import annotations
 
@@ -9,7 +14,6 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
 
 def plot_pes_curve(
     distances: List[float],
@@ -43,7 +47,6 @@ def plot_pes_curve(
     plt.close()
     return path
 
-
 def plot_vqe_convergence(
     history: List[Dict[str, Any]],
     ansatz_name: str,
@@ -66,7 +69,6 @@ def plot_vqe_convergence(
     plt.savefig(path, dpi=300)
     plt.close()
     return path
-
 
 def plot_error(
     distances: List[float],
@@ -101,7 +103,6 @@ def plot_error(
     plt.savefig(path, dpi=300)
     plt.close()
     return path
-
 
 def plot_pareto_front(
     errors: List[float],

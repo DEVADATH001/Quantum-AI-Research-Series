@@ -1,4 +1,8 @@
-"""End-to-end training pipeline for quantum RL noise-mitigation experiments."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+End-to-end training pipeline for quantum RL noise-mitigation experiments."""
 
 from __future__ import annotations
 
@@ -34,11 +38,9 @@ from utils.qiskit_helpers import configure_logging, ensure_dir, save_json, set_g
 
 logger = logging.getLogger(__name__)
 
-
 def _load_config(path: str | Path) -> dict[str, Any]:
     with Path(path).open("r", encoding="utf-8") as handle:
         return yaml.safe_load(handle)
-
 
 def _to_env_config(payload: dict[str, Any]) -> EnvironmentConfig:
     return EnvironmentConfig(
@@ -46,7 +48,6 @@ def _to_env_config(payload: dict[str, Any]) -> EnvironmentConfig:
         correct_reward=float(payload.get("correct_reward", 1.0)),
         incorrect_penalty=float(payload.get("incorrect_penalty", -0.1)),
     )
-
 
 def _to_policy_config(payload: dict[str, Any], seed: int) -> PolicyConfig:
     return PolicyConfig(
@@ -57,7 +58,6 @@ def _to_policy_config(payload: dict[str, Any], seed: int) -> PolicyConfig:
         temperature=float(payload.get("temperature", 1.0)),
         seed=seed,
     )
-
 
 def _to_reinforce_config(payload: dict[str, Any], seed: int, max_steps: int) -> ReinforceConfig:
     return ReinforceConfig(
@@ -72,14 +72,12 @@ def _to_reinforce_config(payload: dict[str, Any], seed: int, max_steps: int) -> 
         grad_clip=payload.get("grad_clip", 1.0),
     )
 
-
 def _save_episode_csv(path: Path, rewards: list[float], runtimes: list[float]) -> None:
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
         writer.writerow(["episode", "reward", "runtime_sec"])
         for idx, (reward, runtime_sec) in enumerate(zip(rewards, runtimes), start=1):
             writer.writerow([idx, reward, runtime_sec])
-
 
 def run_training_pipeline(config_path: str | Path) -> dict[str, Any]:
     """Run full experiment for ideal, noisy, and mitigated modes."""
@@ -255,7 +253,6 @@ def run_training_pipeline(config_path: str | Path) -> dict[str, Any]:
     logger.info("Training pipeline complete in %.2f seconds", total_runtime)
     return summary
 
-
 def _build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Quantum RL Noise-Mitigation Pipeline")
     parser.add_argument(
@@ -265,7 +262,6 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         help="Path to YAML config file.",
     )
     return parser
-
 
 if __name__ == "__main__":
     args = _build_arg_parser().parse_args()

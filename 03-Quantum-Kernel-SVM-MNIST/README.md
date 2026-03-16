@@ -415,9 +415,7 @@ MIT License
 
 ---
 
-## Authors
-
-Quantum ML Research Lab
+Author: DEVADATH H K
 
 ---
 

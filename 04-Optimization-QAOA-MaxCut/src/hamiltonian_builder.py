@@ -1,18 +1,16 @@
-"""
+"""Author: DEVADATH H K
+
 Hamiltonian Builder Module
 
 Constructs Ising Hamiltonians for the Max-Cut problem using Pauli operators.
 
 The Max-Cut problem is formulated as:
-    C = 1/2 Σ_{(i,j) ∈ E} (1 - Z_i Z_j)
+C = 1/2 Σ_{(i,j) ∈ E} (1 - Z_i Z_j)
 
 Where:
-    - Z_i is the Pauli-Z operator on qubit i
-    - Z_i Z_j represents the ZZ interaction term
-    - Edges crossing the cut contribute +1 to the cost
-
-Author: Quantum AI Research Team
-"""
+- Z_i is the Pauli-Z operator on qubit i
+- Z_i Z_j represents the ZZ interaction term
+- Edges crossing the cut contribute +1 to the cost"""
 
 import logging
 from typing import Tuple, Optional
@@ -21,7 +19,6 @@ import networkx as nx
 from qiskit.quantum_info import SparsePauliOp
 
 logger = logging.getLogger(__name__)
-
 
 class HamiltonianBuilder:
     """

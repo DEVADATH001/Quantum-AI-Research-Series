@@ -89,3 +89,6 @@ Reference files:
 - Keep generated result artifacts inside each project folder (for example,
   `01-Classical-vs-Quantum-Visualization/assets`).
 
+---
+
+Author: DEVADATH H K

@@ -1,4 +1,8 @@
-"""Parameter-shift gradient estimation for quantum policy gradients."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Parameter-shift gradient estimation for quantum policy gradients."""
 
 from __future__ import annotations
 
@@ -11,7 +15,6 @@ if TYPE_CHECKING:
     from agent.quantum_policy import QuantumPolicyNetwork
     from src.runtime_executor import QuantumRuntimeExecutor
 
-
 @dataclass(slots=True)
 class GradientEstimatorConfig:
     """
@@ -22,7 +25,6 @@ class GradientEstimatorConfig:
     """
 
     shift: float = np.pi / 2.0
-
 
 class ParameterShiftGradientEstimator:
     """Exact policy-gradient estimator based on the parameter-shift rule."""

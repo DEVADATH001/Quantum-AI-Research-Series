@@ -1,4 +1,8 @@
-"""Research script for automated VQE architecture search and ablation studies."""
+"""Author: DEVADATH H K
+
+Project: Quantum Chemistry VQE
+
+Research script for automated VQE architecture search and ablation studies."""
 
 import copy
 import os

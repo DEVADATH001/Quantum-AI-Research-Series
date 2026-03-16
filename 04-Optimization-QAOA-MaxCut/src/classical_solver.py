@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 Classical Solver Module
 
 Implements exact classical solvers for Max-Cut problem.
@@ -8,10 +9,7 @@ Methods:
 - Branch and bound
 - Dynamic programming approaches
 
-Used as baseline for QAOA performance comparison.
-
-Author: Quantum AI Research Team
-"""
+Used as baseline for QAOA performance comparison."""
 
 import logging
 from typing import Dict, List, Optional, Tuple
@@ -21,7 +19,6 @@ import networkx as nx
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class ClassicalResult:
@@ -45,7 +42,6 @@ class ClassicalResult:
     
     # Number of edges
     n_edges: int
-
 
 class ClassicalSolver:
     """
@@ -381,7 +377,6 @@ class ClassicalSolver:
                 cut_edges.append((u, v))
         
         return cut_edges
-
 
 class ApproximateSolver:
     """

@@ -146,3 +146,5 @@ Interpretation:
 
 - Iris is used as a controlled QML workflow demo, not quantum-advantage proof.
 - GHZ-127 result demonstrates NISQ noise/decoherence limitations at this depth.
+
+Author: DEVADATH H K

@@ -1,4 +1,9 @@
-"""Quantum feature-map helpers."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: Quantum feature-map helpers."""
 
 from __future__ import annotations
 
@@ -15,7 +20,6 @@ except ImportError:  # pragma: no cover - older Qiskit
     zz_feature_map = None
 
 logger = logging.getLogger(__name__)
-
 
 def create_feature_map(
     feature_map_type: str = "ZZFeatureMap",
@@ -115,7 +119,6 @@ def create_zz_feature_map(
     logger.info("Number of parameters: %s", feature_map.num_parameters)
     return feature_map
 
-
 def get_feature_map_circuit_info(feature_map: QuantumCircuit) -> dict:
     """Get metadata for a feature-map circuit."""
     info = {
@@ -128,7 +131,6 @@ def get_feature_map_circuit_info(feature_map: QuantumCircuit) -> dict:
     logger.info("Feature map info: %s", info)
     return info
 
-
 def encode_features(feature_map: QuantumCircuit, X: np.ndarray) -> np.ndarray:
     """Validate feature shape against a feature map."""
     if X.shape[1] != feature_map.num_qubits:
@@ -138,7 +140,6 @@ def encode_features(feature_map: QuantumCircuit, X: np.ndarray) -> np.ndarray:
         )
     logger.info("Encoded %s samples with %s features", X.shape[0], X.shape[1])
     return X
-
 
 def describe_hilbert_space_mapping(feature_dimension: int) -> str:
     """Return a plain-language description of Hilbert-space mapping."""
@@ -155,11 +156,3 @@ def describe_hilbert_space_mapping(feature_dimension: int) -> str:
         "    K(x_i, x_j) = |<phi(x_i)|phi(x_j)>|^2\n"
     )
 
-
-def visualize_feature_map_circuit(
-    feature_map: QuantumCircuit,
-    feature_values: Optional[np.ndarray] = None,
-) -> str:
-    """Render a feature-map circuit as plain text."""
-    circuit = feature_map.assign_parameters(feature_values) if feature_values is not None else feature_map
-    return circuit.draw(output="text", fold=80)

@@ -1,10 +1,9 @@
-"""Classical Model Module.
+"""Author: DEVADATH H K
 
-This module provides classical SVM implementation with RBF kernel
-and hyperparameter tuning using GridSearchCV.
+Quantum AI Research Series
 
-Author: Quantum ML Research Lab
-"""
+Project 03: Quantum Kernel SVM MNIST
+Task: Classical Model Module."""
 
 from __future__ import annotations
 
@@ -18,7 +17,6 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics.pairwise import pairwise_kernels
 
 logger = logging.getLogger(__name__)
-
 
 def train_classical_svm(
     X_train: np.ndarray,
@@ -141,7 +139,6 @@ def train_classical_svm(
         
         return clf, results
 
-
 def get_svm_decision_function(
     model: SVC,
     X: np.ndarray,
@@ -157,7 +154,6 @@ def get_svm_decision_function(
     """
     return model.decision_function(X)
 
-
 def get_support_vectors(
     model: SVC,
 ) -> np.ndarray:
@@ -170,7 +166,6 @@ def get_support_vectors(
         Support vectors
     """
     return model.support_vectors_
-
 
 def compute_kernel_matrix(
     X1: np.ndarray,

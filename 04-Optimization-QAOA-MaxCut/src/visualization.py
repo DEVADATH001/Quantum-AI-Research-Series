@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 Visualization Module
 
 Creates comprehensive visualizations for QAOA research:
@@ -7,10 +8,7 @@ Required Plots:
 1. Energy Landscape Heatmap - cost(γ, β) surface
 2. Graph Cut Visualization - show partition and cut edges
 3. Approximation Ratio vs p - performance scaling
-4. Optimization Convergence - iteration vs cost
-
-Author: Quantum AI Research Team
-"""
+4. Optimization Convergence - iteration vs cost"""
 
 import logging
 from typing import Dict, List, Optional, Tuple
@@ -23,7 +21,6 @@ import seaborn as sns
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
-
 
 class Visualizer:
     """
@@ -521,7 +518,6 @@ class Visualizer:
             )
         
         logger.info(f"Dashboard saved to {output_dir}")
-
 
 def save_metrics_csv(
     metrics: List[Dict],

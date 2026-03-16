@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 Recursive QAOA (RQAOA) Engine Module
 
 Implements Recursive QAOA for improved scalability on larger graphs.
@@ -15,10 +16,7 @@ Benefits:
 - Reduces effective search space
 - Exploits problem structure
 - Improves scalability for larger graphs
-- Can achieve better approximation ratios
-
-Author: Quantum AI Research Team
-"""
+- Can achieve better approximation ratios"""
 
 import logging
 from typing import Dict, List, Optional, Tuple, Callable
@@ -28,7 +26,6 @@ from dataclasses import dataclass
 import copy
 
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class RQAOAResult:
@@ -65,7 +62,6 @@ class RQAOAResult:
     def __post_init__(self):
         if self.eliminated_vars is None:
             self.eliminated_vars = []
-
 
 class RQAOAEngine:
     """
@@ -493,7 +489,6 @@ class RQAOAEngine:
                 if bitstring[i] != bitstring[j]:
                     cut += 1
         return cut
-
 
 class AdaptiveRQAOA(RQAOAEngine):
     """

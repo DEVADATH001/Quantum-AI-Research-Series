@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 QAOA Optimizer Module
 
 Implements the classical optimization loop for QAOA.
@@ -14,10 +15,7 @@ Supports optimizers:
 - COBYLA (Constrained Optimization BY Linear Approximations)
 - SPSA (Simulated Parameter Setting Algorithm)
 - Nelder-Mead
-- L-BFGS-B
-
-Author: Quantum AI Research Team
-"""
+- L-BFGS-B"""
 
 import logging
 from typing import Dict, List, Optional, Tuple, Callable
@@ -26,7 +24,6 @@ from dataclasses import dataclass, field
 import time
 
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class OptimizationResult:
@@ -56,7 +53,6 @@ class OptimizationResult:
     
     # Cut value
     cut_value: Optional[int] = None
-
 
 class QAOAOptimizer:
     """
@@ -420,7 +416,6 @@ class QAOAOptimizer:
         values = np.array([h['value'] for h in result.history])
         
         return iterations, values
-
 
 class ParameterGridEvaluator:
     """

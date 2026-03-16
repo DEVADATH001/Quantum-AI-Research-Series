@@ -1,4 +1,8 @@
-"""Evaluation and plotting utilities for QRL stability analysis."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Evaluation and plotting utilities for QRL stability analysis."""
 
 from __future__ import annotations
 
@@ -14,7 +18,6 @@ from src.runtime_executor import QuantumRuntimeExecutor
 
 logger = logging.getLogger(__name__)
 
-
 def moving_average(values: list[float], window: int) -> np.ndarray:
     """Compute moving average with edge padding."""
     arr = np.asarray(values, dtype=float)
@@ -24,7 +27,6 @@ def moving_average(values: list[float], window: int) -> np.ndarray:
         return arr
     kernel = np.ones(window) / float(window)
     return np.convolve(arr, kernel, mode="same")
-
 
 def find_convergence_episode(
     rewards: list[float],
@@ -38,7 +40,6 @@ def find_convergence_episode(
         return None
     return int(crossed[0] + 1)
 
-
 def convergence_runtime_seconds(
     episode_runtime_sec: list[float],
     convergence_episode: int | None,
@@ -51,7 +52,6 @@ def convergence_runtime_seconds(
         return float(runtimes.sum())
     cutoff = max(1, convergence_episode)
     return float(runtimes[:cutoff].sum())
-
 
 def plot_learning_curves(
     histories: dict[str, dict[str, Any]],
@@ -76,7 +76,6 @@ def plot_learning_curves(
     plt.savefig(output_path)
     plt.close()
     logger.info("Saved learning curves to %s", output_path)
-
 
 def plot_convergence_comparison(
     mode_summary: dict[str, dict[str, float | int | None]],
@@ -105,7 +104,6 @@ def plot_convergence_comparison(
     plt.savefig(output_path)
     plt.close()
     logger.info("Saved convergence comparison to %s", output_path)
-
 
 def plot_final_policy(
     policy: QuantumPolicyNetwork,

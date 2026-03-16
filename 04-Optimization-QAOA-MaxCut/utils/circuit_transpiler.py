@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 Circuit Transpiler Module
 
 Provides circuit transpilation and optimization utilities
@@ -8,10 +9,7 @@ Features:
 - Coupling map-aware layout
 - Gate decomposition to basis gates
 - Circuit depth optimization
-- Noise-aware transpilation
-
-Author: Quantum AI Research Team
-"""
+- Noise-aware transpilation"""
 
 import logging
 from typing import Dict, List, Optional, Tuple, Any
@@ -27,7 +25,6 @@ from qiskit.transpiler.passes import (
 )
 
 logger = logging.getLogger(__name__)
-
 
 class CircuitTranspiler:
     """
@@ -174,7 +171,6 @@ class CircuitTranspiler:
         
         return mapped
 
-
 def optimize_for_hardware(
     circuit: QuantumCircuit,
     backend: Any,
@@ -198,7 +194,6 @@ def optimize_for_hardware(
     
     return transpiler.transpile(circuit)
 
-
 def get_circuit_depth(circuit: QuantumCircuit) -> int:
     """
     Get circuit depth.
@@ -210,7 +205,6 @@ def get_circuit_depth(circuit: QuantumCircuit) -> int:
         Circuit depth
     """
     return circuit.depth()
-
 
 def estimate_circuit_resources(
     circuit: QuantumCircuit,
@@ -253,7 +247,6 @@ def estimate_circuit_resources(
     
     return resources
 
-
 def _count_coupling_violations(
     circuit: QuantumCircuit,
     coupling_map: CouplingMap
@@ -280,7 +273,6 @@ def _count_coupling_violations(
                 violations += 1
     
     return violations
-
 
 def decompose_to_basis(
     circuit: QuantumCircuit,
@@ -315,7 +307,6 @@ def decompose_to_basis(
     )
     
     return transpiled
-
 
 def create_hardware_efficient_layout(
     n_logical: int,
@@ -354,7 +345,6 @@ def create_hardware_efficient_layout(
     layout = physical_qubits[:n_logical]
     
     return layout
-
 
 def visualize_transpilation(
     original: QuantumCircuit,

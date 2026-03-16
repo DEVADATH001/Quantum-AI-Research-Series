@@ -1,9 +1,9 @@
-"""Quantum Utilities Module.
+"""Author: DEVADATH H K
 
-This module provides utility functions for quantum machine learning experiments.
+Quantum AI Research Series
 
-Author: Quantum ML Research Lab
-"""
+Project 03: Quantum Kernel SVM MNIST
+Task: Quantum Utilities Module."""
 
 from __future__ import annotations
 
@@ -14,7 +14,6 @@ from typing import Any
 import numpy as np
 
 logger = logging.getLogger(__name__)
-
 
 def set_random_seed(seed: int = 42) -> None:
     """Set random seed for reproducibility across all libraries.
@@ -32,7 +31,6 @@ def set_random_seed(seed: int = 42) -> None:
     
     logger.info(f"Random seed set to {seed}")
 
-
 def create_results_directory(base_dir: str = "results") -> Path:
     """Create results directory if it doesn't exist.
 
@@ -46,7 +44,6 @@ def create_results_directory(base_dir: str = "results") -> Path:
     results_dir.mkdir(parents=True, exist_ok=True)
     logger.info(f"Results directory: {results_dir}")
     return results_dir
-
 
 def save_json(data: dict, filepath: str) -> None:
     """Save dictionary to JSON file.
@@ -65,7 +62,6 @@ def save_json(data: dict, filepath: str) -> None:
     
     logger.info(f"JSON saved to {filepath}")
 
-
 def load_json(filepath: str) -> dict:
     """Load dictionary from JSON file.
 
@@ -82,7 +78,6 @@ def load_json(filepath: str) -> dict:
     
     logger.info(f"JSON loaded from {filepath}")
     return data
-
 
 def format_time(seconds: float) -> str:
     """Format time in seconds to human-readable string.
@@ -103,7 +98,6 @@ def format_time(seconds: float) -> str:
         hours = int(seconds // 3600)
         minutes = int((seconds % 3600) // 60)
         return f"{hours}h {minutes}m"
-
 
 def get_qiskit_version() -> dict[str, str]:
     """Get versions of Qiskit packages.
@@ -129,7 +123,6 @@ def get_qiskit_version() -> dict[str, str]:
     
     return versions
 
-
 def print_system_info() -> None:
     """Print system and package information."""
     import platform
@@ -147,7 +140,6 @@ def print_system_info() -> None:
         print(f"  {pkg}: {ver}")
     
     print("=" * 60)
-
 
 def validate_feature_map_parameters(
     feature_dimension: int,
@@ -179,7 +171,6 @@ def validate_feature_map_parameters(
     
     return True
 
-
 def estimate_memory_usage(n_samples: int, n_qubits: int) -> dict[str, float]:
     """Estimate memory usage for quantum kernel computation.
 
@@ -207,7 +198,6 @@ def estimate_memory_usage(n_samples: int, n_qubits: int) -> dict[str, float]:
     }
     
     return estimates
-
 
 def compare_kernel_matrices(
     K1: np.ndarray,
@@ -247,7 +237,6 @@ def compare_kernel_matrices(
     
     return comparison
 
-
 def get_entanglement_info(entanglement: str, n_qubits: int) -> dict[str, Any]:
     """Get information about entanglement pattern.
 
@@ -281,7 +270,6 @@ def get_entanglement_info(entanglement: str, n_qubits: int) -> dict[str, Any]:
     
     return info
 
-
 def get_entanglement_description(entanglement: str) -> str:
     """Get description of entanglement pattern.
 
@@ -298,6 +286,5 @@ def get_entanglement_description(entanglement: str) -> str:
         "circular": "Circular entanglement: linear with additional connection between ends",
         "sca": "SCA (shifted circular adjacency): scalable entanglement pattern",
     }
-    
-    return descriptions.get(entanglement, "Unknown entanglement type")
 
+    return descriptions.get(entanglement, "Unknown entanglement type")

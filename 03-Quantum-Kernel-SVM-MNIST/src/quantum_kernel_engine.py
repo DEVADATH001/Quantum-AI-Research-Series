@@ -1,4 +1,9 @@
-"""Quantum-kernel construction and analysis utilities."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 03: Quantum Kernel SVM MNIST
+Task: Quantum-kernel construction and analysis utilities."""
 
 from __future__ import annotations
 
@@ -28,7 +33,6 @@ except ImportError:  # pragma: no cover - older Qiskit ML
 
 logger = logging.getLogger(__name__)
 
-
 def _build_default_sampler() -> Any:
     """Create the best-available default sampler for current Qiskit."""
     if StatevectorSampler is not None:
@@ -36,7 +40,6 @@ def _build_default_sampler() -> Any:
     if LegacySampler is not None:
         return LegacySampler()
     raise RuntimeError("No compatible sampler primitive found in this Qiskit installation.")
-
 
 def create_quantum_kernel(
     feature_map: QuantumCircuit,
@@ -74,7 +77,6 @@ def create_quantum_kernel(
     logger.info("FidelityQuantumKernel created successfully")
     return kernel
 
-
 def compute_kernel_matrix(
     quantum_kernel: FidelityQuantumKernel,
     X: np.ndarray,
@@ -90,7 +92,6 @@ def compute_kernel_matrix(
 
     logger.info("Kernel matrix shape: %s", K.shape)
     return K
-
 
 def analyze_kernel_properties(kernel_matrix: np.ndarray) -> dict:
     """Analyze symmetry, PSD, and numeric properties of a kernel matrix."""
@@ -123,7 +124,6 @@ def analyze_kernel_properties(kernel_matrix: np.ndarray) -> dict:
     logger.info("Kernel properties: %s", properties)
     return properties
 
-
 def regularize_kernel_matrix(kernel_matrix: np.ndarray, epsilon: float = 1e-10) -> np.ndarray:
     """Project kernel matrix to the nearest PSD matrix if needed.
     
@@ -146,7 +146,6 @@ def regularize_kernel_matrix(kernel_matrix: np.ndarray, epsilon: float = 1e-10) 
     
     return regularized_matrix
 
-
 def describe_kernel_theory() -> str:
     """Return a short theory note for the quantum kernel."""
     return (
@@ -155,7 +154,6 @@ def describe_kernel_theory() -> str:
         "The fidelity quantum kernel compares two embedded states:\n"
         "K(x_i, x_j) = |<phi(x_i)|phi(x_j)>|^2\n"
     )
-
 
 def compute_kernel_alignment(K1: np.ndarray, K2: np.ndarray) -> float:
     """Compute Frobenius kernel alignment between K1 and K2."""
@@ -173,20 +171,24 @@ def compute_kernel_alignment(K1: np.ndarray, K2: np.ndarray) -> float:
     logger.info("Kernel alignment: %.4f", alignment)
     return float(alignment)
 
-
 def compute_kernel_target_alignment(K: np.ndarray, y: np.ndarray) -> float:
     """Compute Kernel-Target Alignment (KTA) between K and labels y.
     
     KTA measures how well the kernel matrix matches the ideal label kernel Y = y * y.T.
     The labels y should be encoded as {-1, 1} for this calculation.
     """
-    # Ensure labels are binary and in {-1, 1}
+    if K.ndim != 2 or K.shape[0] != K.shape[1]:
+        raise ValueError("K must be a square kernel matrix.")
+    if K.shape[0] != len(y):
+        raise ValueError("K and y must contain the same number of samples.")
+
+    # Binary labels are mapped to {-1, 1} to build the ideal target kernel.
     unique_y = np.unique(y)
     if len(unique_y) != 2:
         logger.warning("KTA is primarily defined for binary classification.")
         return 0.0
-    
-    y_mapped = np.where(y == unique_y[0], -1, 1)
+
+    y_mapped = np.where(y == unique_y[0], -1.0, 1.0)
     Y = np.outer(y_mapped, y_mapped)
-    
+
     return compute_kernel_alignment(K, Y)

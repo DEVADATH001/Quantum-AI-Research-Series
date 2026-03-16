@@ -1,4 +1,8 @@
-"""Unit tests for quantum chemistry VQE stack."""
+"""Author: DEVADATH H K
+
+Project: Quantum Chemistry VQE
+
+Unit tests for quantum chemistry VQE stack."""
 
 from __future__ import annotations
 
@@ -25,7 +29,6 @@ from src.problem_builder import build_mapped_hamiltonian
 from src.vqe_engine import VQEEngine
 import src.molecule_driver as molecule_driver_module
 
-
 def _base_config() -> dict:
     return {
         "general": {"random_seed": 7, "allow_synthetic_fallback": True},
@@ -47,7 +50,6 @@ def _base_config() -> dict:
         "runtime": {"backend": "local", "resilience_level": 1, "optimization_level": 1, "shots": 1024},
         "analysis": {"chemical_accuracy_mhartree": 1.6},
     }
-
 
 class TestQuantumChemistryVQE(unittest.TestCase):
     def test_distance_generation(self):
@@ -151,7 +153,6 @@ class TestQuantumChemistryVQE(unittest.TestCase):
         self.assertEqual(len(results["vqe_energies"]["NonExistentAnsatz"]), len(results["distances"]))
         self.assertGreaterEqual(len(results["failures"]), 1)
         self.assertTrue(np.isnan(results["vqe_energies"]["NonExistentAnsatz"][0]))
-
 
 if __name__ == "__main__":
     unittest.main()

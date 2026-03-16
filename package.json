@@ -1,0 +1,11 @@
+{
+  "name": "quantum-ai-research-series",
+  "private": true,
+  "version": "2026.3.16",
+  "description": "Repository metadata for the Quantum AI Research Series research portfolio.",
+  "author": "DEVADATH H K",
+  "license": "MIT",
+  "scripts": {
+    "authorship:check": "python scripts/check_authorship.py"
+  }
+}

@@ -1,4 +1,9 @@
-"""Classical vs quantum Iris classification with runtime-safe boundary plotting."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 01: Classical vs Quantum Visualization
+Task: Classical vs quantum Iris classification with runtime-safe boundary plotting."""
 
 from __future__ import annotations
 
@@ -33,7 +38,6 @@ else:
     QML_IMPORT_ERROR = None
 
 BASE_DIR = Path(__file__).resolve().parent
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Classical vs Quantum Iris classification (PCA-2D).")
@@ -70,11 +74,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-show", action="store_true", help="Do not display matplotlib window.")
     return parser.parse_args()
 
-
 def estimate_kernel_evals(train_size: int, grid_resolution: int) -> int:
     grid_points = grid_resolution * grid_resolution
     return (train_size * train_size) + (grid_points * train_size)
-
 
 def resolve_output_path(path_value: str) -> Path:
     path = Path(path_value)
@@ -82,19 +84,16 @@ def resolve_output_path(path_value: str) -> Path:
         path = BASE_DIR / path
     return path
 
-
 def build_zz_feature_map(feature_dimension: int, reps: int = 2, entanglement: str = "linear"):
     if zz_feature_map is not None:
         return zz_feature_map(feature_dimension=feature_dimension, reps=reps, entanglement=entanglement)
     return ZZFeatureMap(feature_dimension=feature_dimension, reps=reps, entanglement=entanglement)
-
 
 def choose_quantum_grid(train_size: int, max_kernel_evals: int, floor: int = 12, cap: int = 80) -> int:
     for resolution in range(cap, floor - 1, -1):
         if estimate_kernel_evals(train_size, resolution) <= max_kernel_evals:
             return resolution
     return floor
-
 
 def plot_decision_surface(ax, model, x_plot, y_plot, title: str, resolution: int):
     x_min, x_max = x_plot[:, 0].min() - 0.5, x_plot[:, 0].max() + 0.5
@@ -119,7 +118,6 @@ def plot_decision_surface(ax, model, x_plot, y_plot, title: str, resolution: int
     ax.set_xlabel("PC1")
     ax.set_ylabel("PC2")
     return scatter
-
 
 def main() -> None:
     args = parse_args()
@@ -219,7 +217,6 @@ def main() -> None:
     output_report.parent.mkdir(parents=True, exist_ok=True)
     output_report.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"Saved report: {output_report}")
-
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 Evaluation Metrics Module
 
 Provides comprehensive metrics for evaluating QAOA performance:
@@ -12,10 +13,7 @@ Secondary Metrics:
 - Energy gap
 - Runtime performance
 
-Target: r > 0.8 is considered strong for NISQ algorithms.
-
-Author: Quantum AI Research Team
-"""
+Target: r > 0.8 is considered strong for NISQ algorithms."""
 
 import logging
 from typing import Dict, List, Optional, Tuple
@@ -24,7 +22,6 @@ import networkx as nx
 from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class EvaluationResult:
@@ -52,7 +49,6 @@ class EvaluationResult:
     n_nodes: int = 0
     n_edges: int = 0
     qaoa_depth: int = 0
-
 
 class EvaluationMetrics:
     """
@@ -367,7 +363,6 @@ class EvaluationMetrics:
             'mean_value': np.mean(values),
             'best_value': np.max(values)
         }
-
 
 class BenchmarkSuite:
     """

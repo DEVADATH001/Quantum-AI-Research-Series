@@ -1,4 +1,8 @@
-"""Error-mitigation engine implementing TREX-style correction and ZNE."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+Error-mitigation engine implementing TREX-style correction and ZNE."""
 
 from __future__ import annotations
 
@@ -11,7 +15,6 @@ from qiskit import QuantumCircuit
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass(slots=True)
 class MitigationConfig:
     """Configuration for mitigation behavior."""
@@ -23,7 +26,6 @@ class MitigationConfig:
     extrapolation: str = "polynomial"
     polynomial_degree: int = 2
     readout_error_probability: float = 0.0
-
 
 def fold_circuit_for_noise_scaling(circuit: QuantumCircuit, scale_factor: float) -> QuantumCircuit:
     """
@@ -60,7 +62,6 @@ def fold_circuit_for_noise_scaling(circuit: QuantumCircuit, scale_factor: float)
             folded.append(inst, q_idx, c_idx)
 
     return folded
-
 
 class MitigationEngine:
     """Apply TREX and ZNE mitigation to expectation-value estimates."""

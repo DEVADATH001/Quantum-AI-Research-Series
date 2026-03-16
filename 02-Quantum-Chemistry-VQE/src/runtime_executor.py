@@ -1,4 +1,9 @@
-"""Runtime estimator factory."""
+"""Author: DEVADATH H K
+
+Quantum AI Research Series
+
+Project 02: Quantum Chemistry VQE
+Task: Runtime estimator factory."""
 
 from __future__ import annotations
 
@@ -16,7 +21,6 @@ except Exception:
     QiskitRuntimeService = None
     IBM_RUNTIME_AVAILABLE = False
 
-
 @dataclass
 class EstimatorContext:
     """Estimator plus runtime metadata."""
@@ -25,7 +29,6 @@ class EstimatorContext:
     mode: str
     backend: Optional[str]
     mitigation: str
-
 
 def get_estimator(
     backend_name: str = "local",

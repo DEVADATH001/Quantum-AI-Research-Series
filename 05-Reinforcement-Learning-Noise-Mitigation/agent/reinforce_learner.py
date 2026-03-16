@@ -1,4 +1,8 @@
-"""REINFORCE learner for the quantum policy network."""
+"""Author: DEVADATH H K
+
+Project: Quantum RL Noise Mitigation
+
+REINFORCE learner for the quantum policy network."""
 
 from __future__ import annotations
 
@@ -15,7 +19,6 @@ from src.runtime_executor import QuantumRuntimeExecutor
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass(slots=True)
 class ReinforceConfig:
     """Training hyperparameters for REINFORCE."""
@@ -30,7 +33,6 @@ class ReinforceConfig:
     entropy_coeff: float = 0.01
     grad_clip: float | None = 1.0
 
-
 @dataclass(slots=True)
 class TrainingHistory:
     """Container for training outputs."""
@@ -44,7 +46,6 @@ class TrainingHistory:
     loss_history: list[float] = field(default_factory=list)
     total_runtime_sec: float = 0.0
     final_parameters: list[float] = field(default_factory=list)
-
 
 class AdamOptimizer:
     """Lightweight Adam optimizer for NumPy parameter arrays with gradient clipping."""
@@ -84,7 +85,6 @@ class AdamOptimizer:
         m_hat = self.m / (1.0 - self.beta1**self.t)
         v_hat = self.v / (1.0 - self.beta2**self.t)
         return params - self.lr * m_hat / (np.sqrt(v_hat) + self.eps)
-
 
 class ReinforceLearner:
     """Train a quantum policy with REINFORCE and parameter-shift gradients."""

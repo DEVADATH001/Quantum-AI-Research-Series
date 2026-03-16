@@ -1,23 +1,12 @@
-"""Quantum Kernel SVM for MNIST - Research Project.
+"""Author: DEVADATH H K
 
-This package provides tools for comparing classical RBF kernel SVM
-against quantum kernel SVM with Pegasos optimization on MNIST digit
-classification (4 vs 9).
+Quantum AI Research Series
 
-Modules:
-    - data_loader: MNIST dataset loading and filtering
-    - preprocessing: Data normalization and PCA dimensionality reduction
-    - classical_models: Classical SVM with RBF kernel
-    - quantum_feature_maps: ZZFeatureMap for quantum encoding
-    - quantum_kernel_engine: FidelityQuantumKernel computation
-    - quantum_training: PegasosQSVC implementation
-    - evaluation_metrics: Model evaluation metrics
-    - visualization: Plotting utilities
-    - noise_simulation: IBM noise model simulation
-"""
+Project 03: Quantum Kernel SVM MNIST
+Task: Research package initialization."""
 
 __version__ = "1.0.0"
-__author__ = "Quantum ML Research Lab"
+__author__ = "DEVADATH H K"
 
 from importlib import import_module
 from typing import Any
@@ -55,7 +44,6 @@ _EXPORT_MAP: dict[str, str] = {
     "plot_confusion_matrix": "src.visualization",
     "simulate_noisy_kernel": "src.noise_simulation",
 }
-
 
 def __getattr__(name: str) -> Any:
     module_name = _EXPORT_MAP.get(name)

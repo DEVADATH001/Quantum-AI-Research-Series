@@ -1,4 +1,5 @@
-"""
+"""Author: DEVADATH H K
+
 Runtime Executor Module
 
 Implements Qiskit Runtime V2 execution engine for QAOA.
@@ -12,10 +13,7 @@ Features:
 - EstimatorV2 for expectation value calculation
 - Noise mitigation (T-REX - Twirled Readout Error eXtinguishing)
 - Circuit transpilation and optimization
-- Resilience levels for different accuracy/speed tradeoffs
-
-Author: Quantum AI Research Team
-"""
+- Resilience levels for different accuracy/speed tradeoffs"""
 
 import logging
 from typing import Dict, List, Optional, Tuple, Union
@@ -24,7 +22,6 @@ import networkx as nx
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class ExecutionResult:
@@ -54,7 +51,6 @@ class ExecutionResult:
     
     # Measurement counts
     measurement_counts: Optional[Dict[str, int]] = None
-
 
 class RuntimeExecutor:
     """
@@ -390,7 +386,6 @@ class RuntimeExecutor:
         
         return info
 
-
 class BatchExecutor:
     """
     Batch executor for running multiple QAOA evaluations.
@@ -456,7 +451,6 @@ class BatchExecutor:
             results.append(result)
         
         return results
-
 
 def create_executor(
     mode: str = "local",

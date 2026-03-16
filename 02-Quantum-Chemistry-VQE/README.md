@@ -172,3 +172,5 @@ inspection and visualization.
 - Use module execution (`python -m src.pes_generator`), not
   `python src/pes_generator.py`.
 - IBM runtime mode will fail without valid credentials/backend access.
+
+Author: DEVADATH H K
