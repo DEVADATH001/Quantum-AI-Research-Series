@@ -1,0 +1,13 @@
+.test_tmp/
+__pycache__/
+*.pyc
+
+.grok/
+
+results_smoke/
+results_arch_smoke/
+results_sweep_smoke/
+results_hardware_realistic/
+results_benchmark_smoke/
+
+05-reinforcement-learning-noise-mitigation/

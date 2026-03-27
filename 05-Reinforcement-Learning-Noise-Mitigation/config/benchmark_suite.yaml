@@ -1,0 +1,11 @@
+suite_name: Key-and-Door Research Benchmark
+description: >
+  Fixed eight-scenario benchmark family for measurement-defined quantum RL under
+  NISQ-style noise, mitigation, and stronger classical baselines.
+base_config: config/research_benchmark.yaml
+output_root: results/benchmark_suite
+scenario_source: research_registry
+experiment_overrides:
+  experiment:
+    seeds: [7, 21, 33, 47, 63, 77, 91, 105, 119, 133]
+    n_eval_episodes: 64

@@ -1,0 +1,93 @@
+seed: 42
+
+experiment:
+  seeds: [7, 21]
+  n_eval_episodes: 16
+  run_tabular_baseline: true
+  run_mlp_baseline: true
+  run_random_baseline: false
+
+environment:
+  n_positions: 4
+  start_positions: [1, 2]
+  key_position: 0
+  goal_position: 3
+  max_episode_steps: 6
+  step_penalty: -0.02
+  wall_penalty: -0.05
+  locked_goal_penalty: -0.25
+  key_reward: 0.15
+  goal_reward: 1.0
+  progress_reward_scale: 0.05
+  slip_probability: 0.05
+
+quantum_policy:
+  num_qubits: 3
+  reuploads: 1
+  ansatz: RealAmplitudes
+  ansatz_reps: 1
+  entanglement: linear
+  state_encoding: hybrid
+
+training:
+  n_episodes: 20
+  gamma: 0.99
+  learning_rate: 0.02
+  baseline_decay: 0.9
+  episodes_per_update: 2
+  probability_floor: null
+  shift: 1.5707963267948966
+  log_every: 5
+  entropy_coeff: 0.01
+  grad_clip: 0.75
+  selection_eval_episodes: 2
+  track_best_parameters: true
+  lr_plateau_patience: 2
+  lr_decay: 0.5
+  min_learning_rate: 0.002
+
+baselines:
+  n_episodes: 20
+  gamma: 0.99
+  learning_rate: 0.05
+  baseline_decay: 0.9
+  log_every: 5
+  entropy_coeff: 0.01
+  grad_clip: 1.0
+  temperature: 1.0
+
+mlp_baseline:
+  n_episodes: 20
+  gamma: 0.99
+  learning_rate: 0.03
+  baseline_decay: 0.9
+  log_every: 5
+  entropy_coeff: 0.01
+  grad_clip: 1.0
+  hidden_dim: 16
+  init_scale: 0.1
+  temperature: 1.0
+
+quantum_execution:
+  shots: 96
+  optimization_level: 1
+  backend_name: ibm_osaka
+  resilience_level: 2
+  compact_noise_model: true
+
+mitigation:
+  enabled: true
+  readout_correction: true
+  method: both
+  zne:
+    scale_factors: [1.0, 2.0]
+    extrapolation: linear
+    degree: 1
+
+evaluation:
+  convergence_threshold: 0.8
+  moving_avg_window: 4
+
+results:
+  output_dir: results_tuning
+  log_level: INFO

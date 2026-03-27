@@ -1,0 +1,11 @@
+suite_name: Key-and-Door Benchmark Smoke
+description: >
+  Two-scenario smoke suite for validating the benchmark runner, schema outputs,
+  and report builder without paying the full research-benchmark cost.
+base_config: config/smoke_test.yaml
+output_root: results_benchmark_smoke
+scenario_source: smoke_registry
+experiment_overrides:
+  experiment:
+    seeds: [7]
+    n_eval_episodes: 8

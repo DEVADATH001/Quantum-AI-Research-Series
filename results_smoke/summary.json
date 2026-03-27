@@ -1,0 +1,1287 @@
+{
+  "config_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\config\\smoke_test.yaml",
+  "seeds": [
+    7
+  ],
+  "n_eval_episodes": 8,
+  "environment": {
+    "n_positions": 4,
+    "start_positions": [
+      1,
+      2
+    ],
+    "key_position": 0,
+    "goal_position": 3,
+    "max_episode_steps": 6,
+    "step_penalty": -0.02,
+    "wall_penalty": -0.05,
+    "locked_goal_penalty": -0.25,
+    "key_reward": 0.15,
+    "goal_reward": 1.0,
+    "progress_reward_scale": 0.05,
+    "slip_probability": 0.05,
+    "seed": 42
+  },
+  "quantum": {
+    "ideal": {
+      "seeds": [
+        7
+      ],
+      "seed_count": 1,
+      "reward_curve_mean": [
+        0.13,
+        0.23,
+        1.3,
+        0.12999999999999998,
+        1.27,
+        -0.17000000000000004
+      ],
+      "reward_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "success_curve_mean": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "success_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "length_curve_mean": [
+        6.0,
+        6.0,
+        5.0,
+        6.0,
+        4.0,
+        6.0
+      ],
+      "length_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_ma_mean": [
+        0.12,
+        0.5533333333333333,
+        0.5533333333333333,
+        0.9,
+        0.41,
+        0.36666666666666664
+      ],
+      "reward_ma_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "success_ma_mean": [
+        0.0,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "success_ma_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "grad_norm_curve_mean": [
+        0.07566843723787312,
+        0.07566843723787312,
+        0.143622346796017,
+        0.143622346796017,
+        0.24707112550056748,
+        0.24707112550056748
+      ],
+      "grad_norm_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_avg_reward_mean": 0.41,
+      "final_avg_reward_std": 0.0,
+      "final_success_rate_mean": 0.3333333333333333,
+      "final_success_rate_std": 0.0,
+      "reward_auc_mean": 0.5820000000000001,
+      "reward_auc_std": 0.0,
+      "success_auc_mean": 0.4,
+      "success_auc_std": 0.0,
+      "grad_norm_final_mean": 0.21258819926571734,
+      "grad_norm_final_std": 0.0,
+      "convergence_rate": 0.0,
+      "convergence_episode_mean": null,
+      "convergence_episode_std": null,
+      "convergence_runtime_mean": 3.934736800030805,
+      "convergence_runtime_std": 0.0,
+      "total_runtime_mean": 3.936024599999655,
+      "total_runtime_std": 0.0,
+      "eval_reward_mean": 0.6575,
+      "eval_reward_std": 0.0,
+      "eval_success_mean": 0.5,
+      "eval_success_std": 0.0,
+      "per_seed_metrics": [
+        {
+          "convergence_episode": null,
+          "convergence_runtime_sec": 3.934736800030805,
+          "final_avg_reward": 0.41,
+          "final_success_rate": 0.3333333333333333,
+          "reward_auc": 0.5820000000000001,
+          "success_auc": 0.4,
+          "grad_norm_final": 0.21258819926571734,
+          "total_runtime_sec": 3.936024599999655
+        }
+      ],
+      "final_avg_reward_count": 1,
+      "final_avg_reward_sem": 0.0,
+      "final_avg_reward_ci95": [
+        0.41,
+        0.41
+      ],
+      "final_success_rate_count": 1,
+      "final_success_rate_sem": 0.0,
+      "final_success_rate_ci95": [
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "reward_auc_count": 1,
+      "reward_auc_sem": 0.0,
+      "reward_auc_ci95": [
+        0.5820000000000001,
+        0.5820000000000001
+      ],
+      "success_auc_count": 1,
+      "success_auc_sem": 0.0,
+      "success_auc_ci95": [
+        0.4,
+        0.4
+      ],
+      "grad_norm_final_count": 1,
+      "grad_norm_final_sem": 0.0,
+      "grad_norm_final_ci95": [
+        0.21258819926571734,
+        0.21258819926571734
+      ],
+      "convergence_episode_count": 0,
+      "convergence_episode_sem": null,
+      "convergence_episode_ci95": null,
+      "convergence_runtime_count": 1,
+      "convergence_runtime_sem": 0.0,
+      "convergence_runtime_ci95": [
+        3.934736800030805,
+        3.934736800030805
+      ],
+      "total_runtime_sec_count": 1,
+      "total_runtime_sec_sem": 0.0,
+      "total_runtime_sec_ci95": [
+        3.936024599999655,
+        3.936024599999655
+      ],
+      "eval_reward_count": 1,
+      "eval_reward_sem": 0.0,
+      "eval_reward_ci95": [
+        0.6575,
+        0.6575
+      ],
+      "eval_success_count": 1,
+      "eval_success_sem": 0.0,
+      "eval_success_ci95": [
+        0.5,
+        0.5
+      ]
+    },
+    "noisy": {
+      "seeds": [
+        7
+      ],
+      "seed_count": 1,
+      "reward_curve_mean": [
+        0.12999999999999998,
+        0.13,
+        1.3,
+        0.12999999999999998,
+        1.2,
+        0.12999999999999998
+      ],
+      "reward_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "success_curve_mean": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "success_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "length_curve_mean": [
+        6.0,
+        6.0,
+        5.0,
+        6.0,
+        5.0,
+        6.0
+      ],
+      "length_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_ma_mean": [
+        0.08666666666666666,
+        0.52,
+        0.52,
+        0.8766666666666667,
+        0.48666666666666664,
+        0.4433333333333333
+      ],
+      "reward_ma_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "success_ma_mean": [
+        0.0,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "success_ma_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "grad_norm_curve_mean": [
+        0.030760631666084687,
+        0.030760631666084687,
+        0.10174209221068267,
+        0.10174209221068267,
+        0.32762365758209044,
+        0.32762365758209044
+      ],
+      "grad_norm_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_avg_reward_mean": 0.4866666666666666,
+      "final_avg_reward_std": 0.0,
+      "final_success_rate_mean": 0.3333333333333333,
+      "final_success_rate_std": 0.0,
+      "reward_auc_mean": 0.5780000000000001,
+      "reward_auc_std": 0.0,
+      "success_auc_mean": 0.4,
+      "success_auc_std": 0.0,
+      "grad_norm_final_mean": 0.25232980245828784,
+      "grad_norm_final_std": 0.0,
+      "convergence_rate": 0.0,
+      "convergence_episode_mean": null,
+      "convergence_episode_std": null,
+      "convergence_runtime_mean": 1.9554432000149973,
+      "convergence_runtime_std": 0.0,
+      "total_runtime_mean": 1.9565888000070117,
+      "total_runtime_std": 0.0,
+      "eval_reward_mean": 0.43499999999999994,
+      "eval_reward_std": 0.0,
+      "eval_success_mean": 0.25,
+      "eval_success_std": 0.0,
+      "per_seed_metrics": [
+        {
+          "convergence_episode": null,
+          "convergence_runtime_sec": 1.9554432000149973,
+          "final_avg_reward": 0.4866666666666666,
+          "final_success_rate": 0.3333333333333333,
+          "reward_auc": 0.5780000000000001,
+          "success_auc": 0.4,
+          "grad_norm_final": 0.25232980245828784,
+          "total_runtime_sec": 1.9565888000070117
+        }
+      ],
+      "final_avg_reward_count": 1,
+      "final_avg_reward_sem": 0.0,
+      "final_avg_reward_ci95": [
+        0.4866666666666666,
+        0.4866666666666666
+      ],
+      "final_success_rate_count": 1,
+      "final_success_rate_sem": 0.0,
+      "final_success_rate_ci95": [
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "reward_auc_count": 1,
+      "reward_auc_sem": 0.0,
+      "reward_auc_ci95": [
+        0.5780000000000001,
+        0.5780000000000001
+      ],
+      "success_auc_count": 1,
+      "success_auc_sem": 0.0,
+      "success_auc_ci95": [
+        0.4,
+        0.4
+      ],
+      "grad_norm_final_count": 1,
+      "grad_norm_final_sem": 0.0,
+      "grad_norm_final_ci95": [
+        0.25232980245828784,
+        0.25232980245828784
+      ],
+      "convergence_episode_count": 0,
+      "convergence_episode_sem": null,
+      "convergence_episode_ci95": null,
+      "convergence_runtime_count": 1,
+      "convergence_runtime_sem": 0.0,
+      "convergence_runtime_ci95": [
+        1.9554432000149973,
+        1.9554432000149973
+      ],
+      "total_runtime_sec_count": 1,
+      "total_runtime_sec_sem": 0.0,
+      "total_runtime_sec_ci95": [
+        1.9565888000070117,
+        1.9565888000070117
+      ],
+      "eval_reward_count": 1,
+      "eval_reward_sem": 0.0,
+      "eval_reward_ci95": [
+        0.43499999999999994,
+        0.43499999999999994
+      ],
+      "eval_success_count": 1,
+      "eval_success_sem": 0.0,
+      "eval_success_ci95": [
+        0.25,
+        0.25
+      ]
+    },
+    "mitigated": {
+      "seeds": [
+        7
+      ],
+      "seed_count": 1,
+      "reward_curve_mean": [
+        0.12999999999999998,
+        0.13,
+        1.3,
+        0.12999999999999998,
+        1.2,
+        0.12999999999999998
+      ],
+      "reward_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "success_curve_mean": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "success_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "length_curve_mean": [
+        6.0,
+        6.0,
+        5.0,
+        6.0,
+        5.0,
+        6.0
+      ],
+      "length_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_ma_mean": [
+        0.08666666666666666,
+        0.52,
+        0.52,
+        0.8766666666666667,
+        0.48666666666666664,
+        0.4433333333333333
+      ],
+      "reward_ma_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "success_ma_mean": [
+        0.0,
+        0.3333333333333333,
+        0.3333333333333333,
+        0.6666666666666666,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "success_ma_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "grad_norm_curve_mean": [
+        0.056266665260764175,
+        0.056266665260764175,
+        0.13705230155209164,
+        0.13705230155209164,
+        0.3981271603948461,
+        0.3981271603948461
+      ],
+      "grad_norm_curve_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_avg_reward_mean": 0.4866666666666666,
+      "final_avg_reward_std": 0.0,
+      "final_success_rate_mean": 0.3333333333333333,
+      "final_success_rate_std": 0.0,
+      "reward_auc_mean": 0.5780000000000001,
+      "reward_auc_std": 0.0,
+      "success_auc_mean": 0.4,
+      "success_auc_std": 0.0,
+      "grad_norm_final_mean": 0.31110220744726125,
+      "grad_norm_final_std": 0.0,
+      "convergence_rate": 0.0,
+      "convergence_episode_mean": null,
+      "convergence_episode_std": null,
+      "convergence_runtime_mean": 4.86245100008091,
+      "convergence_runtime_std": 0.0,
+      "total_runtime_mean": 4.863422600028571,
+      "total_runtime_std": 0.0,
+      "eval_reward_mean": 0.43499999999999994,
+      "eval_reward_std": 0.0,
+      "eval_success_mean": 0.25,
+      "eval_success_std": 0.0,
+      "per_seed_metrics": [
+        {
+          "convergence_episode": null,
+          "convergence_runtime_sec": 4.86245100008091,
+          "final_avg_reward": 0.4866666666666666,
+          "final_success_rate": 0.3333333333333333,
+          "reward_auc": 0.5780000000000001,
+          "success_auc": 0.4,
+          "grad_norm_final": 0.31110220744726125,
+          "total_runtime_sec": 4.863422600028571
+        }
+      ],
+      "final_avg_reward_count": 1,
+      "final_avg_reward_sem": 0.0,
+      "final_avg_reward_ci95": [
+        0.4866666666666666,
+        0.4866666666666666
+      ],
+      "final_success_rate_count": 1,
+      "final_success_rate_sem": 0.0,
+      "final_success_rate_ci95": [
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "reward_auc_count": 1,
+      "reward_auc_sem": 0.0,
+      "reward_auc_ci95": [
+        0.5780000000000001,
+        0.5780000000000001
+      ],
+      "success_auc_count": 1,
+      "success_auc_sem": 0.0,
+      "success_auc_ci95": [
+        0.4,
+        0.4
+      ],
+      "grad_norm_final_count": 1,
+      "grad_norm_final_sem": 0.0,
+      "grad_norm_final_ci95": [
+        0.31110220744726125,
+        0.31110220744726125
+      ],
+      "convergence_episode_count": 0,
+      "convergence_episode_sem": null,
+      "convergence_episode_ci95": null,
+      "convergence_runtime_count": 1,
+      "convergence_runtime_sem": 0.0,
+      "convergence_runtime_ci95": [
+        4.86245100008091,
+        4.86245100008091
+      ],
+      "total_runtime_sec_count": 1,
+      "total_runtime_sec_sem": 0.0,
+      "total_runtime_sec_ci95": [
+        4.863422600028571,
+        4.863422600028571
+      ],
+      "eval_reward_count": 1,
+      "eval_reward_sem": 0.0,
+      "eval_reward_ci95": [
+        0.43499999999999994,
+        0.43499999999999994
+      ],
+      "eval_success_count": 1,
+      "eval_success_sem": 0.0,
+      "eval_success_ci95": [
+        0.25,
+        0.25
+      ]
+    }
+  },
+  "tabular_baseline": {
+    "seeds": [
+      7
+    ],
+    "seed_count": 1,
+    "reward_curve_mean": [
+      -1.12,
+      -0.07000000000000003,
+      -0.27,
+      0.02999999999999997,
+      -0.32,
+      1.27
+    ],
+    "reward_curve_std": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "success_curve_mean": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "success_curve_std": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "length_curve_mean": [
+      6.0,
+      6.0,
+      6.0,
+      6.0,
+      6.0,
+      4.0
+    ],
+    "length_curve_std": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "reward_ma_mean": [
+      -0.3966666666666667,
+      -0.4866666666666667,
+      -0.10333333333333335,
+      -0.18666666666666665,
+      0.32666666666666666,
+      0.31666666666666665
+    ],
+    "reward_ma_std": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "success_ma_mean": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "success_ma_std": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "grad_norm_curve_mean": [
+      1.9981322217381714,
+      0.23530564676248383,
+      0.3188881548071445,
+      0.1560728235033478,
+      0.43487060841779307,
+      1.583538751312984
+    ],
+    "grad_norm_curve_std": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "final_avg_reward_mean": 0.32666666666666666,
+    "final_avg_reward_std": 0.0,
+    "final_success_rate_mean": 0.3333333333333333,
+    "final_success_rate_std": 0.0,
+    "reward_auc_mean": -0.11100000000000006,
+    "reward_auc_std": 0.0,
+    "success_auc_mean": 0.1,
+    "success_auc_std": 0.0,
+    "grad_norm_final_mean": 0.724827394411375,
+    "grad_norm_final_std": 0.0,
+    "convergence_rate": 0.0,
+    "convergence_episode_mean": null,
+    "convergence_episode_std": null,
+    "convergence_runtime_mean": 0.009950099920388311,
+    "convergence_runtime_std": 0.0,
+    "total_runtime_mean": 0.011083199991844594,
+    "total_runtime_std": 0.0,
+    "eval_reward_mean": 0.155,
+    "eval_reward_std": 0.0,
+    "eval_success_mean": 0.25,
+    "eval_success_std": 0.0,
+    "per_seed_metrics": [
+      {
+        "convergence_episode": null,
+        "convergence_runtime_sec": 0.009950099920388311,
+        "final_avg_reward": 0.32666666666666666,
+        "final_success_rate": 0.3333333333333333,
+        "reward_auc": -0.11100000000000006,
+        "success_auc": 0.1,
+        "grad_norm_final": 0.724827394411375,
+        "total_runtime_sec": 0.011083199991844594
+      }
+    ],
+    "final_avg_reward_count": 1,
+    "final_avg_reward_sem": 0.0,
+    "final_avg_reward_ci95": [
+      0.32666666666666666,
+      0.32666666666666666
+    ],
+    "final_success_rate_count": 1,
+    "final_success_rate_sem": 0.0,
+    "final_success_rate_ci95": [
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "reward_auc_count": 1,
+    "reward_auc_sem": 0.0,
+    "reward_auc_ci95": [
+      -0.11100000000000006,
+      -0.11100000000000006
+    ],
+    "success_auc_count": 1,
+    "success_auc_sem": 0.0,
+    "success_auc_ci95": [
+      0.1,
+      0.1
+    ],
+    "grad_norm_final_count": 1,
+    "grad_norm_final_sem": 0.0,
+    "grad_norm_final_ci95": [
+      0.724827394411375,
+      0.724827394411375
+    ],
+    "convergence_episode_count": 0,
+    "convergence_episode_sem": null,
+    "convergence_episode_ci95": null,
+    "convergence_runtime_count": 1,
+    "convergence_runtime_sem": 0.0,
+    "convergence_runtime_ci95": [
+      0.009950099920388311,
+      0.009950099920388311
+    ],
+    "total_runtime_sec_count": 1,
+    "total_runtime_sec_sem": 0.0,
+    "total_runtime_sec_ci95": [
+      0.011083199991844594,
+      0.011083199991844594
+    ],
+    "eval_reward_count": 1,
+    "eval_reward_sem": 0.0,
+    "eval_reward_ci95": [
+      0.155,
+      0.155
+    ],
+    "eval_success_count": 1,
+    "eval_success_sem": 0.0,
+    "eval_success_ci95": [
+      0.25,
+      0.25
+    ]
+  },
+  "random_baseline": {
+    "avg_reward_mean": -0.06150000000000003,
+    "avg_reward_std": 0.0,
+    "success_rate_mean": 0.115,
+    "success_rate_std": 0.0,
+    "avg_length_mean": 5.9,
+    "avg_length_std": 0.0
+  },
+  "mitigation_gain_over_noisy": {
+    "eval_success_delta": 0.0,
+    "reward_auc_delta": 0.0
+  },
+  "statistical_analysis": {
+    "ideal_vs_noisy": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.5,
+        "mean_b": 0.25,
+        "mean_difference": 0.25,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.25,
+          0.25
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.25
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.6575,
+        "mean_b": 0.43499999999999994,
+        "mean_difference": 0.22250000000000003,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.22250000000000003,
+          0.22250000000000003
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.22250000000000003
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.5820000000000001,
+        "mean_b": 0.5780000000000001,
+        "mean_difference": 0.0040000000000000036,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0040000000000000036,
+          0.0040000000000000036
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.0040000000000000036
+        ]
+      },
+      "final_success_rate": {
+        "metric": "final_success_rate",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.3333333333333333,
+        "mean_b": 0.3333333333333333,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      }
+    },
+    "mitigated_vs_noisy": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.25,
+        "mean_b": 0.25,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.43499999999999994,
+        "mean_b": 0.43499999999999994,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.5780000000000001,
+        "mean_b": 0.5780000000000001,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      },
+      "final_success_rate": {
+        "metric": "final_success_rate",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.3333333333333333,
+        "mean_b": 0.3333333333333333,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      }
+    },
+    "ideal_vs_tabular": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.5,
+        "mean_b": 0.25,
+        "mean_difference": 0.25,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.25,
+          0.25
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.25
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.6575,
+        "mean_b": 0.155,
+        "mean_difference": 0.5025,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.5025,
+          0.5025
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.5025
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.5820000000000001,
+        "mean_b": -0.11100000000000006,
+        "mean_difference": 0.6930000000000002,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.6930000000000002,
+          0.6930000000000002
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.6930000000000002
+        ]
+      },
+      "final_success_rate": {
+        "metric": "final_success_rate",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.3333333333333333,
+        "mean_b": 0.3333333333333333,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      }
+    },
+    "mitigated_vs_tabular": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.25,
+        "mean_b": 0.25,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.43499999999999994,
+        "mean_b": 0.155,
+        "mean_difference": 0.2799999999999999,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.2799999999999999,
+          0.2799999999999999
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.2799999999999999
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.5780000000000001,
+        "mean_b": -0.11100000000000006,
+        "mean_difference": 0.6890000000000002,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.6890000000000002,
+          0.6890000000000002
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.6890000000000002
+        ]
+      },
+      "final_success_rate": {
+        "metric": "final_success_rate",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.3333333333333333,
+        "mean_b": 0.3333333333333333,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      }
+    },
+    "noisy_vs_tabular": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.25,
+        "mean_b": 0.25,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.43499999999999994,
+        "mean_b": 0.155,
+        "mean_difference": 0.2799999999999999,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.2799999999999999,
+          0.2799999999999999
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.2799999999999999
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.5780000000000001,
+        "mean_b": -0.11100000000000006,
+        "mean_difference": 0.6890000000000002,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.6890000000000002,
+          0.6890000000000002
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 1,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.6890000000000002
+        ]
+      },
+      "final_success_rate": {
+        "metric": "final_success_rate",
+        "paired_seed_count": 1,
+        "shared_seeds": [
+          7
+        ],
+        "mean_a": 0.3333333333333333,
+        "mean_b": 0.3333333333333333,
+        "mean_difference": 0.0,
+        "difference_sem": 0.0,
+        "difference_ci95": [
+          0.0,
+          0.0
+        ],
+        "sign_flip_pvalue": 1.0,
+        "wins_a": 0,
+        "wins_b": 0,
+        "ties": 1,
+        "paired_differences": [
+          0.0
+        ]
+      }
+    }
+  },
+  "reproducibility": {
+    "timestamp_utc": "2026-03-26T20:54:27.320150+00:00",
+    "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "command": [
+      "05-reinforcement-learning-noise-mitigation\\src\\training_pipeline.py",
+      "--config",
+      "05-reinforcement-learning-noise-mitigation\\config\\smoke_test.yaml"
+    ],
+    "package_versions": {
+      "numpy": "2.3.5",
+      "matplotlib": "3.10.7",
+      "pandas": "2.3.3",
+      "PyYAML": "6.0.3",
+      "pydantic": "2.12.5",
+      "qiskit": "2.3.0",
+      "qiskit-aer": "0.17.2",
+      "qiskit-ibm-runtime": "0.45.1",
+      "qiskit-machine-learning": "0.9.0"
+    },
+    "seed_count": 1,
+    "per_seed_logs_present": {
+      "quantum": true,
+      "tabular_baseline": true,
+      "random_baseline": true
+    }
+  },
+  "total_runtime_sec": 17.263839000021107
+}

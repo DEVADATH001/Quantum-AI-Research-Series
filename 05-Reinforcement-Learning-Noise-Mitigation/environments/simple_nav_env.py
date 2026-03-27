@@ -1,116 +1,209 @@
-"""Author: DEVADATH H K
-
-Project: Quantum RL Noise Mitigation
-
-Simple 2-state navigation environment for Quantum RL."""
+"""Sequential navigation environments for quantum RL experiments."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
 
+import numpy as np
+
+
 @dataclass(slots=True)
 class EnvironmentConfig:
-    """Configuration for the navigation environment."""
+    """Configuration for the key-and-door navigation task."""
 
-    max_episode_steps: int = 20
-    correct_reward: float = 1.0
-    incorrect_penalty: float = -0.1
+    n_positions: int = 4
+    start_positions: tuple[int, ...] = (1, 2)
+    key_position: int = 0
+    goal_position: int = 3
+    max_episode_steps: int = 8
+    step_penalty: float = -0.02
+    wall_penalty: float = -0.05
+    locked_goal_penalty: float = -0.25
+    key_reward: float = 0.15
+    goal_reward: float = 1.0
+    progress_reward_scale: float = 0.05
+    slip_probability: float = 0.1
+    seed: int = 42
 
-class SimpleNavigationEnv:
+    def validate(self) -> None:
+        if self.n_positions < 3:
+            raise ValueError("n_positions must be at least 3.")
+        if not self.start_positions:
+            raise ValueError("start_positions must contain at least one position.")
+        if any(pos < 0 or pos >= self.n_positions for pos in self.start_positions):
+            raise ValueError("All start positions must lie inside the corridor.")
+        if not (0 <= self.key_position < self.n_positions):
+            raise ValueError("key_position must lie inside the corridor.")
+        if not (0 <= self.goal_position < self.n_positions):
+            raise ValueError("goal_position must lie inside the corridor.")
+        if self.key_position == self.goal_position:
+            raise ValueError("key_position and goal_position must differ.")
+        if not (0.0 <= self.slip_probability < 1.0):
+            raise ValueError("slip_probability must be in [0, 1).")
+
+
+class KeyDoorNavigationEnv:
     """
-    Minimal navigation MDP.
+    Sequential corridor task with delayed reward and phase-dependent control.
 
-    State space:
-    - 0: Searching
-    - 1: Target Found
-
-    Action space:
-    - 0: Move Left
-    - 1: Move Right
-
-    Dynamics:
-    - From state 0, action 1 transitions to state 1.
-    - Any other action keeps the agent in state 0.
-    - Episode terminates on reaching state 1 or max steps.
+    The agent starts without a key. The goal tile is locked until the key tile
+    has been visited, so the optimal policy must first move toward the key and
+    then reverse direction toward the goal.
     """
 
     ACTION_MEANINGS = {0: "Move Left", 1: "Move Right"}
-    STATE_MEANINGS = {0: "Searching", 1: "Target Found"}
-    OPTIMAL_ACTION = {0: 1}
 
     def __init__(self, config: EnvironmentConfig | None = None) -> None:
         self.config = config or EnvironmentConfig()
-        self._state: int = 0
-        self._step_count: int = 0
-        self._done: bool = False
+        self.config.validate()
+        self.rng = np.random.default_rng(self.config.seed)
+        self._position = self.config.start_positions[0]
+        self._has_key = False
+        self._step_count = 0
+        self._done = False
 
     @property
     def action_space(self) -> int:
-        """Return action-space cardinality."""
         return 2
 
     @property
     def observation_space(self) -> int:
-        """Return observation-space cardinality."""
-        return 2
+        return self.config.n_positions * 2
+
+    @property
+    def state(self) -> int:
+        return self.encode_state(position=self._position, has_key=self._has_key)
+
+    def encode_state(self, position: int, has_key: bool) -> int:
+        return int(position + (self.config.n_positions if has_key else 0))
+
+    def decode_state(self, state: int) -> tuple[int, bool]:
+        if state < 0 or state >= self.observation_space:
+            raise ValueError(f"State {state} is outside [0, {self.observation_space}).")
+        has_key = state >= self.config.n_positions
+        position = state % self.config.n_positions
+        return position, has_key
+
+    def state_label(self, state: int) -> str:
+        position, has_key = self.decode_state(state)
+        return f"pos={position},key={int(has_key)}"
+
+    def optimal_action(self, state: int) -> int:
+        position, has_key = self.decode_state(state)
+        target_position = self.config.goal_position if has_key else self.config.key_position
+        return 1 if position < target_position else 0
 
     def reset(self) -> int:
-        """Reset to the Searching state."""
-        self._state = 0
+        self._position = int(self.rng.choice(self.config.start_positions))
+        self._has_key = False
         self._step_count = 0
         self._done = False
-        return self._state
+        return self.state
 
     def step(self, action: int) -> tuple[int, float, bool, dict[str, Any]]:
-        """Apply action and return transition tuple."""
         if self._done:
-            return self._state, 0.0, True, {"warning": "Episode already terminated."}
+            return self.state, 0.0, True, {"warning": "Episode already terminated."}
         if action not in (0, 1):
             raise ValueError(f"Invalid action {action}. Valid actions are 0 and 1.")
 
         self._step_count += 1
-        optimal_action = self.OPTIMAL_ACTION[self._state]
-        action_correct = action == optimal_action
-        reward = self.config.correct_reward if action_correct else self.config.incorrect_penalty
+        slipped = bool(self.rng.random() < self.config.slip_probability)
+        executed_action = 1 - action if slipped else action
+        delta = -1 if executed_action == 0 else 1
 
-        if self._state == 0 and action == 1:
-            self._state = 1
+        reward = self.config.step_penalty
+        target_position = self.config.goal_position if self._has_key else self.config.key_position
+        prev_distance = abs(self._position - target_position)
+        proposed_position = int(np.clip(self._position + delta, 0, self.config.n_positions - 1))
+        hit_wall = proposed_position == self._position and (
+            (delta < 0 and self._position == 0)
+            or (delta > 0 and self._position == self.config.n_positions - 1)
+        )
 
-        reached_target = self._state == 1
+        if hit_wall:
+            reward += self.config.wall_penalty
+        elif proposed_position == self.config.goal_position and not self._has_key:
+            proposed_position = self._position
+            reward += self.config.locked_goal_penalty
+        else:
+            self._position = proposed_position
+
+        target_position = self.config.goal_position if self._has_key else self.config.key_position
+        new_distance = abs(self._position - target_position)
+        reward += self.config.progress_reward_scale * float(prev_distance - new_distance)
+
+        key_collected = False
+        if self._position == self.config.key_position and not self._has_key:
+            self._has_key = True
+            key_collected = True
+            reward += self.config.key_reward
+
+        reached_goal = self._position == self.config.goal_position and self._has_key
+        if reached_goal:
+            reward += self.config.goal_reward
+
         timed_out = self._step_count >= self.config.max_episode_steps
-        self._done = reached_target or timed_out
+        self._done = reached_goal or timed_out
 
         info = {
             "step": self._step_count,
-            "state_name": self.STATE_MEANINGS[self._state],
+            "state_name": self.state_label(self.state),
             "action_name": self.ACTION_MEANINGS[action],
-            "optimal_action": optimal_action,
-            "action_correct": action_correct,
-            "reached_target": reached_target,
+            "executed_action_name": self.ACTION_MEANINGS[executed_action],
+            "slipped": slipped,
+            "hit_wall": hit_wall,
+            "key_collected": key_collected,
+            "has_key": self._has_key,
+            "reached_goal": reached_goal,
             "timed_out": timed_out,
+            "optimal_action": self.optimal_action(self.state),
         }
-        return self._state, reward, self._done, info
+        return self.state, float(reward), self._done, info
 
     def render(self) -> str:
-        """Text render for quick debugging."""
-        return f"State={self._state} ({self.STATE_MEANINGS[self._state]}), step={self._step_count}"
+        corridor = []
+        for pos in range(self.config.n_positions):
+            token = "."
+            if pos == self.config.key_position:
+                token = "K"
+            if pos == self.config.goal_position:
+                token = "G"
+            if pos == self._position:
+                token = "A"
+            corridor.append(token)
+        return (
+            f"{''.join(corridor)} | step={self._step_count} | "
+            f"has_key={int(self._has_key)}"
+        )
 
-class SimpleNavigationGymEnv:
-    """Thin Gymnasium-style wrapper."""
+    def all_state_labels(self) -> list[str]:
+        return [self.state_label(state) for state in range(self.observation_space)]
+
+
+class SimpleNavigationEnv(KeyDoorNavigationEnv):
+    """Backward-compatible alias for older imports."""
+
+
+class KeyDoorNavigationGymEnv:
+    """Thin Gymnasium-style wrapper around the sequential task."""
 
     def __init__(self, config: EnvironmentConfig | None = None) -> None:
-        self.env = SimpleNavigationEnv(config=config)
+        self.env = KeyDoorNavigationEnv(config=config)
 
     def reset(
-        self, seed: int | None = None, options: dict[str, Any] | None = None
+        self,
+        seed: int | None = None,
+        options: dict[str, Any] | None = None,
     ) -> tuple[int, dict[str, Any]]:
-        del seed, options
+        del options
+        if seed is not None:
+            self.env.rng = np.random.default_rng(seed)
         return self.env.reset(), {}
 
     def step(self, action: int) -> tuple[int, float, bool, bool, dict[str, Any]]:
         next_state, reward, done, info = self.env.step(action)
-        terminated = done and info["reached_target"]
+        terminated = done and info["reached_goal"]
         truncated = done and info["timed_out"]
         return next_state, reward, terminated, truncated, info
 
@@ -119,4 +212,3 @@ class SimpleNavigationGymEnv:
 
     def close(self) -> None:
         return None
-

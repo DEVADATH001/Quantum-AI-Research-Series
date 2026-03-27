@@ -1,148 +1,176 @@
-"""Author: DEVADATH H K
-
-Project: Quantum RL Noise Mitigation
-
-Parameterized quantum policy network for REINFORCE."""
+"""Parameterized quantum policy network with a measurement-defined action register."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Sequence
+from math import ceil, log2
+from typing import Sequence, TYPE_CHECKING
 
 import numpy as np
 from qiskit import QuantumCircuit
-from qiskit.circuit import ParameterVector
+from qiskit.circuit import Parameter, ParameterVector
 from qiskit.circuit.library import EfficientSU2, RealAmplitudes
 
-from utils.qiskit_helpers import build_state_angles, make_z_observables, softmax
+from utils.qiskit_helpers import build_state_angles
 
 if TYPE_CHECKING:
-    from qiskit.quantum_info import SparsePauliOp
-
     from src.runtime_executor import QuantumRuntimeExecutor
+
 
 @dataclass(slots=True)
 class PolicyConfig:
     """Configuration for the quantum policy network."""
 
-    num_qubits: int = 2
-    reps: int = 2
-    entanglement: str = "full"
+    num_qubits: int = 3
+    reuploads: int = 1
     ansatz: str = "RealAmplitudes"
-    temperature: float = 1.0
+    ansatz_reps: int = 1
+    entanglement: str = "linear"
+    state_encoding: str = "hybrid"
     seed: int = 42
 
+
 class QuantumPolicyNetwork:
-    """Quantum policy with angle embedding and variational ansatz using Data Re-uploading."""
+    """Measurement-native variational quantum policy for discrete-action control."""
 
-    def __init__(self, n_actions: int, config: PolicyConfig | None = None) -> None:
+    def __init__(
+        self,
+        n_actions: int,
+        n_observations: int,
+        config: PolicyConfig | None = None,
+    ) -> None:
         self.config = config or PolicyConfig()
-        self.n_actions = n_actions
-        if self.config.num_qubits < self.n_actions:
+        self.n_actions = int(n_actions)
+        self.n_observations = int(n_observations)
+
+        if self.n_actions < 2:
+            raise ValueError("The measurement-defined policy requires at least two actions.")
+        if self.n_actions & (self.n_actions - 1):
             raise ValueError(
-                f"num_qubits ({self.config.num_qubits}) must be >= n_actions ({self.n_actions})."
+                "This measurement-native policy currently requires the number of actions to be a power of two."
             )
+
+        self.action_register_size = int(round(log2(self.n_actions)))
+        if self.config.num_qubits < self.action_register_size:
+            raise ValueError(
+                f"num_qubits ({self.config.num_qubits}) must be >= log2(n_actions) "
+                f"({self.action_register_size})."
+            )
+
+        min_qubits = max(1, ceil(log2(max(2, self.n_observations))))
+        if self.config.num_qubits < min_qubits:
+            raise ValueError(
+                f"num_qubits ({self.config.num_qubits}) must be >= ceil(log2(n_observations)) "
+                f"({min_qubits}) to encode {self.n_observations} states."
+            )
+        if self.config.reuploads < 1:
+            raise ValueError("reuploads must be >= 1.")
+        if self.config.ansatz_reps < 1:
+            raise ValueError("ansatz_reps must be >= 1.")
+
         self.rng = np.random.default_rng(self.config.seed)
-        
-        # Build Data Re-uploading Circuit
-        self.state_params = ParameterVector("state", self.config.num_qubits * self.config.reps)
-        self.ansatz_params = ParameterVector("theta", self._get_ansatz_param_count())
-        
-        self._parameterized_circuit = QuantumCircuit(self.config.num_qubits)
-        
-        param_idx = 0
-        ansatz_param_idx = 0
-        
-        # Interleave state embedding with variational layers (Data Re-uploading)
-        for r in range(self.config.reps):
-            # State embedding layer
-            for q in range(self.config.num_qubits):
-                self._parameterized_circuit.rx(self.state_params[r * self.config.num_qubits + q], q)
-                self._parameterized_circuit.ry(self.state_params[r * self.config.num_qubits + q], q)
-            
-            # Variational layer (simplified ansatz layer)
-            # Use RY and CX for a standard heuristic ansatz
-            for q in range(self.config.num_qubits):
-                self._parameterized_circuit.ry(self.ansatz_params[ansatz_param_idx], q)
-                ansatz_param_idx += 1
-            
-            if self.config.num_qubits > 1:
-                for q in range(self.config.num_qubits):
-                    self._parameterized_circuit.cx(q, (q + 1) % self.config.num_qubits)
+        self.action_qubits = tuple(range(self.action_register_size))
+        self.latent_qubits = tuple(range(self.action_register_size, self.config.num_qubits))
 
-        self.parameter_count = ansatz_param_idx
-        self.observables: list[SparsePauliOp] = make_z_observables(
-            num_qubits=self.config.num_qubits,
-            num_actions=self.n_actions,
+        self.state_params = ParameterVector(
+            "state",
+            self.config.num_qubits * self.config.reuploads,
         )
+        self._parameterized_circuit = QuantumCircuit(self.config.num_qubits)
 
-        # Store parameter order for binding
+        self.ansatz_params: list[Parameter] = []
+        block_parameter_count = 0
+        for block_idx in range(self.config.reuploads):
+            state_offset = block_idx * self.config.num_qubits
+            for qubit_idx in range(self.config.num_qubits):
+                state_param = self.state_params[state_offset + qubit_idx]
+                # Hybrid angle embedding: a Y rotation carries the main feature,
+                # while a tied Z phase provides a second, state-dependent channel.
+                self._parameterized_circuit.ry(state_param, qubit_idx)
+                self._parameterized_circuit.rz(0.5 * state_param, qubit_idx)
+
+            ansatz_template = self._build_ansatz_template()
+            template_params = list(ansatz_template.parameters)
+            block_parameter_count = len(template_params)
+            block_params = ParameterVector(f"theta_block_{block_idx}", block_parameter_count)
+            self.ansatz_params.extend(block_params)
+            reassigned = ansatz_template.assign_parameters(
+                {template_param: block_params[i] for i, template_param in enumerate(template_params)},
+                inplace=False,
+            )
+            self._parameterized_circuit.compose(reassigned, inplace=True)
+
+        self.parameter_count = len(self.ansatz_params)
+        self.parameter_count_per_block = block_parameter_count
+
         self._all_parameters = list(self._parameterized_circuit.parameters)
-        self._state_indices = [self._all_parameters.index(p) for p in self.state_params]
-        self._ansatz_indices = [self._all_parameters.index(p) for p in self.ansatz_params]
+        self._state_indices = [self._all_parameters.index(param) for param in self.state_params]
+        self._ansatz_indices = [self._all_parameters.index(param) for param in self.ansatz_params]
 
-    def _get_ansatz_param_count(self) -> int:
-        # Each rep has num_qubits RY gates
-        return self.config.num_qubits * self.config.reps
+    def _build_ansatz_template(self) -> QuantumCircuit:
+        ansatz_name = self.config.ansatz.lower()
+        if ansatz_name == "realamplitudes":
+            return RealAmplitudes(
+                num_qubits=self.config.num_qubits,
+                reps=self.config.ansatz_reps,
+                entanglement=self.config.entanglement,
+                flatten=True,
+            )
+        if ansatz_name == "efficientsu2":
+            return EfficientSU2(
+                num_qubits=self.config.num_qubits,
+                reps=self.config.ansatz_reps,
+                entanglement=self.config.entanglement,
+                flatten=True,
+            )
+        raise ValueError(f"Unsupported ansatz: {self.config.ansatz}")
 
     def initial_parameters(self, scale: float = 0.1) -> np.ndarray:
-        """Return deterministic random initialization for policy parameters."""
         return self.rng.normal(loc=0.0, scale=scale, size=self.parameter_count)
 
+    def _state_embedding_angles(self, state: int) -> np.ndarray:
+        return build_state_angles(
+            state=state,
+            num_qubits=self.config.num_qubits,
+            n_states=self.n_observations,
+            encoding=self.config.state_encoding,
+        )
+
     def get_combined_parameters(self, state: int, parameters: np.ndarray) -> np.ndarray:
-        """Get flattened parameter array for parameterized circuit."""
-        angles = build_state_angles(state=state, num_qubits=self.config.num_qubits)
-        # Repeat angles for each re-uploading layer
-        repeated_angles = np.tile(angles, self.config.reps)
-        
+        angles = self._state_embedding_angles(state=state)
         combined = np.zeros(len(self._all_parameters), dtype=float)
-        combined[self._state_indices] = repeated_angles
+        combined[self._state_indices] = np.tile(angles, self.config.reuploads)
         combined[self._ansatz_indices] = parameters
         return combined
 
-    def get_batched_parameters(self, states: Sequence[int], parameters_batch: np.ndarray) -> np.ndarray:
-        """Get 2D array of parameters for a batch of states and parameters."""
+    def get_batched_parameters(
+        self,
+        states: Sequence[int],
+        parameters_batch: np.ndarray,
+    ) -> np.ndarray:
         if parameters_batch.ndim == 1:
             parameters_batch = np.tile(parameters_batch, (len(states), 1))
-        
-        batch_size = len(states)
-        combined = np.zeros((batch_size, len(self._all_parameters)), dtype=float)
-        for i, state in enumerate(states):
-            angles = build_state_angles(state=state, num_qubits=self.config.num_qubits)
-            repeated_angles = np.tile(angles, self.config.reps)
-            combined[i, self._state_indices] = repeated_angles
+
+        combined = np.zeros((len(states), len(self._all_parameters)), dtype=float)
+        for row_idx, state in enumerate(states):
+            angles = self._state_embedding_angles(state=state)
+            combined[row_idx, self._state_indices] = np.tile(angles, self.config.reuploads)
         combined[:, self._ansatz_indices] = parameters_batch
         return combined
 
-    def expectation_logits(
-        self,
-        state: int,
-        parameters: np.ndarray,
-        executor: QuantumRuntimeExecutor,
-    ) -> np.ndarray:
-        """Evaluate Pauli-Z expectation values used as action logits."""
-        combined_params = self.get_combined_parameters(state, parameters)
-        expectations = executor.estimate_expectations(
-            circuit=self._parameterized_circuit,
-            observables=self.observables,
-            parameter_values=combined_params,
-        )
-        return np.asarray(expectations, dtype=float)
-
-    def batched_expectation_logits(
+    def batched_action_probabilities(
         self,
         states: Sequence[int],
         parameters_batch: np.ndarray,
         executor: QuantumRuntimeExecutor,
     ) -> np.ndarray:
-        """Batch evaluate Pauli-Z expectation values."""
         combined_params = self.get_batched_parameters(states, parameters_batch)
-        expectations = executor.estimate_expectations(
+        probabilities = executor.estimate_action_probabilities(
             circuit=self._parameterized_circuit,
-            observables=self.observables,
+            action_qubits=self.action_qubits,
             parameter_values=combined_params,
         )
-        return np.asarray(expectations, dtype=float)
+        return np.asarray(probabilities, dtype=float)
 
     def action_probabilities(
         self,
@@ -150,9 +178,13 @@ class QuantumPolicyNetwork:
         parameters: np.ndarray,
         executor: QuantumRuntimeExecutor,
     ) -> np.ndarray:
-        """Compute policy distribution by applying softmax over expectation logits."""
-        logits = self.expectation_logits(state=state, parameters=parameters, executor=executor)
-        return softmax(logits, temperature=self.config.temperature)
+        combined_params = self.get_combined_parameters(state, parameters)
+        probabilities = executor.estimate_action_probabilities(
+            circuit=self._parameterized_circuit,
+            action_qubits=self.action_qubits,
+            parameter_values=combined_params,
+        )
+        return np.asarray(probabilities, dtype=float)
 
     def log_prob(
         self,
@@ -161,7 +193,6 @@ class QuantumPolicyNetwork:
         parameters: np.ndarray,
         executor: QuantumRuntimeExecutor,
     ) -> float:
-        """Log probability of a selected action in a given state."""
         probs = self.action_probabilities(
             state=state,
             parameters=parameters,
@@ -170,5 +201,4 @@ class QuantumPolicyNetwork:
         return float(np.log(np.clip(probs[action], 1e-9, 1.0)))
 
     def sample_action(self, probs: np.ndarray) -> int:
-        """Sample an action from probability distribution."""
         return int(self.rng.choice(self.n_actions, p=probs))

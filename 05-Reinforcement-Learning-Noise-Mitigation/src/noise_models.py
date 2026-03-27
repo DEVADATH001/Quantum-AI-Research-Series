@@ -1,8 +1,4 @@
-"""Author: DEVADATH H K
-
-Project: Quantum RL Noise Mitigation
-
-Noise model utilities for ideal/noisy/mitigated execution modes."""
+"""Noise-model utilities for ideal, noisy, and mitigated execution modes."""
 
 from __future__ import annotations
 
@@ -11,13 +7,19 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
-from qiskit_aer.noise import NoiseModel, ReadoutError, depolarizing_error, thermal_relaxation_error
+from qiskit_aer.noise import (
+    NoiseModel,
+    ReadoutError,
+    depolarizing_error,
+    thermal_relaxation_error,
+)
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass(slots=True)
 class NoiseConfig:
-    """Noise configuration with IBM-backend defaults."""
+    """Compact fallback noise configuration."""
 
     backend_name: str = "ibm_osaka"
     gate_error: float = 0.001
@@ -26,7 +28,8 @@ class NoiseConfig:
     t2_ns: float = 50_000.0
     gate_time_ns: float = 100.0
 
-def _resolve_fake_backend(backend_name: str) -> Any | None:
+
+def resolve_fake_backend(backend_name: str) -> Any | None:
     backend_name = backend_name.lower().replace("-", "_")
     try:
         from qiskit_ibm_runtime.fake_provider import FakeOsaka
@@ -42,8 +45,8 @@ def _resolve_fake_backend(backend_name: str) -> Any | None:
         return None
     return backend_cls()
 
+
 def _derive_noise_config_from_backend(fake_backend: Any, backend_name: str) -> NoiseConfig:
-    """Build compact noise parameters from fake-backend calibration data."""
     properties = fake_backend.properties()
 
     one_qubit_errors: list[float] = []
@@ -76,7 +79,7 @@ def _derive_noise_config_from_backend(fake_backend: Any, backend_name: str) -> N
     for qubit_props in properties.qubits:
         values = {item.name: float(item.value) for item in qubit_props}
         t1_ns.append(values.get("T1", 100.0) * 1000.0)  # us -> ns
-        t2_ns.append(values.get("T2", 80.0) * 1000.0)   # us -> ns
+        t2_ns.append(values.get("T2", 80.0) * 1000.0)  # us -> ns
         readout_errors.append(values.get("readout_error", 0.02))
 
     gate_error = float(np.mean(one_qubit_errors)) if one_qubit_errors else 0.001
@@ -94,13 +97,19 @@ def _derive_noise_config_from_backend(fake_backend: Any, backend_name: str) -> N
         else 100.0,
     )
 
-def load_ibm_noise_model(backend_name: str = "ibm_osaka", compact: bool = True) -> NoiseModel:
-    """
-    Load realistic noise model from IBM fake backend.
 
-    Falls back to a custom physically motivated model if the backend is unavailable.
+def load_ibm_noise_model(
+    backend_name: str = "ibm_osaka",
+    compact: bool = False,
+) -> NoiseModel:
     """
-    fake_backend = _resolve_fake_backend(backend_name)
+    Load a backend-derived noise model.
+
+    When possible, the full fake-backend model is used. Compact mode is kept as
+    a fallback for quick experiments or environments without fake-backend data.
+    """
+
+    fake_backend = resolve_fake_backend(backend_name)
     if fake_backend is not None:
         if compact:
             compact_config = _derive_noise_config_from_backend(fake_backend, backend_name)
@@ -112,25 +121,24 @@ def load_ibm_noise_model(backend_name: str = "ibm_osaka", compact: bool = True) 
                 compact_config.readout_error,
             )
             return build_custom_noise_model(compact_config)
-        logger.info("Loaded full fake backend noise model for %s", backend_name)
+        logger.info("Loaded full fake-backend noise model for %s", backend_name)
         return NoiseModel.from_backend(fake_backend)
+
     logger.warning(
-        "Could not resolve fake backend '%s'. Falling back to custom noise model.",
+        "Could not resolve fake backend '%s'. Falling back to a compact custom model.",
         backend_name,
     )
     return build_custom_noise_model(NoiseConfig(backend_name=backend_name))
 
+
 def build_custom_noise_model(config: NoiseConfig) -> NoiseModel:
-    """Build a lightweight custom noise model for research experimentation."""
     noise_model = NoiseModel()
 
-    # Depolarizing gate noise.
     one_qubit_error = depolarizing_error(config.gate_error, 1)
     two_qubit_error = depolarizing_error(min(5.0 * config.gate_error, 0.2), 2)
     noise_model.add_all_qubit_quantum_error(one_qubit_error, ["rx", "ry", "rz", "x", "sx"])
     noise_model.add_all_qubit_quantum_error(two_qubit_error, ["cx", "cz"])
 
-    # Relaxation channel approximation.
     tr_error_1 = thermal_relaxation_error(
         t1=config.t1_ns,
         t2=min(config.t2_ns, 2 * config.t1_ns),
@@ -138,28 +146,90 @@ def build_custom_noise_model(config: NoiseConfig) -> NoiseModel:
     )
     noise_model.add_all_qubit_quantum_error(tr_error_1, ["u", "u1", "u2", "u3"])
 
-    # Asymmetric readout error.
-    # T1 relaxation implies P(0|1) > P(1|0).
     p10 = max(0.0, min(config.readout_error * 0.5, 0.49))  # P(meas=1 | true=0)
     p01 = max(0.0, min(config.readout_error * 1.5, 0.49))  # P(meas=0 | true=1)
     readout = ReadoutError([[1.0 - p10, p10], [p01, 1.0 - p01]])
     noise_model.add_all_qubit_readout_error(readout)
     return noise_model
 
-def infer_readout_error_probability(noise_model: NoiseModel | None) -> float:
-    """Estimate average symmetric readout error for TREX-style correction."""
+
+def infer_average_readout_error_rates(noise_model: NoiseModel | None) -> tuple[float, float]:
+    """Estimate average asymmetric readout rates (p01, p10) from a noise model."""
+
     if noise_model is None:
-        return 0.0
-    probs: list[float] = []
+        return 0.0, 0.0
+
+    p01_values: list[float] = []
+    p10_values: list[float] = []
     serialized = noise_model.to_dict()
     for err in serialized.get("errors", []):
         if err.get("type") != "roerror":
             continue
         matrix = err.get("probabilities", [])
         if len(matrix) == 2 and len(matrix[0]) == 2:
-            p01 = float(matrix[0][1])
-            p10 = float(matrix[1][0])
-            probs.append(0.5 * (p01 + p10))
-    if not probs:
-        return 0.0
-    return float(sum(probs) / len(probs))
+            p10_values.append(float(matrix[0][1]))
+            p01_values.append(float(matrix[1][0]))
+
+    if not p01_values or not p10_values:
+        return 0.0, 0.0
+    return float(np.mean(p01_values)), float(np.mean(p10_values))
+
+
+def infer_readout_error_rates_by_qubit(
+    noise_model: NoiseModel | None,
+) -> dict[int, tuple[float, float]]:
+    """
+    Estimate per-qubit asymmetric readout rates from a noise model.
+
+    Returns a dictionary mapping qubit index -> (p01, p10), where
+    p01 = P(meas=0 | true=1) and p10 = P(meas=1 | true=0).
+    """
+
+    if noise_model is None:
+        return {}
+
+    serialized = noise_model.to_dict()
+    per_qubit: dict[int, list[tuple[float, float]]] = {}
+    fallback_rates: list[tuple[float, float]] = []
+
+    for err in serialized.get("errors", []):
+        if err.get("type") != "roerror":
+            continue
+        matrix = err.get("probabilities", [])
+        if len(matrix) != 2 or len(matrix[0]) != 2:
+            continue
+
+        p10 = float(matrix[0][1])
+        p01 = float(matrix[1][0])
+        gate_qubits = err.get("gate_qubits", [])
+        if gate_qubits:
+            for qubit_group in gate_qubits:
+                if len(qubit_group) != 1:
+                    continue
+                qubit_idx = int(qubit_group[0])
+                per_qubit.setdefault(qubit_idx, []).append((p01, p10))
+        else:
+            fallback_rates.append((p01, p10))
+
+    if per_qubit:
+        return {
+            qubit_idx: (
+                float(np.mean([rates[0] for rates in samples])),
+                float(np.mean([rates[1] for rates in samples])),
+            )
+            for qubit_idx, samples in per_qubit.items()
+        }
+
+    if fallback_rates:
+        avg_p01 = float(np.mean([rates[0] for rates in fallback_rates]))
+        avg_p10 = float(np.mean([rates[1] for rates in fallback_rates]))
+        return {-1: (avg_p01, avg_p10)}
+
+    return {}
+
+
+def infer_readout_error_probability(noise_model: NoiseModel | None) -> float:
+    """Backward-compatible average symmetric readout error estimate."""
+
+    p01, p10 = infer_average_readout_error_rates(noise_model)
+    return 0.5 * (p01 + p10)
