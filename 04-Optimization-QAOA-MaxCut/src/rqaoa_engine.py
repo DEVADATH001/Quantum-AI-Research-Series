@@ -1,76 +1,52 @@
-"""Author: DEVADATH H K
+"""Recursive QAOA utilities for Max-Cut benchmarks."""
 
-Recursive QAOA (RQAOA) Engine Module
-
-Implements Recursive QAOA for improved scalability on larger graphs.
-
-RQAOA Concept:
-1. Run standard QAOA on the full problem
-2. Analyze expectation values to detect strong correlations
-3. Fix correlated variables based on relationship (e.g., Z_i ≈ Z_j)
-4. Reduce problem size by eliminating variables
-5. Solve smaller problem recursively
-6. Reconstruct full solution from reduced solution
-
-Benefits:
-- Reduces effective search space
-- Exploits problem structure
-- Improves scalability for larger graphs
-- Can achieve better approximation ratios"""
-
-import logging
-from typing import Dict, List, Optional, Tuple, Callable
-import numpy as np
-import networkx as nx
-from dataclasses import dataclass
 import copy
+import logging
+import time
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, List, Optional, Tuple
+
+import networkx as nx
+import numpy as np
+
+from .classical_solver import ClassicalSolver
+from .hamiltonian_builder import HamiltonianBuilder
+from .qaoa_circuit import QAOACircuitBuilder
+from .qaoa_optimizer import QAOAOptimizer
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class RQAOAResult:
-    """
-    Container for RQAOA results.
-    """
-    # Final solution bitstring
+    """Container for RQAOA results."""
+
     solution_bitstring: str
-    
-    # Cut value
     cut_value: float
-    
-    # Optimal value for comparison
     optimal_value: Optional[float] = None
-    
-    # Approximation ratio
     approximation_ratio: Optional[float] = None
-    
-    # Number of recursion levels
     n_levels: int = 0
-    
-    # Original problem size
     original_size: int = 0
-    
-    # Final reduced problem size
     reduced_size: int = 0
-    
-    # Eliminated variables (correlations found)
-    eliminated_vars: List[Dict] = None
-    
-    # Runtime
+    reduction_constant: float = 0.0
+    eliminated_vars: Optional[List[Dict[str, Any]]] = None
     runtime: float = 0.0
-    
-    def __post_init__(self):
+
+    def __post_init__(self) -> None:
         if self.eliminated_vars is None:
             self.eliminated_vars = []
 
+
 class RQAOAEngine:
     """
-    Recursive QAOA implementation for Max-Cut.
-    
-    Recursively reduces problem size by exploiting correlations
-    between variables detected in QAOA execution.
+    Recursive QAOA implementation for Max-Cut-style graph objectives.
+
+    This implementation favors correctness and reproducibility over aggressive
+    recursion. Opposite-spin eliminations accumulate an explicit constant term
+    so that the reduced objective remains mathematically equivalent to the
+    constrained original problem.
     """
-    
+
     def __init__(
         self,
         p: int = 1,
@@ -78,21 +54,10 @@ class RQAOAEngine:
         correlation_threshold: float = 0.8,
         min_problem_size: int = 4,
         max_depth: int = 5,
-        optimizer: Optional = None,
-        qaoa_evaluator: Optional[Callable] = None
+        optimizer: Optional[QAOAOptimizer] = None,
+        qaoa_evaluator: Optional[Callable[[nx.Graph], np.ndarray]] = None,
+        force_fallback_elimination: bool = True,
     ) -> None:
-        """
-        Initialize RQAOA engine.
-        
-        Args:
-            p: Number of QAOA layers
-            n_eliminate_per_step: Variables to eliminate per iteration
-            correlation_threshold: Threshold for detecting correlations
-            min_problem_size: Minimum problem size before stopping
-            max_depth: Maximum recursion depth
-            optimizer: QAOA optimizer instance
-            qaoa_evaluator: Function to evaluate QAOA expectation values
-        """
         self.p = p
         self.n_eliminate = n_eliminate_per_step
         self.correlation_threshold = correlation_threshold
@@ -100,445 +65,441 @@ class RQAOAEngine:
         self.max_depth = max_depth
         self.optimizer = optimizer
         self.qaoa_evaluator = qaoa_evaluator
-        
+        self.force_fallback_elimination = force_fallback_elimination
+
         logger.info(
-            f"RQAOA initialized: p={p}, eliminate={self.n_eliminate}, "
-            f"threshold={correlation_threshold}"
+            "RQAOA initialized: p=%s, eliminate=%s, threshold=%s",
+            self.p,
+            self.n_eliminate,
+            self.correlation_threshold,
         )
-    
+
     def solve(
         self,
         graph: nx.Graph,
-        hamiltonian: Optional = None,
-        optimal_value: Optional[float] = None
+        hamiltonian: Optional[Any] = None,
+        optimal_value: Optional[float] = None,
     ) -> RQAOAResult:
-        """
-        Solve Max-Cut using Recursive QAOA.
-        
-        Args:
-            graph: NetworkX graph (problem instance)
-            hamiltonian: Cost Hamiltonian (optional)
-            optimal_value: Known optimal value for comparison
-            
-        Returns:
-            RQAOAResult with solution
-        """
-        import time
+        """Solve Max-Cut using recursive variable elimination."""
+        del hamiltonian
         start_time = time.time()
-        
-        original_size = graph.number_of_nodes()
-        logger.info(f"Starting RQAOA on graph with {original_size} nodes")
-        
-        # Store eliminated variable relationships
-        eliminated_vars = []
-        
-        # Working graph (will be reduced)
+
+        original_nodes = list(sorted(graph.nodes()))
         working_graph = copy.deepcopy(graph)
-        current_hamiltonian = hamiltonian
-        
+        working_graph.graph["constant_offset"] = float(
+            working_graph.graph.get("constant_offset", 0.0)
+        )
+        elimination_history: List[Dict[str, Any]] = []
         n_levels = 0
-        
-        # Recursion loop
-        while (working_graph.number_of_nodes() > self.min_problem_size and 
-               n_levels < self.max_depth):
-            
+
+        while (
+            working_graph.number_of_nodes() > self.min_problem_size
+            and n_levels < self.max_depth
+        ):
             logger.info(
-                f"Level {n_levels}: solving reduced problem with "
-                f"{working_graph.number_of_nodes()} nodes"
+                "RQAOA level %s: solving graph with %s active nodes",
+                n_levels,
+                working_graph.number_of_nodes(),
             )
-            
-            # Step 1: Run QAOA on current problem
             qaoa_result = self._run_qaoa_on_subgraph(working_graph)
-            
-            # Step 2: Analyze correlations
-            correlations = self._analyze_correlations(
-                qaoa_result,
-                working_graph
-            )
-            
-            if not correlations:
-                logger.info("No strong correlations found, stopping recursion")
+            correlations = self._analyze_correlations(qaoa_result)
+            selected = self._select_eliminations(correlations)
+
+            if not selected:
+                logger.info("No eliminations selected; solving the current instance directly.")
                 break
-            
-            # Step 3: Eliminate variables based on correlations
-            to_eliminate = correlations[:self.n_eliminate]
-            
-            for corr in to_eliminate:
-                eliminated_vars.append({
-                    'level': n_levels,
-                    'var1': corr['var1'],
-                    'var2': corr['var2'],
-                    'correlation': corr['correlation'],
-                    'relationship': corr.get('relationship', 'same')
-                })
-            
-            # Step 4: Reduce problem
-            working_graph = self._reduce_problem(
-                working_graph,
-                to_eliminate
-            )
-            
+
+            elimination_history.extend(selected)
+            working_graph = self._reduce_problem(working_graph, selected)
             n_levels += 1
-        
-        final_size = working_graph.number_of_nodes()
-        logger.info(
-            f"Recursion complete: reduced from {original_size} to "
-            f"{final_size} nodes in {n_levels} levels"
-        )
-        
-        # Step 5: Solve final reduced problem (could be exact or QAOA)
-        final_result = self._solve_final_problem(working_graph)
-        
-        # Step 6: Reconstruct full solution
+
+        final_solution = self._solve_reduced_problem(working_graph)
         full_solution = self._reconstruct_solution(
-            final_result,
-            eliminated_vars,
-            original_size
+            final_solution,
+            elimination_history,
+            original_nodes,
         )
-        
-        # Calculate metrics
-        cut_value = self._calculate_cut(graph, full_solution)
-        
+        cut_value = self._calculate_cut(graph, full_solution, original_nodes)
+
         approximation_ratio = None
         if optimal_value is not None and optimal_value > 0:
             approximation_ratio = cut_value / optimal_value
-        
-        runtime = time.time() - start_time
-        
+
         return RQAOAResult(
             solution_bitstring=full_solution,
             cut_value=cut_value,
             optimal_value=optimal_value,
             approximation_ratio=approximation_ratio,
             n_levels=n_levels,
-            original_size=original_size,
-            reduced_size=final_size,
-            eliminated_vars=eliminated_vars,
-            runtime=runtime
+            original_size=len(original_nodes),
+            reduced_size=working_graph.number_of_nodes(),
+            reduction_constant=float(working_graph.graph.get("constant_offset", 0.0)),
+            eliminated_vars=elimination_history,
+            runtime=time.time() - start_time,
         )
-    
-    def _run_qaoa_on_subgraph(
-        self,
-        graph: nx.Graph
-    ) -> Dict:
-        """
-        Run QAOA on a subgraph to get expectation values.
-        
-        Args:
-            graph: Current problem graph
-            
-        Returns:
-            Dictionary with QAOA results and measurements
-        """
-        n_nodes = graph.number_of_nodes()
-        
+
+    def _run_qaoa_on_subgraph(self, graph: nx.Graph) -> Dict[str, Any]:
+        """Optimize QAOA on the current working graph and estimate correlations."""
+        relabeled_graph, node_order = self._prepare_contiguous_graph(graph)
+
         if self.qaoa_evaluator is not None:
-            correlations = self.qaoa_evaluator(graph)
-        else:
-            correlations = self._compute_correlation_matrix(graph)
-            
+            correlation_matrix = self.qaoa_evaluator(relabeled_graph)
+            return {
+                "correlations": correlation_matrix,
+                "node_order": node_order,
+                "solution_bitstring": None,
+                "cut_value": None,
+            }
+
+        builder = HamiltonianBuilder()
+        hamiltonian, offset = builder.build_maxcut_hamiltonian(relabeled_graph)
+        total_offset = float(offset) + float(relabeled_graph.graph.get("constant_offset", 0.0))
+        circuit_builder = QAOACircuitBuilder(
+            n_qubits=relabeled_graph.number_of_nodes(),
+            p=self.p,
+        )
+
+        def objective_function(params: np.ndarray) -> float:
+            from qiskit.quantum_info import Statevector
+
+            circuit = circuit_builder.build_qaoa_circuit_multilayer(
+                relabeled_graph,
+                gammas=params[0::2].tolist(),
+                betas=params[1::2].tolist(),
+            )
+            expectation = float(
+                np.real(Statevector.from_instruction(circuit).expectation_value(hamiltonian))
+            )
+            return -(expectation + total_offset)
+
+        optimizer = self.optimizer or QAOAOptimizer(
+            p=self.p,
+            optimizer_type="COBYLA",
+            maxiter=120,
+            n_initial_points=2,
+            seed=42,
+        )
+        opt_result = optimizer.optimize(
+            objective_function=objective_function,
+            n_qubits=relabeled_graph.number_of_nodes(),
+            graph=relabeled_graph,
+        )
+        correlation_matrix = self._compute_pair_correlations(
+            relabeled_graph,
+            opt_result.optimal_params,
+        )
+
+        reduced_cut_value = None
+        if opt_result.cut_value is not None:
+            reduced_cut_value = float(opt_result.cut_value) + float(
+                relabeled_graph.graph.get("constant_offset", 0.0)
+            )
+
         return {
-            'n_nodes': n_nodes,
-            'graph': graph,
-            'correlations': correlations
+            "correlations": correlation_matrix,
+            "node_order": node_order,
+            "solution_bitstring": opt_result.solution_bitstring,
+            "cut_value": reduced_cut_value,
+            "optimal_params": opt_result.optimal_params,
         }
-    
-    def _compute_correlation_matrix(
-        self,
-        graph: nx.Graph
-    ) -> np.ndarray:
-        """
-        Compute real correlation matrix using exact simulation of QAOA.
-        Evaluates <Z_i Z_j> for the optimized QAOA state.
-        
-        Args:
-            graph: NetworkX graph
-            
-        Returns:
-            Correlation matrix
-        """
-        from qiskit.quantum_info import Statevector, SparsePauliOp
-        from qiskit.circuit.library import QAOAAnsatz
-        from scipy.optimize import minimize
-        
-        n = graph.number_of_nodes()
-        correlations = np.zeros((n, n))
-        np.fill_diagonal(correlations, 1.0)
-        
-        edges = list(graph.edges())
-        if not edges:
-            return correlations
-            
-        # Build Hamiltonian for the subgraph
-        pauli_list = []
-        for i, j in edges:
-            pauli_str = ['I'] * n
-            pauli_str[i] = 'Z'
-            pauli_str[j] = 'Z'
-            pauli_list.append(''.join(reversed(pauli_str)))
-            
-        hamiltonian = SparsePauliOp(pauli_list, coeffs=[-0.5] * len(edges))
-        
-        # QAOA Ansatz
-        ansatz = QAOAAnsatz(cost_operator=hamiltonian, reps=self.p)
-        
-        # Objective function
-        def obj_fn(params):
-            qc = ansatz.assign_parameters(params)
-            sv = Statevector(qc)
-            return sv.expectation_value(hamiltonian).real
-            
-        # Optimize parameters
-        rng = np.random.default_rng(42)
-        init_params = rng.uniform(0, 2 * np.pi, ansatz.num_parameters)
-        res = minimize(obj_fn, init_params, method='COBYLA', options={'maxiter': 60})
-        
-        # Get optimal state
-        optimal_qc = ansatz.assign_parameters(res.x)
-        optimal_sv = Statevector(optimal_qc)
-        
-        # Compute correlations <Z_i Z_j>
-        for i in range(n):
-            for j in range(i + 1, n):
-                p_str = ['I'] * n
-                p_str[i] = 'Z'
-                p_str[j] = 'Z'
-                op = SparsePauliOp([''.join(reversed(p_str))])
-                corr = optimal_sv.expectation_value(op).real
+
+    def _compute_pair_correlations(self, graph: nx.Graph, params: np.ndarray) -> np.ndarray:
+        """Compute ``<Z_i Z_j>`` correlations for the optimized QAOA state."""
+        from qiskit.quantum_info import SparsePauliOp, Statevector
+
+        n_qubits = graph.number_of_nodes()
+        builder = QAOACircuitBuilder(n_qubits=n_qubits, p=self.p)
+        circuit = builder.build_qaoa_circuit_multilayer(
+            graph,
+            gammas=params[0::2].tolist(),
+            betas=params[1::2].tolist(),
+        )
+        statevector = Statevector.from_instruction(circuit)
+
+        correlations = np.eye(n_qubits)
+        for i in range(n_qubits):
+            for j in range(i + 1, n_qubits):
+                pauli = ["I"] * n_qubits
+                pauli[i] = "Z"
+                pauli[j] = "Z"
+                operator = SparsePauliOp(["".join(reversed(pauli))])
+                corr = float(np.real(statevector.expectation_value(operator)))
                 correlations[i, j] = corr
                 correlations[j, i] = corr
-        
         return correlations
-    
-    def _analyze_correlations(
-        self,
-        qaoa_result: Dict,
-        graph: nx.Graph
-    ) -> List[Dict]:
-        """
-        Analyze correlations to identify variable relationships.
-        
-        Args:
-            qaoa_result: QAOA execution results
-            graph: Current graph
-            
-        Returns:
-            List of correlation dictionaries
-        """
-        correlations = qaoa_result['correlations']
-        n = correlations.shape[0]
-        
-        strong_correlations = []
-        
-        # Find pairs with strong correlations
-        for i in range(n):
-            for j in range(i + 1, n):
-                corr = abs(correlations[i, j])
-                
-                if corr > self.correlation_threshold:
-                    # Determine relationship
-                    relationship = "same" if correlations[i, j] > 0 else "opposite"
-                    
-                    strong_correlations.append({
-                        'var1': i,
-                        'var2': j,
-                        'correlation': corr,
-                        'relationship': relationship
-                    })
-        
-        # Sort by correlation strength
-        strong_correlations.sort(key=lambda x: x['correlation'], reverse=True)
-        
-        logger.info(f"Found {len(strong_correlations)} strong correlations")
-        
-        return strong_correlations
-    
+
+    def _analyze_correlations(self, qaoa_result: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Rank candidate eliminations using absolute pair correlations."""
+        correlations = qaoa_result["correlations"]
+        node_order = qaoa_result["node_order"]
+        n_qubits = correlations.shape[0]
+
+        ranked: List[Dict[str, Any]] = []
+        for i in range(n_qubits):
+            for j in range(i + 1, n_qubits):
+                corr = float(correlations[i, j])
+                magnitude = abs(corr)
+                if magnitude < self.correlation_threshold:
+                    continue
+                ranked.append(
+                    {
+                        "var1": node_order[i],
+                        "var2": node_order[j],
+                        "correlation": magnitude,
+                        "signed_correlation": corr,
+                        "relationship": "same" if corr >= 0 else "opposite",
+                        "selection_reason": "threshold",
+                    }
+                )
+
+        ranked.sort(key=lambda item: item["correlation"], reverse=True)
+        if ranked:
+            return ranked
+
+        if not self.force_fallback_elimination or n_qubits < 2:
+            return []
+
+        i, j = np.unravel_index(
+            np.argmax(np.abs(correlations - np.eye(n_qubits))),
+            correlations.shape,
+        )
+        if i == j:
+            return []
+
+        corr = float(correlations[i, j])
+        return [
+            {
+                "var1": node_order[min(i, j)],
+                "var2": node_order[max(i, j)],
+                "correlation": abs(corr),
+                "signed_correlation": corr,
+                "relationship": "same" if corr >= 0 else "opposite",
+                "selection_reason": "fallback-strongest-pair",
+            }
+        ]
+
+    def _select_eliminations(self, correlations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Select non-overlapping eliminations from a ranked correlation list."""
+        selected: List[Dict[str, Any]] = []
+        used_nodes = set()
+
+        for candidate in correlations:
+            keep = candidate["var1"]
+            remove = candidate["var2"]
+            if keep in used_nodes or remove in used_nodes:
+                continue
+            selected.append(candidate)
+            used_nodes.add(remove)
+            if len(selected) >= self.n_eliminate:
+                break
+
+        return selected
+
     def _reduce_problem(
         self,
         graph: nx.Graph,
-        to_eliminate: List[Dict]
+        eliminations: List[Dict[str, Any]],
     ) -> nx.Graph:
         """
-        Reduce problem size by eliminating variables.
-        
-        Args:
-            graph: Current graph
-            to_eliminate: Variables to eliminate
-            
-        Returns:
-            Reduced graph
+        Reduce the graph by substituting eliminated variables into their keeper.
+
+        ``same`` correlations transfer the incident edge weight directly.
+        ``opposite`` correlations negate the transferred edge and add an
+        assignment-independent constant term that is tracked in
+        ``graph.graph["constant_offset"]``.
         """
         reduced = copy.deepcopy(graph)
-        
-        # Get nodes to eliminate
-        eliminate_nodes = set()
-        for corr in to_eliminate:
-            # Keep var1, eliminate var2 (with relationship)
-            eliminate_nodes.add(corr['var2'])
-        
-        # Remove eliminated nodes
-        reduced.remove_nodes_from(eliminate_nodes)
-        
-        # Relabel remaining nodes to consecutive indices
-        mapping = {old: new for new, old in enumerate(reduced.nodes())}
-        reduced = nx.relabel_nodes(reduced, mapping)
-        
-        logger.info(f"Reduced problem: {graph.number_of_nodes()} → {reduced.number_of_nodes()} nodes")
-        
+        constant_offset = float(reduced.graph.get("constant_offset", 0.0))
+
+        for elimination in eliminations:
+            keep = elimination["var1"]
+            remove = elimination["var2"]
+            relationship = elimination["relationship"]
+
+            if keep not in reduced or remove not in reduced:
+                continue
+
+            sign = 1.0 if relationship == "same" else -1.0
+            for neighbor, edge_data in list(reduced[remove].items()):
+                weight = float(edge_data.get("weight", 1.0))
+
+                if relationship == "opposite":
+                    constant_offset += weight
+
+                if neighbor == keep:
+                    continue
+
+                delta = sign * weight
+                if reduced.has_edge(keep, neighbor):
+                    reduced[keep][neighbor]["weight"] = (
+                        float(reduced[keep][neighbor].get("weight", 1.0)) + delta
+                    )
+                else:
+                    reduced.add_edge(keep, neighbor, weight=delta)
+
+                if (
+                    reduced.has_edge(keep, neighbor)
+                    and abs(reduced[keep][neighbor]["weight"]) < 1e-12
+                ):
+                    reduced.remove_edge(keep, neighbor)
+
+            reduced.remove_node(remove)
+
+        reduced.graph["constant_offset"] = constant_offset
+
+        logger.info(
+            "Reduced problem: %s -> %s active nodes",
+            graph.number_of_nodes(),
+            reduced.number_of_nodes(),
+        )
         return reduced
-    
-    def _solve_final_problem(
-        self,
-        graph: nx.Graph
-    ) -> Dict:
-        """
-        Solve the final reduced problem.
-        
-        Could use QAOA or exact solver depending on size.
-        
-        Args:
-            graph: Final reduced graph
-            
-        Returns:
-            Solution dictionary
-        """
-        n = graph.number_of_nodes()
-        
-        if n <= self.min_problem_size:
-            # Use exact solver for small problems
-            from .classical_solver import ClassicalSolver
-            
-            solver = ClassicalSolver()
-            result = solver.solve_exact(graph)
-            
-            return result
-        else:
-            # Use QAOA
-            return self._run_qaoa_on_subgraph(graph)
-    
+
+    def _solve_reduced_problem(self, graph: nx.Graph) -> Dict[str, Any]:
+        """Solve the reduced graph exactly when feasible, else with QAOA."""
+        if graph.number_of_nodes() == 0:
+            return {"assignments": {}, "bitstring": "", "cut_value": 0.0}
+
+        relabeled_graph, node_order = self._prepare_contiguous_graph(graph)
+        n_nodes = relabeled_graph.number_of_nodes()
+        reduction_constant = float(relabeled_graph.graph.get("constant_offset", 0.0))
+
+        if n_nodes <= 20:
+            exact_result = ClassicalSolver().solve_exact(relabeled_graph)
+            bitstring = exact_result.optimal_bitstrings[0]
+            assignments = {
+                node_order[index]: bitstring[index] for index in range(len(bitstring))
+            }
+            return {
+                "assignments": assignments,
+                "bitstring": bitstring,
+                "cut_value": float(exact_result.optimal_value) + reduction_constant,
+            }
+
+        builder = HamiltonianBuilder()
+        hamiltonian, offset = builder.build_maxcut_hamiltonian(relabeled_graph)
+        total_offset = float(offset) + reduction_constant
+        circuit_builder = QAOACircuitBuilder(n_qubits=n_nodes, p=self.p)
+
+        def objective_function(params: np.ndarray) -> float:
+            from qiskit.quantum_info import Statevector
+
+            circuit = circuit_builder.build_qaoa_circuit_multilayer(
+                relabeled_graph,
+                gammas=params[0::2].tolist(),
+                betas=params[1::2].tolist(),
+            )
+            expectation = float(
+                np.real(Statevector.from_instruction(circuit).expectation_value(hamiltonian))
+            )
+            return -(expectation + total_offset)
+
+        optimizer = self.optimizer or QAOAOptimizer(
+            p=self.p,
+            optimizer_type="COBYLA",
+            maxiter=120,
+            n_initial_points=2,
+            seed=42,
+        )
+        qaoa_result = optimizer.optimize(
+            objective_function=objective_function,
+            n_qubits=n_nodes,
+            graph=relabeled_graph,
+        )
+        assignments = {
+            node_order[index]: qaoa_result.solution_bitstring[index]
+            for index in range(len(qaoa_result.solution_bitstring or ""))
+        }
+        reduced_cut_value = None
+        if qaoa_result.cut_value is not None:
+            reduced_cut_value = float(qaoa_result.cut_value) + reduction_constant
+        return {
+            "assignments": assignments,
+            "bitstring": qaoa_result.solution_bitstring,
+            "cut_value": reduced_cut_value,
+        }
+
     def _reconstruct_solution(
         self,
-        final_result,
-        eliminated_vars: List[Dict],
-        original_size: int
+        final_solution: Dict[str, Any],
+        eliminated_vars: List[Dict[str, Any]],
+        original_nodes: List[int],
     ) -> str:
-        """
-        Reconstruct full solution from reduced solution.
-        
-        Args:
-            final_result: Solution of reduced problem
-            eliminated_vars: List of eliminated variable relationships
-            original_size: Original problem size
-            
-        Returns:
-            Full solution bitstring
-        """
-        # Create initial solution from final result
-        if isinstance(final_result, dict) and 'bitstring' in final_result:
-            solution = list(final_result['bitstring'])
-        elif hasattr(final_result, 'optimal_bitstrings') and final_result.optimal_bitstrings:
-            # Handle ClassicalResult dataclass
-            solution = list(final_result.optimal_bitstrings[0])
-        else:
-            # Default to all zeros
-            solution = ['0'] * self.min_problem_size
-        
-        # Reconstruct eliminated variables
-        # Process in reverse order of elimination
-        for elim in reversed(eliminated_vars):
-            var1 = elim['var1']
-            var2 = elim['var2']
-            relationship = elim['relationship']
-            
-            # Insert var2 based on var1
-            if var1 < len(solution):
-                val = solution[var1]
-                if relationship == "opposite":
-                    val = '1' if val == '0' else '0'
-                
-                # Insert at correct position
-                solution.insert(var2, val)
-            else:
-                # Fallback if var1 index is out of range
-                solution.insert(var2, '0')
-        
-        # Pad if necessary
-        while len(solution) < original_size:
-            solution.append('0')
-        
-        return ''.join(solution[:original_size])
-    
+        """Reconstruct the original bitstring from the reduced solution."""
+        assignment_map: Dict[int, str] = dict(final_solution.get("assignments", {}))
+
+        for elimination in reversed(eliminated_vars):
+            keep = elimination["var1"]
+            remove = elimination["var2"]
+            keep_value = assignment_map.get(keep, "0")
+            assignment_map[remove] = (
+                keep_value
+                if elimination["relationship"] == "same"
+                else self._flip_bit(keep_value)
+            )
+
+        for node in original_nodes:
+            assignment_map.setdefault(node, "0")
+
+        return "".join(assignment_map[node] for node in original_nodes)
+
+    @staticmethod
+    def _flip_bit(bit: str) -> str:
+        return "1" if bit == "0" else "0"
+
+    @staticmethod
+    def _prepare_contiguous_graph(graph: nx.Graph) -> Tuple[nx.Graph, List[int]]:
+        """Relabel a graph to consecutive integer nodes for Qiskit routines."""
+        node_order = list(sorted(graph.nodes()))
+        mapping = {node: index for index, node in enumerate(node_order)}
+        relabeled = nx.relabel_nodes(graph, mapping, copy=True)
+        relabeled.graph.update(copy.deepcopy(graph.graph))
+        return relabeled, node_order
+
+    @staticmethod
     def _calculate_cut(
-        self,
         graph: nx.Graph,
-        bitstring: str
-    ) -> int:
-        """
-        Calculate cut value for a solution.
-        
-        Args:
-            graph: NetworkX graph
-            bitstring: Solution bitstring
-            
-        Returns:
-            Cut value
-        """
-        cut = 0
-        for i, j in graph.edges():
-            if i < len(bitstring) and j < len(bitstring):
-                if bitstring[i] != bitstring[j]:
-                    cut += 1
-        return cut
+        bitstring: str,
+        node_order: Optional[List[int]] = None,
+    ) -> float:
+        """Calculate the weighted cut value on the original graph."""
+        if node_order is None:
+            node_order = list(sorted(graph.nodes()))
+        index_map = {node: idx for idx, node in enumerate(node_order)}
+
+        cut_value = 0.0
+        for u, v in graph.edges():
+            left = bitstring[index_map[u]]
+            right = bitstring[index_map[v]]
+            if left != right:
+                cut_value += float(graph[u][v].get("weight", 1.0))
+        return cut_value
+
 
 class AdaptiveRQAOA(RQAOAEngine):
-    """
-    Adaptive RQAOA that adjusts elimination strategy dynamically.
-    """
-    
+    """Adaptive-threshold variant of RQAOA."""
+
     def __init__(
         self,
         p: int = 1,
         correlation_threshold: float = 0.8,
         min_problem_size: int = 4,
-        max_depth: int = 5
+        max_depth: int = 5,
     ) -> None:
-        """
-        Initialize Adaptive RQAOA.
-        
-        Args:
-            p: QAOA layers
-            correlation_threshold: Initial threshold
-            min_problem_size: Minimum problem size
-            max_depth: Maximum recursion depth
-        """
         super().__init__(
             p=p,
             n_eliminate_per_step=1,
             correlation_threshold=correlation_threshold,
             min_problem_size=min_problem_size,
-            max_depth=max_depth
+            max_depth=max_depth,
         )
-        
         self.threshold_history = [correlation_threshold]
-    
-    def adapt_threshold(
-        self,
-        correlation_strength: float
-    ) -> None:
-        """
-        Adapt correlation threshold based on results.
-        
-        Args:
-            correlation_strength: Average correlation found
-        """
+
+    def adapt_threshold(self, correlation_strength: float) -> None:
+        """Adapt the threshold based on observed correlation strengths."""
         if correlation_strength < self.correlation_threshold * 0.5:
-            # Too few correlations - lower threshold
             self.correlation_threshold *= 0.8
         elif correlation_strength > self.correlation_threshold * 1.5:
-            # Many correlations - can be more aggressive
             self.correlation_threshold *= 1.1
-        
-        self.threshold_history.append(self.correlation_threshold)
-        
-        logger.info(f"Adapted threshold to {self.correlation_threshold:.3f}")
 
+        self.threshold_history.append(self.correlation_threshold)
+        logger.info("Adapted RQAOA threshold to %.3f", self.correlation_threshold)

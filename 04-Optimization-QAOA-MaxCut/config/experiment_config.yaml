@@ -4,19 +4,19 @@
 # Graph Generation Settings
 # ============================================================================
 graph:
-  # Number of nodes in the robot communication mesh
-  n_nodes: 15
-  
+  # Number of nodes in the benchmark graph
+  n_nodes: 12
+
   # Degree for D-regular graph (each node connects to D neighbors)
   degree: 3
-  
+
   # Random seed for reproducibility
   seed: 42
-  
+
   # Graph type: "d_regular", "erdos_renyi", "barabasi_albert"
   type: "d_regular"
-  
-  # Edge probability for Erdős-Rényi graphs
+
+  # Edge probability for Erdos-Renyi graphs
   edge_probability: 0.5
 
 # ============================================================================
@@ -25,16 +25,19 @@ graph:
 qaoa:
   # Number of QAOA layers (p parameter)
   p_layers: [1, 2, 3]
-  
+
   # Initial parameter strategy: "random", "linear", "custom"
   initial_strategy: "random"
-  
-  # Number of random initial points to try
-  n_initial_points: 3
-  
+
+  # Number of random initial points to try per depth
+  n_initial_points: 4
+
+  # Reuse the previous depth's optimal parameters when moving from p to p+1
+  warm_start_across_depths: true
+
   # Maximum iterations for classical optimizer
-  max_iterations: 500
-  
+  max_iterations: 200
+
   # Tolerance for convergence
   tolerance: 1e-6
 
@@ -44,16 +47,23 @@ qaoa:
 optimizer:
   # Optimizer type: "COBYLA", "SPSA", "Nelder-Mead", "L-BFGS-B"
   type: "COBYLA"
-  
+
   # Maximum function evaluations
-  maxiter: 500
-  
+  maxiter: 200
+
   # Step size for SPSA
-  sarsa_step_size: 0.1
-  
+  spsa_step_size: 0.1
+
   # SPSA perturbation
-  sarsa_perturbation: 0.1
-  
+  spsa_perturbation: 0.1
+
+  # Re-evaluate candidate minima to reduce noisy winner's-curse bias
+  selection_repetitions: 1
+
+  # Plateau warning diagnostics
+  plateau_window: 20
+  plateau_tolerance: 1e-4
+
   # Random seed for optimizer
   seed: 42
 
@@ -63,25 +73,39 @@ optimizer:
 quantum:
   # Execution mode: "local", "noisy_simulator", "ibm_hardware"
   mode: "local"
-  
+
   # Backend name for IBM Quantum
   backend_name: "ibm_brisbane"
-  
-  # Number of shots for sampling (None for exact expectation)
+
+  # Number of shots for sampling (0 gives exact local expectations)
   shots: 1024
-  
+
+  # Average repeated backend evaluations inside the optimization loop.
+  # Increase this for noisy_simulator or ibm_hardware modes.
+  objective_repetitions: 1
+
+  # Repeated evaluations used when reporting the final optimized state.
+  report_repetitions: 1
+
+  # How representative bitstrings are decoded:
+  # "auto" uses the same backend only when it can produce counts
+  # "same_backend" requires backend-faithful sampling
+  # "none" suppresses representative bitstrings
+  # "local_exact" uses a local exact fallback for debugging only
+  analysis_mode: "auto"
+
   # Resilience level for Qiskit Runtime
   # 0: No mitigation
   # 1: Light mitigation (T-REX)
   # 2: Heavy mitigation
   resilience_level: 1
-  
+
   # Optimization level for transpilation
   optimization_level: 1
-  
+
   # Enable noise simulation
   simulate_noise: false
-  
+
   # Noise model path (optional)
   noise_model_path: null
 
@@ -91,16 +115,16 @@ quantum:
 rqaoa:
   # Enable recursive QAOA
   enabled: true
-  
+
   # Number of variables to eliminate per iteration
   eliminate_per_step: 1
-  
+
   # Maximum recursion depth
   max_depth: 5
-  
+
   # Correlation threshold for variable elimination
-  correlation_threshold: 0.8
-  
+  correlation_threshold: 0.7
+
   # Stopping criteria: problem size
   min_problem_size: 4
 
@@ -110,16 +134,16 @@ rqaoa:
 visualization:
   # Enable interactive plots
   interactive: false
-  
+
   # Figure DPI
   dpi: 150
-  
+
   # Figure format
   format: "png"
-  
+
   # Color scheme
   style: "seaborn-v0_8-darkgrid"
-  
+
   # Generate all plots
   generate_all: true
 
@@ -129,16 +153,16 @@ visualization:
 results:
   # Save results to CSV
   save_csv: true
-  
+
   # Save figures
   save_figures: true
-  
+
   # Results directory
   output_dir: "results"
-  
+
   # Verbose output
   verbose: true
-  
+
   # Log level: "DEBUG", "INFO", "WARNING", "ERROR"
   log_level: "INFO"
 
@@ -148,7 +172,7 @@ results:
 hardware:
   # Enable hardware-aware qubit mapping
   enable_mapping: false
-  
+
   # Target backend coupling map
   coupling_map:
     - [0, 1]
@@ -158,7 +182,6 @@ hardware:
     - [4, 5]
     - [5, 6]
     - [6, 7]
-  
+
   # Number of qubits to use
   n_qubits: 8
-

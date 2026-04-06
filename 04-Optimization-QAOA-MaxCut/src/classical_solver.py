@@ -26,7 +26,7 @@ class ClassicalResult:
     Container for classical solver results.
     """
     # Optimal cut value
-    optimal_value: int
+    optimal_value: float
     
     # Optimal bitstring(s)
     optimal_bitstrings: List[str]
@@ -92,7 +92,7 @@ class ClassicalSolver:
             )
         
         # Try all 2^n possible partitions
-        best_value = -1
+        best_value = float("-inf")
         best_bitstrings = []
         
         for bits in itertools.product([0, 1], repeat=n_nodes):
@@ -112,7 +112,7 @@ class ClassicalSolver:
         )
         
         return ClassicalResult(
-            optimal_value=best_value,
+            optimal_value=float(best_value),
             optimal_bitstrings=best_bitstrings,
             n_solutions=len(best_bitstrings),
             runtime=runtime,
@@ -123,7 +123,7 @@ class ClassicalSolver:
     def solve_branch_and_bound(
         self,
         graph: nx.Graph,
-        upper_bound: Optional[int] = None
+        upper_bound: Optional[float] = None
     ) -> ClassicalResult:
         """
         Solve Max-Cut using branch and bound.
@@ -142,35 +142,39 @@ class ClassicalSolver:
         
         n_nodes = graph.number_of_nodes()
         
-        # Default upper bound: number of edges
+        # Default upper bound: sum of positive edge weights
         if upper_bound is None:
-            upper_bound = graph.number_of_edges()
+            upper_bound = sum(
+                max(0.0, self._edge_weight(graph, u, v))
+                for u, v in graph.edges()
+            )
         
         logger.info(f"Running branch and bound for {n_nodes} nodes")
         
         # Track best solution
-        best_value = 0
+        best_value = float("-inf")
         best_bitstring = None
         
         # Current assignment
         current = [0] * n_nodes
         
-        def bound(pos: int) -> int:
+        def bound(pos: int) -> float:
             """
             Compute upper bound for remaining unassigned nodes.
             
             Simplified: count remaining edges that could be cut.
             """
             # Count edges from assigned nodes
-            assigned_cut = 0
+            assigned_cut = 0.0
             for i in range(pos):
                 for j in range(i + 1, pos):
                     if graph.has_edge(i, j) and current[i] != current[j]:
-                        assigned_cut += 1
+                        assigned_cut += self._edge_weight(graph, i, j)
             
             # Upper bound: assigned cut + all remaining edges
             remaining_edges = sum(
-                1 for u, v in graph.edges()
+                max(0.0, self._edge_weight(graph, u, v))
+                for u, v in graph.edges()
                 if u >= pos or v >= pos
             )
             
@@ -202,7 +206,7 @@ class ClassicalSolver:
         runtime = time.time() - start_time
         
         return ClassicalResult(
-            optimal_value=best_value,
+            optimal_value=float(best_value),
             optimal_bitstrings=[best_bitstring] if best_bitstring else [],
             n_solutions=1 if best_bitstring else 0,
             runtime=runtime,
@@ -260,7 +264,7 @@ class ClassicalSolver:
         bitstring = ''.join(map(str, assignment))
         
         return ClassicalResult(
-            optimal_value=cut_value,
+            optimal_value=float(cut_value),
             optimal_bitstrings=[bitstring],
             n_solutions=1,
             runtime=runtime,
@@ -272,7 +276,7 @@ class ClassicalSolver:
         self,
         graph: nx.Graph,
         partition: List[int]
-    ) -> int:
+    ) -> float:
         """
         Compute cut value for a given partition.
         
@@ -285,10 +289,10 @@ class ClassicalSolver:
         """
         partition_set = set(partition)
         
-        cut = 0
+        cut = 0.0
         for u, v in graph.edges():
             if (u in partition_set) != (v in partition_set):
-                cut += 1
+                cut += self._edge_weight(graph, u, v)
         
         return cut
     
@@ -296,7 +300,7 @@ class ClassicalSolver:
         self,
         graph: nx.Graph,
         bits: Tuple[int, ...]
-    ) -> int:
+    ) -> float:
         """
         Compute cut value for a bitstring.
         
@@ -307,11 +311,11 @@ class ClassicalSolver:
         Returns:
             Number of edges crossing the cut
         """
-        cut = 0
+        cut = 0.0
         
         for u, v in graph.edges():
             if bits[u] != bits[v]:
-                cut += 1
+                cut += self._edge_weight(graph, u, v)
         
         return cut
     
@@ -319,7 +323,7 @@ class ClassicalSolver:
         self,
         graph: nx.Graph,
         assignment: List[int]
-    ) -> int:
+    ) -> float:
         """
         Compute cut from array assignment.
         
@@ -375,8 +379,13 @@ class ClassicalSolver:
         for u, v in graph.edges():
             if bitstring[u] != bitstring[v]:
                 cut_edges.append((u, v))
-        
+
         return cut_edges
+
+    @staticmethod
+    def _edge_weight(graph: nx.Graph, u: int, v: int) -> float:
+        """Return an edge weight, defaulting to 1.0 for unweighted graphs."""
+        return float(graph[u][v].get("weight", 1.0))
 
 class ApproximateSolver:
     """
@@ -389,7 +398,7 @@ class ApproximateSolver:
     def solve_local_search(
         graph: nx.Graph,
         max_iterations: int = 1000
-    ) -> Tuple[int, str]:
+    ) -> Tuple[float, str]:
         """
         Local search algorithm for Max-Cut.
         
@@ -415,16 +424,19 @@ class ApproximateSolver:
                 assignment[i] = 1 - assignment[i]
                 
                 new_cut = sum(
-                    1 for u, v in graph.edges()
+                    float(graph[u][v].get("weight", 1.0))
+                    for u, v in graph.edges()
                     if assignment[u] != assignment[v]
                 )
-                
+
+                assignment[i] = 1 - assignment[i]
                 old_cut = sum(
-                    1 for u, v in graph.edges()
-                    if (u == i and assignment[v] != assignment[i]) or
-                       (v == i and assignment[u] != assignment[i])
+                    float(graph[u][v].get("weight", 1.0))
+                    for u, v in graph.edges()
+                    if assignment[u] != assignment[v]
                 )
-                
+                assignment[i] = 1 - assignment[i]
+
                 if new_cut <= old_cut:
                     # Revert
                     assignment[i] = 1 - assignment[i]
@@ -435,7 +447,8 @@ class ApproximateSolver:
                 break
         
         cut_value = sum(
-            1 for u, v in graph.edges()
+            float(graph[u][v].get("weight", 1.0))
+            for u, v in graph.edges()
             if assignment[u] != assignment[v]
         )
         

@@ -205,7 +205,7 @@ class GraphGenerator:
         Returns:
             NetworkX graph
         """
-        graph = nx.read_adjlist(path=filepath)
+        graph = nx.read_adjlist(path=filepath, nodetype=int)
         logger.info(f"Loaded adjacency list from {filepath}")
         return graph
     
@@ -213,7 +213,7 @@ class GraphGenerator:
         self,
         graph: nx.Graph,
         partition: List[int]
-    ) -> int:
+    ) -> float:
         """
         Calculate the cut value for a given partition.
         
@@ -232,7 +232,11 @@ class GraphGenerator:
                (v in partition and u in other_nodes):
                 cut_set.add((min(u, v), max(u, v)))
         
-        return len(cut_set)
+        cut_value = 0.0
+        for u, v in cut_set:
+            cut_value += float(graph[u][v].get("weight", 1.0))
+
+        return cut_value
     
     def get_all_partitions(self, n_nodes: int) -> List[List[int]]:
         """

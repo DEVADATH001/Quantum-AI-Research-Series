@@ -33,3 +33,16 @@ def test_hamiltonian_triangle():
     # For n=3, the strings are IIZ, IZI, ZII etc. depending on edges
     assert 'IZZ' in labels or 'ZZI' in labels or 'ZIZ' in labels
     assert np.isclose(offset, 1.5)
+
+
+def test_qubo_builder_matches_standard_maxcut_mapping():
+    G = nx.Graph()
+    G.add_edge(0, 1, weight=2.0)
+    G.add_edge(1, 2, weight=3.0)
+
+    builder = HamiltonianBuilder()
+    standard_hamiltonian, standard_offset = builder.build_maxcut_hamiltonian(G)
+    qubo_hamiltonian, qubo_offset = builder.build_maxcut_hamiltonian_qubo(G)
+
+    assert np.isclose(standard_offset, qubo_offset)
+    assert standard_hamiltonian.equiv(qubo_hamiltonian)

@@ -13,7 +13,7 @@ Secondary Metrics:
 - Energy gap
 - Runtime performance
 
-Target: r > 0.8 is considered strong for NISQ algorithms."""
+The approximation ratio is the primary benchmark metric."""
 
 import logging
 from typing import Dict, List, Optional, Tuple
@@ -219,32 +219,65 @@ class EvaluationMetrics:
     
     def compute_energy_distribution(
         self,
-        samples: List[Tuple[str, float]]
+        samples: List[Tuple[str, float]],
+        graph: Optional[nx.Graph] = None,
+        energies: Optional[Dict[str, float]] = None,
     ) -> Dict:
         """
         Analyze energy distribution from measurement samples.
         
         Args:
-            samples: List of (bitstring, probability) tuples
+            samples: List of ``(bitstring, probability)`` tuples.
+            graph: Optional graph used to compute Max-Cut values directly.
+            energies: Optional explicit mapping from bitstring to energy/value.
             
         Returns:
             Dictionary with distribution statistics
         """
-        energies = [prob for _, prob in samples]
-        
+        if not samples:
+            raise ValueError("samples must not be empty")
+
+        if graph is None and energies is None:
+            raise ValueError("Provide either graph or energies to evaluate sample energies.")
+
+        probability_sum = sum(probability for _, probability in samples)
+        if probability_sum <= 0:
+            raise ValueError("Sample probabilities must sum to a positive value.")
+
+        energy_values = []
+        normalized_probabilities = []
+        for bitstring, probability in samples:
+            if energies is not None:
+                if bitstring not in energies:
+                    raise KeyError(f"Missing energy for bitstring {bitstring!r}")
+                energy = float(energies[bitstring])
+            else:
+                energy = float(self._compute_cut(graph, bitstring))
+
+            energy_values.append(energy)
+            normalized_probabilities.append(probability / probability_sum)
+
+        energy_array = np.array(energy_values, dtype=float)
+        probability_array = np.array(normalized_probabilities, dtype=float)
+        weighted_mean = float(np.dot(probability_array, energy_array))
+        weighted_second_moment = float(np.dot(probability_array, energy_array**2))
+        weighted_std = float(np.sqrt(max(0.0, weighted_second_moment - weighted_mean**2)))
+
         stats = {
-            'mean': np.mean(energies),
-            'std': np.std(energies),
-            'min': np.min(energies),
-            'max': np.max(energies),
-            'median': np.median(energies),
+            'mean': weighted_mean,
+            'std': weighted_std,
+            'min': float(np.min(energy_array)),
+            'max': float(np.max(energy_array)),
+            'median': float(np.median(energy_array)),
             'n_samples': len(samples)
         }
         
-        # Find best sample
-        best = max(samples, key=lambda x: x[1])
+        # Find best sample by energy/value, not by probability.
+        best_idx = int(np.argmax(energy_array))
+        best = samples[best_idx]
         stats['best_bitstring'] = best[0]
-        stats['best_energy'] = best[1]
+        stats['best_energy'] = float(energy_array[best_idx])
+        stats['best_probability'] = float(probability_array[best_idx])
         
         return stats
     
@@ -332,13 +365,13 @@ class EvaluationMetrics:
         Returns:
             Cut value
         """
-        cut = 0
+        cut = 0.0
         
         for u, v in graph.edges():
             if u < len(bitstring) and v < len(bitstring):
                 if bitstring[u] != bitstring[v]:
-                    cut += 1
-        
+                    cut += float(graph[u][v].get("weight", 1.0))
+
         return cut
     
     def get_summary(self) -> Dict:

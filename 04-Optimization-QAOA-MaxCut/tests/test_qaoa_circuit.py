@@ -28,3 +28,16 @@ def test_initial_parameters():
     assert len(params) == 4
     assert np.isclose(params[0], np.pi / 2)
     assert np.isclose(params[1], np.pi / 4)
+
+
+def test_weighted_graph_maps_to_correct_rzz_angle():
+    G = nx.Graph()
+    G.add_edge(0, 1, weight=1.5)
+
+    c_builder = QAOACircuitBuilder(n_qubits=2, p=1)
+    circuit = c_builder.build_qaoa_circuit_simple(G, gamma=0.4, beta=0.2)
+
+    rzz_instruction = next(
+        instruction for instruction in circuit.data if instruction.operation.name == "rzz"
+    )
+    assert np.isclose(float(rzz_instruction.operation.params[0]), -0.6)

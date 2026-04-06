@@ -167,9 +167,9 @@ def get_quantum_resources(circuit) -> Dict[str, int]:
     
     resources = {
         'depth': circuit.depth(),
-        'num_qubits': circuit.num_qubits(),
+        'num_qubits': circuit.num_qubits,
         'num_gates': len(circuit.data),
-        'num_clbits': circuit.num_clbits(),
+        'num_clbits': circuit.num_clbits,
     }
     
     # Count gate types

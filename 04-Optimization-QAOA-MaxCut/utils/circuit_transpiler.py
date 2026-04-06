@@ -222,9 +222,9 @@ def estimate_circuit_resources(
     """
     resources = {
         'depth': circuit.depth(),
-        'width': circuit.num_qubits(),
+        'width': circuit.num_qubits,
         'operations': len(circuit.data),
-        'clbits': circuit.num_clbits(),
+        'clbits': circuit.num_clbits,
     }
     
     # Count gates by type

@@ -1,112 +1,56 @@
-# QAOA-MaxCut Production Implementation Plan
+# QAOA-MaxCut Status
 
-## Information Gathered
+## Current State
 
-### Current Repository State
-- **Location**: `04-Optimization-QAOA-MaxCut/`
-- **Existing Files**: 
-  - `README.md` - Basic project description
-  - `project_04_qaoa_maxcut.ipynb` - Simple 5-node QAOA demo
-  - Empty `figures/` and `notes/` directories
+This project is now a reproducible Max-Cut benchmark package rather than a
+placeholder "production-grade" scaffold. The main upgrades in this revision are:
 
-### Dependencies Available
-- Python ≥ 3.10
-- Qiskit ≥ 1.1
-- Qiskit Aer, IBM Runtime, Optimization, Machine Learning
-- NetworkX ≥ 3.2
-- Matplotlib, NumPy, SciPy, Scikit-learn
+1. Fixed the Max-Cut objective sign so the variational loop maximizes cut value
+   instead of minimizing the wrong ZZ interaction.
+2. Rebuilt the optimizer bookkeeping so evaluation history, final parameters,
+   and decoded bitstrings are internally consistent.
+3. Repaired local execution by using exact statevector evaluation for
+   unmeasured circuits and sampled Aer execution for noisy simulation.
+4. Reworked RQAOA so it performs weighted reductions, keeps node mappings
+   straight, and falls back to exact reduced-instance solving instead of
+   returning invalid all-zero solutions.
+5. Added regression tests for the previously broken optimizer, runtime, and
+   RQAOA paths.
+6. Added `generate_artifacts.py` and generated real outputs in `results/`.
+7. Added warm-start depth scaling, config-driven SPSA hyperparameters,
+   noisy-candidate re-evaluation, and plateau diagnostics in the optimizer.
+8. Split representative sampled bitstrings from best-observed samples so the
+   benchmark no longer overstates sampled performance.
 
-### Task Requirements Summary
-A comprehensive production-grade quantum optimization research platform for Max-Cut using QAOA and RQAOA, with:
-- D-regular graph generation (robot communication mesh)
-- Ising Hamiltonian construction
-- QAOA circuit implementation (p=1-3 layers)
-- Qiskit Runtime V2 execution (EstimatorV2)
-- Classical optimization (COBYLA, SPSA)
-- Energy landscape visualization
-- Approximation ratio analysis
-- Recursive QAOA implementation
-- Hardware-aware optimization
+## Reproducible Outputs
 
----
+Run the full benchmark and artifact generation pipeline with:
 
-## Implementation Plan
-
-### Phase 1: Configuration and Data (Step 1-3)
-1. **requirements.txt** - Add project-specific dependencies
-2. **config/experiment_config.yaml** - Experiment configuration
-3. **data/robot_network.adjlist** - D-regular graph adjacency list
-
-### Phase 2: Core Quantum Modules (Step 4-7)
-4. **src/__init__.py** - Package initialization
-5. **src/graph_generator.py** - NetworkX D-regular graph generator
-6. **src/hamiltonian_builder.py** - Ising Hamiltonian (SparsePauliOp)
-7. **src/qaoa_circuit.py** - Parameterized QAOA circuits
-8. **src/qaoa_optimizer.py** - Classical optimization loop
-
-### Phase 3: Advanced Algorithms (Step 8-10)
-9. **src/rqaoa_engine.py** - Recursive QAOA implementation
-10. **src/classical_solver.py** - Brute force optimal solver
-11. **src/evaluation_metrics.py** - Approximation ratio calculations
-
-### Phase 4: Execution Engine (Step 11-12)
-12. **src/runtime_executor.py** - Qiskit Runtime V2 (EstimatorV2)
-13. **src/visualization.py** - Matplotlib/Seaborn plots
-
-### Phase 5: Utilities (Step 13-14)
-14. **utils/__init__.py** - Package init
-15. **utils/qiskit_helpers.py** - Helper functions
-16. **utils/circuit_transpiler.py** - Transpilation utilities
-
-### Phase 6: Notebooks (Step 15-17)
-17. **notebooks/01_problem_formulation.ipynb** - Max-Cut math & Ising
-18. **notebooks/02_qaoa_execution.ipynb** - QAOA execution details
-19. **notebooks/03_results_analysis.ipynb** - Results & analysis
-
-### Phase 7: Results and Documentation (Step 18-19)
-20. **results/** - Output directory for metrics
-21. **README.md** - Comprehensive documentation
-
----
-
-## Files to Create (19 new files)
-```
-04-Optimization-QAOA-MaxCut/
-├── requirements.txt
-├── config/
-│   └── experiment_config.yaml
-├── data/
-│   └── robot_network.adjlist
-├── src/
-│   ├── __init__.py
-│   ├── graph_generator.py
-│   ├── hamiltonian_builder.py
-│   ├── qaoa_circuit.py
-│   ├── qaoa_optimizer.py
-│   ├── rqaoa_engine.py
-│   ├── classical_solver.py
-│   ├── evaluation_metrics.py
-│   ├── runtime_executor.py
-│   └── visualization.py
-├── notebooks/
-│   ├── 01_problem_formulation.ipynb
-│   ├── 02_qaoa_execution.ipynb
-│   └── 03_results_analysis.ipynb
-├── results/
-│   └── .gitkeep
-├── utils/
-│   ├── __init__.py
-│   ├── qiskit_helpers.py
-│   └── circuit_transpiler.py
-└── README.md
+```bash
+python generate_artifacts.py
 ```
 
----
+This writes:
 
-## Follow-up Steps
-1. Create all modules with PEP8, type hints, docstrings
-2. Test each module independently
-3. Run full pipeline in notebooks
-4. Generate visualization outputs
-5. Verify approximation ratio > 0.8 target
+- `results/metrics.csv`
+- `results/approximation_ratio.png`
+- `results/energy_landscape.png`
+- `results/graph_cut_visualization.png`
+- `results/optimization_convergence.png`
+- `results/method_comparison.png`
 
+## Remaining Research Gaps
+
+The package is stronger as software, but it is still a benchmark repo rather
+than a conference-ready research contribution. The next meaningful upgrades are:
+
+1. Benchmark across many random seeds and graph families, not one configured
+   instance.
+2. Compare against stronger classical baselines than brute force on small
+   graphs.
+3. Add noisy and hardware-backed experiments with clear shot budgets and error
+   bars.
+4. Tie the "robot network" framing to a genuine domain objective instead of a
+   generic D-regular graph surrogate.
+5. Add backend-native hardware sampling for representative bitstrings when
+   using Runtime-based execution.
