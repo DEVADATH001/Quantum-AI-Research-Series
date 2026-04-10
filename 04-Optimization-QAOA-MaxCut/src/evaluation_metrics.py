@@ -308,6 +308,115 @@ class EvaluationMetrics:
         }
         
         return stats
+
+    def bootstrap_confidence_interval(
+        self,
+        values: List[float],
+        confidence: float = 0.95,
+        n_bootstrap: int = 1000,
+        seed: Optional[int] = 42,
+    ) -> Tuple[float, float]:
+        """
+        Compute a bootstrap confidence interval for the sample mean.
+
+        Args:
+            values: Sample values.
+            confidence: Confidence level.
+            n_bootstrap: Number of bootstrap resamples.
+            seed: Random seed.
+
+        Returns:
+            Lower and upper confidence bounds.
+        """
+        if not values:
+            raise ValueError("values must not be empty")
+        if not 0 < confidence < 1:
+            raise ValueError("confidence must lie in (0, 1)")
+
+        rng = np.random.default_rng(seed)
+        array = np.asarray(values, dtype=float)
+        bootstrap_means = []
+        for _ in range(max(1, int(n_bootstrap))):
+            sample = rng.choice(array, size=array.size, replace=True)
+            bootstrap_means.append(float(np.mean(sample)))
+
+        alpha = 1.0 - confidence
+        lower = float(np.quantile(bootstrap_means, alpha / 2))
+        upper = float(np.quantile(bootstrap_means, 1 - alpha / 2))
+        return lower, upper
+
+    def summarize_values(
+        self,
+        values: List[float],
+        confidence: float = 0.95,
+        n_bootstrap: int = 1000,
+        seed: Optional[int] = 42,
+    ) -> Dict[str, float]:
+        """Summarize a list of scalar values with uncertainty estimates."""
+        if not values:
+            raise ValueError("values must not be empty")
+
+        array = np.asarray(values, dtype=float)
+        ci_lower, ci_upper = self.bootstrap_confidence_interval(
+            values=values,
+            confidence=confidence,
+            n_bootstrap=n_bootstrap,
+            seed=seed,
+        )
+        return {
+            "mean": float(np.mean(array)),
+            "std": float(np.std(array)),
+            "sem": float(np.std(array) / np.sqrt(array.size)),
+            "min": float(np.min(array)),
+            "max": float(np.max(array)),
+            "n": int(array.size),
+            "ci_lower": ci_lower,
+            "ci_upper": ci_upper,
+        }
+
+    def paired_method_test(
+        self,
+        values_a: List[float],
+        values_b: List[float],
+        n_resamples: int = 2000,
+        confidence: float = 0.95,
+        seed: Optional[int] = 42,
+    ) -> Dict[str, float]:
+        """
+        Run a paired randomization-style significance test on method differences.
+
+        Returns:
+            Mean difference, bootstrap confidence interval, and permutation p-value.
+        """
+        if len(values_a) != len(values_b):
+            raise ValueError("Paired method comparison requires equal-length inputs.")
+        if not values_a:
+            raise ValueError("Paired method comparison requires at least one sample.")
+
+        rng = np.random.default_rng(seed)
+        diffs = np.asarray(values_a, dtype=float) - np.asarray(values_b, dtype=float)
+        observed = float(np.mean(diffs))
+
+        bootstrap_diffs = []
+        for _ in range(max(1, int(n_resamples))):
+            indices = rng.integers(0, diffs.size, size=diffs.size)
+            bootstrap_diffs.append(float(np.mean(diffs[indices])))
+
+        alpha = 1.0 - confidence
+        ci_lower = float(np.quantile(bootstrap_diffs, alpha / 2))
+        ci_upper = float(np.quantile(bootstrap_diffs, 1 - alpha / 2))
+
+        sign_flips = rng.choice([-1.0, 1.0], size=(max(1, int(n_resamples)), diffs.size))
+        null_means = np.mean(sign_flips * diffs, axis=1)
+        p_value = float(np.mean(np.abs(null_means) >= abs(observed)))
+
+        return {
+            "mean_difference": observed,
+            "ci_lower": ci_lower,
+            "ci_upper": ci_upper,
+            "p_value": p_value,
+            "n_pairs": int(diffs.size),
+        }
     
     def assess_quality(
         self,

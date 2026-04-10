@@ -4,8 +4,8 @@
 # Graph Generation Settings
 # ============================================================================
 graph:
-  # Number of nodes in the benchmark graph
-  n_nodes: 12
+  # Small benchmark graph sized for NISQ-style proxy studies
+  n_nodes: 6
 
   # Degree for D-regular graph (each node connects to D neighbors)
   degree: 3
@@ -23,46 +23,46 @@ graph:
 # QAOA Circuit Parameters
 # ============================================================================
 qaoa:
-  # Number of QAOA layers (p parameter)
-  p_layers: [1, 2, 3]
+  # Restrict depth to a NISQ-plausible range by default
+  p_layers: [1]
 
   # Initial parameter strategy: "random", "linear", "custom"
   initial_strategy: "random"
 
   # Number of random initial points to try per depth
-  n_initial_points: 4
+  n_initial_points: 1
 
   # Reuse the previous depth's optimal parameters when moving from p to p+1
   warm_start_across_depths: true
 
   # Maximum iterations for classical optimizer
-  max_iterations: 200
+  max_iterations: 12
 
   # Tolerance for convergence
-  tolerance: 1e-6
+  tolerance: 1e-4
 
 # ============================================================================
 # Classical Optimizer Settings
 # ============================================================================
 optimizer:
-  # Optimizer type: "COBYLA", "SPSA", "Nelder-Mead", "L-BFGS-B"
-  type: "COBYLA"
+  # SPSA is more realistic for shot-based NISQ proxy optimization
+  type: "SPSA"
 
   # Maximum function evaluations
-  maxiter: 200
+  maxiter: 12
 
   # Step size for SPSA
-  spsa_step_size: 0.1
+  spsa_step_size: 0.08
 
   # SPSA perturbation
-  spsa_perturbation: 0.1
+  spsa_perturbation: 0.12
 
   # Re-evaluate candidate minima to reduce noisy winner's-curse bias
   selection_repetitions: 1
 
   # Plateau warning diagnostics
-  plateau_window: 20
-  plateau_tolerance: 1e-4
+  plateau_window: 6
+  plateau_tolerance: 5e-3
 
   # Random seed for optimizer
   seed: 42
@@ -71,117 +71,132 @@ optimizer:
 # Quantum Execution Settings
 # ============================================================================
 quantum:
-  # Execution mode: "local", "noisy_simulator", "ibm_hardware"
-  mode: "local"
+  # Use a hardware-noise proxy by default
+  mode: "noisy_simulator"
 
-  # Backend name for IBM Quantum
+  # Backend name for IBM Quantum or the corresponding fake backend
   backend_name: "ibm_brisbane"
 
-  # Number of shots for sampling (0 gives exact local expectations)
-  shots: 1024
+  # Number of shots for sampling
+  shots: 512
 
-  # Average repeated backend evaluations inside the optimization loop.
-  # Increase this for noisy_simulator or ibm_hardware modes.
+  # Average repeated backend evaluations inside the optimization loop
   objective_repetitions: 1
 
-  # Repeated evaluations used when reporting the final optimized state.
-  report_repetitions: 1
+  # Repeated evaluations used when reporting the final optimized state
+  report_repetitions: 2
 
-  # How representative bitstrings are decoded:
-  # "auto" uses the same backend only when it can produce counts
-  # "same_backend" requires backend-faithful sampling
-  # "none" suppresses representative bitstrings
-  # "local_exact" uses a local exact fallback for debugging only
-  analysis_mode: "auto"
+  # Representative bitstrings must come from the same backend model
+  analysis_mode: "same_backend"
 
   # Resilience level for Qiskit Runtime
-  # 0: No mitigation
-  # 1: Light mitigation (T-REX)
-  # 2: Heavy mitigation
   resilience_level: 1
 
   # Optimization level for transpilation
   optimization_level: 1
 
-  # Enable noise simulation
-  simulate_noise: false
+  # Enable hardware-noise simulation
+  simulate_noise: true
 
-  # Noise model path (optional)
+  # Optional serialized Aer noise model path (JSON)
   noise_model_path: null
 
 # ============================================================================
 # Recursive QAOA Settings
 # ============================================================================
 rqaoa:
-  # Enable recursive QAOA
-  enabled: true
+  # Disable by default in the hardware proxy benchmark; it remains available
+  enabled: false
 
   # Number of variables to eliminate per iteration
   eliminate_per_step: 1
 
   # Maximum recursion depth
-  max_depth: 5
+  max_depth: 4
 
   # Correlation threshold for variable elimination
-  correlation_threshold: 0.7
+  correlation_threshold: 0.75
 
   # Stopping criteria: problem size
   min_problem_size: 4
+
+  # Correlation estimation: "auto", "counts", or "exact"
+  correlation_method: "counts"
 
 # ============================================================================
 # Visualization Settings
 # ============================================================================
 visualization:
-  # Enable interactive plots
   interactive: false
-
-  # Figure DPI
   dpi: 150
-
-  # Figure format
   format: "png"
-
-  # Color scheme
   style: "seaborn-v0_8-darkgrid"
-
-  # Generate all plots
   generate_all: true
 
 # ============================================================================
 # Results Settings
 # ============================================================================
 results:
-  # Save results to CSV
   save_csv: true
-
-  # Save figures
   save_figures: true
-
-  # Results directory
   output_dir: "results"
-
-  # Verbose output
   verbose: true
-
-  # Log level: "DEBUG", "INFO", "WARNING", "ERROR"
   log_level: "INFO"
 
 # ============================================================================
-# Hardware-Aware Mapping
+# Scientific Study Settings
+# ============================================================================
+study:
+  enabled: true
+  seed: 42
+
+  # Use a fast exact backend for the multi-instance algorithm study.
+  # Hardware realism is covered separately by the main benchmark + feasibility report.
+  executor_mode: "local"
+  backend_name: null
+  simulate_noise: false
+  shots: 0
+  objective_repetitions: 1
+  report_repetitions: 1
+  analysis_shots: 0
+  analysis_mode: "none"
+
+  optimizer_type: "COBYLA"
+  maxiter: 40
+  tolerance: 1e-4
+
+  candidate_depths: [1, 2]
+  candidate_initial_points: [1, 2]
+
+  tuning_seeds: [101, 202, 303]
+  evaluation_seeds: [404, 505, 606, 707, 808, 909, 1001]
+
+  graph_families:
+    - name: "d_regular_8_3"
+      type: "d_regular"
+      n_nodes: 8
+      degree: 3
+    - name: "erdos_renyi_8_0.5"
+      type: "erdos_renyi"
+      n_nodes: 8
+      edge_probability: 0.5
+
+  random_cut_trials: 64
+  local_search_iterations: 200
+  confidence_level: 0.95
+  bootstrap_samples: 1000
+  permutation_samples: 2000
+
+# ============================================================================
+# Hardware-Aware Mapping / Feasibility Heuristics
 # ============================================================================
 hardware:
-  # Enable hardware-aware qubit mapping
-  enable_mapping: false
+  enable_mapping: true
 
-  # Target backend coupling map
-  coupling_map:
-    - [0, 1]
-    - [1, 2]
-    - [2, 3]
-    - [3, 4]
-    - [4, 5]
-    - [5, 6]
-    - [6, 7]
+  # Backend used for transpilation and feasibility estimates
+  target_backend: "ibm_brisbane"
 
-  # Number of qubits to use
-  n_qubits: 8
+  # Heuristic NISQ feasibility thresholds
+  max_transpiled_depth: 200
+  max_two_qubit_gates: 120
+  max_total_shots: 150000

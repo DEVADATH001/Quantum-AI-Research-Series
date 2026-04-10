@@ -10,7 +10,10 @@ import yaml
 
 from src.classical_solver import ClassicalSolver
 from src.evaluation_metrics import EvaluationMetrics
+from src.experimental_study import ExperimentalStudyRunner
 from src.graph_generator import GraphGenerator
+from src.hardware_analysis import HardwareFeasibilityAnalyzer, HardwareFeasibilityThresholds
+from src.qaoa_circuit import QAOACircuitBuilder
 from src.qaoa_optimizer import MaxCutQAOAProblem, ParameterGridEvaluator, QAOAOptimizer
 from src.rqaoa_engine import RQAOAEngine
 from src.runtime_executor import RuntimeExecutor
@@ -18,6 +21,9 @@ from src.visualization import Visualizer, save_metrics_csv
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 LOGGER = logging.getLogger(__name__)
+logging.getLogger("qiskit").setLevel(logging.WARNING)
+logging.getLogger("qiskit_ibm_runtime").setLevel(logging.WARNING)
+logging.getLogger("stevedore").setLevel(logging.WARNING)
 
 
 def load_config(project_root: Path) -> Dict:
@@ -70,6 +76,8 @@ def create_executor(config: Dict, seed: int) -> RuntimeExecutor:
         resilience_level=quantum_cfg.get("resilience_level", 1),
         optimization_level=quantum_cfg.get("optimization_level", 1),
         seed=seed,
+        simulate_noise=quantum_cfg.get("simulate_noise", True),
+        noise_model_path=quantum_cfg.get("noise_model_path"),
     )
 
 
@@ -107,6 +115,27 @@ def create_optimizer(config: Dict, depth: int) -> QAOAOptimizer:
     )
 
 
+def create_hardware_analyzer(config: Dict, seed: int) -> HardwareFeasibilityAnalyzer | None:
+    """Create a target-backend analyzer for NISQ feasibility estimates."""
+    hardware_cfg = config.get("hardware", {})
+    backend_name = hardware_cfg.get("target_backend") or config["quantum"].get("backend_name")
+    backend, _ = RuntimeExecutor.resolve_backend(backend_name)
+    if backend is None:
+        return None
+
+    thresholds = HardwareFeasibilityThresholds(
+        max_transpiled_depth=int(hardware_cfg.get("max_transpiled_depth", 200)),
+        max_two_qubit_gates=int(hardware_cfg.get("max_two_qubit_gates", 120)),
+        max_total_shots=int(hardware_cfg.get("max_total_shots", 150000)),
+    )
+    return HardwareFeasibilityAnalyzer(
+        backend=backend,
+        optimization_level=config["quantum"].get("optimization_level", 1),
+        seed=seed,
+        thresholds=thresholds,
+    )
+
+
 def main() -> None:
     project_root = Path(__file__).resolve().parent
     config = load_config(project_root)
@@ -134,8 +163,10 @@ def main() -> None:
 
     qaoa_rows: List[Dict] = []
     qaoa_results: List[Tuple[int, QAOAOptimizer, object]] = []
+    hardware_rows: List[Dict] = []
     previous_params = None
     warm_start_enabled = bool(qaoa_cfg.get("warm_start_across_depths", True))
+    hardware_analyzer = create_hardware_analyzer(config, seed=optimizer_cfg.get("seed", 42))
 
     for depth in qaoa_cfg["p_layers"]:
         problem = create_problem(config, graph, depth=depth, seed=optimizer_cfg.get("seed", 42))
@@ -194,6 +225,28 @@ def main() -> None:
             }
         )
         qaoa_results.append((depth, optimizer, result))
+        if hardware_analyzer is not None:
+            circuit = QAOACircuitBuilder(
+                n_qubits=graph.number_of_nodes(),
+                p=depth,
+            ).build_qaoa_circuit_multilayer(
+                graph,
+                gammas=result.optimal_params[0::2].tolist(),
+                betas=result.optimal_params[1::2].tolist(),
+            )
+            hardware_rows.append(
+                {
+                    "method": f"qaoa_p{depth}",
+                    "depth": depth,
+                    **hardware_analyzer.analyze(
+                        circuit,
+                        shots_per_evaluation=config["quantum"].get("shots", 1024),
+                        n_evaluations=result.n_evaluations,
+                        objective_repetitions=config["quantum"].get("objective_repetitions", 1),
+                        report_repetitions=config["quantum"].get("report_repetitions", 1),
+                    ),
+                }
+            )
         LOGGER.info(
             "QAOA p=%s expected_cut=%.4f ratio=%.4f representative_bitstring=%s diagnostics=%s",
             depth,
@@ -203,42 +256,48 @@ def main() -> None:
             "; ".join(result.diagnostics) if result.diagnostics else "none",
         )
 
-    rqaoa = RQAOAEngine(
-        p=qaoa_cfg["p_layers"][0],
-        n_eliminate_per_step=config["rqaoa"]["eliminate_per_step"],
-        correlation_threshold=config["rqaoa"]["correlation_threshold"],
-        min_problem_size=config["rqaoa"]["min_problem_size"],
-        max_depth=config["rqaoa"]["max_depth"],
-        force_fallback_elimination=True,
-    )
-    rqaoa_result = rqaoa.solve(graph, optimal_value=exact_result.optimal_value)
-    rqaoa_row = {
-        "method": "rqaoa",
-        "depth": qaoa_cfg["p_layers"][0],
-        "expected_cut_value": float(rqaoa_result.cut_value),
-        "sampled_cut_value": float(rqaoa_result.cut_value),
-        "best_sampled_cut_value": float(rqaoa_result.cut_value),
-        "approximation_ratio": float(rqaoa_result.approximation_ratio or 0.0),
-        "minimization_objective": -float(rqaoa_result.cut_value),
-        "reevaluated_minimization_objective": -float(rqaoa_result.cut_value),
-        "objective_std": 0.0,
-        "objective_stderr": 0.0,
-        "n_evaluations": None,
-        "runtime_sec": round(rqaoa_result.runtime, 4),
-        "representative_bitstring": rqaoa_result.solution_bitstring,
-        "representative_probability": None,
-        "most_likely_bitstring": rqaoa_result.solution_bitstring,
-        "best_sampled_bitstring": rqaoa_result.solution_bitstring,
-        "analysis_mode": "rqaoa_recursive",
-        "diagnostics": "",
-        "n_levels": rqaoa_result.n_levels,
-    }
-    LOGGER.info(
-        "RQAOA cut=%.4f ratio=%.4f levels=%s",
-        rqaoa_result.cut_value,
-        rqaoa_result.approximation_ratio or 0.0,
-        rqaoa_result.n_levels,
-    )
+    rqaoa_result = None
+    rqaoa_row = None
+    if config["rqaoa"].get("enabled", True):
+        rqaoa = RQAOAEngine(
+            p=qaoa_cfg["p_layers"][0],
+            n_eliminate_per_step=config["rqaoa"]["eliminate_per_step"],
+            correlation_threshold=config["rqaoa"]["correlation_threshold"],
+            min_problem_size=config["rqaoa"]["min_problem_size"],
+            max_depth=config["rqaoa"]["max_depth"],
+            force_fallback_elimination=True,
+            executor=create_executor(config, seed=optimizer_cfg.get("seed", 42)),
+            analysis_shots=config["quantum"].get("shots", 1024),
+            correlation_method=config["rqaoa"].get("correlation_method", "auto"),
+        )
+        rqaoa_result = rqaoa.solve(graph, optimal_value=exact_result.optimal_value)
+        rqaoa_row = {
+            "method": "rqaoa",
+            "depth": qaoa_cfg["p_layers"][0],
+            "expected_cut_value": float(rqaoa_result.cut_value),
+            "sampled_cut_value": float(rqaoa_result.cut_value),
+            "best_sampled_cut_value": float(rqaoa_result.cut_value),
+            "approximation_ratio": float(rqaoa_result.approximation_ratio or 0.0),
+            "minimization_objective": -float(rqaoa_result.cut_value),
+            "reevaluated_minimization_objective": -float(rqaoa_result.cut_value),
+            "objective_std": 0.0,
+            "objective_stderr": 0.0,
+            "n_evaluations": None,
+            "runtime_sec": round(rqaoa_result.runtime, 4),
+            "representative_bitstring": rqaoa_result.solution_bitstring,
+            "representative_probability": None,
+            "most_likely_bitstring": rqaoa_result.solution_bitstring,
+            "best_sampled_bitstring": rqaoa_result.solution_bitstring,
+            "analysis_mode": "rqaoa_recursive",
+            "diagnostics": "",
+            "n_levels": rqaoa_result.n_levels,
+        }
+        LOGGER.info(
+            "RQAOA cut=%.4f ratio=%.4f levels=%s",
+            rqaoa_result.cut_value,
+            rqaoa_result.approximation_ratio or 0.0,
+            rqaoa_result.n_levels,
+        )
 
     metrics_rows = [
         {
@@ -262,8 +321,11 @@ def main() -> None:
         }
     ]
     metrics_rows.extend(qaoa_rows)
-    metrics_rows.append(rqaoa_row)
+    if rqaoa_row is not None:
+        metrics_rows.append(rqaoa_row)
     save_metrics_csv(metrics_rows, str(results_dir / "metrics.csv"))
+    if hardware_rows:
+        save_metrics_csv(hardware_rows, str(results_dir / "hardware_feasibility.csv"))
 
     best_depth, best_optimizer, best_result = max(qaoa_results, key=lambda item: item[2].cut_value or 0.0)
     representative_bitstring = (
@@ -291,15 +353,18 @@ def main() -> None:
         title="QAOA Expected Approximation Ratio vs Depth",
     )
 
-    objective_p1 = create_problem(
-        config,
-        graph,
-        depth=1,
+    landscape_problem = MaxCutQAOAProblem(
+        graph=graph,
+        p=1,
+        executor=RuntimeExecutor(mode="local", shots=0, seed=optimizer_cfg.get("seed", 42)),
         seed=optimizer_cfg.get("seed", 42),
-    ).objective_function
+        analysis_shots=0,
+        analysis_mode="none",
+    )
+    objective_p1 = landscape_problem.objective_function
     gamma_grid, beta_grid, cost_grid = ParameterGridEvaluator(p=1).evaluate_grid(
         objective_function=objective_p1,
-        n_points=25,
+        n_points=15,
     )
     visualizer.plot_energy_landscape(
         gamma_grid=gamma_grid,
@@ -318,17 +383,26 @@ def main() -> None:
             title=f"QAOA Convergence (p={best_depth})",
         )
 
+    comparison_labels = ["Exact", f"QAOA p={best_depth}"]
+    comparison_values = [
+        float(exact_result.optimal_value),
+        float(best_result.cut_value or 0.0),
+    ]
+    if rqaoa_result is not None:
+        comparison_labels.append("RQAOA")
+        comparison_values.append(float(rqaoa_result.cut_value))
+
     visualizer.plot_comparison_bar(
-        labels=["Exact", f"QAOA p={best_depth}", "RQAOA"],
-        values=[
-            float(exact_result.optimal_value),
-            float(best_result.cut_value or 0.0),
-            float(rqaoa_result.cut_value),
-        ],
+        labels=comparison_labels,
+        values=comparison_values,
         reference=float(exact_result.optimal_value),
         save_path=str(results_dir / "method_comparison.png"),
         title="Expected Objective Comparison on Configured Graph",
     )
+
+    if config.get("study", {}).get("enabled", False):
+        LOGGER.info("Running held-out experimental study")
+        ExperimentalStudyRunner(project_root=project_root, config=config).run()
 
     LOGGER.info("Artifacts written to %s", results_dir)
 

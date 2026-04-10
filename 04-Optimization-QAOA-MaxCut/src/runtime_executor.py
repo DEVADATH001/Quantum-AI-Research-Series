@@ -8,9 +8,11 @@ Provides a small execution layer for QAOA research workflows:
 - ``ibm_hardware`` uses Runtime Estimator when credentials are available
 """
 
+import json
 import logging
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -44,6 +46,8 @@ class RuntimeExecutor:
         resilience_level: int = 1,
         optimization_level: int = 1,
         seed: Optional[int] = 42,
+        simulate_noise: bool = True,
+        noise_model_path: Optional[str] = None,
     ) -> None:
         self.mode = mode
         self.backend_name = backend_name
@@ -51,16 +55,21 @@ class RuntimeExecutor:
         self.resilience_level = resilience_level
         self.optimization_level = optimization_level
         self.seed = seed
+        self.simulate_noise = simulate_noise
+        self.noise_model_path = noise_model_path
         self.rng = np.random.default_rng(seed)
         self.backend: Optional[Any] = None
         self.primitive: Optional[Any] = None
+        self.target_backend: Optional[Any] = None
+        self.backend_source: str = "none"
         self._initialize_backend()
 
         logger.info(
-            "RuntimeExecutor initialized: mode=%s, backend=%s, shots=%s",
+            "RuntimeExecutor initialized: mode=%s, backend=%s, shots=%s, simulate_noise=%s",
             self.mode,
             self.backend_name,
             self.shots,
+            self.simulate_noise,
         )
 
     def _initialize_backend(self) -> None:
@@ -73,19 +82,19 @@ class RuntimeExecutor:
         if self.mode == "noisy_simulator":
             from qiskit_aer import AerSimulator
 
-            noise_model = None
-            if self.backend_name:
+            noise_model = self._load_noise_model(self.noise_model_path)
+            self.target_backend, self.backend_source = self.resolve_backend(self.backend_name)
+
+            if self.simulate_noise and self.target_backend is not None:
                 try:
-                    from qiskit_aer.noise import NoiseModel
-                    from qiskit_ibm_runtime import QiskitRuntimeService
+                    self.backend = AerSimulator.from_backend(self.target_backend)
+                except Exception as exc:
+                    logger.warning("Could not create Aer simulator from backend: %s", exc)
+                    self.backend = None
 
-                    service = QiskitRuntimeService()
-                    real_backend = service.backend(self.backend_name)
-                    noise_model = NoiseModel.from_backend(real_backend)
-                except Exception as exc:  # pragma: no cover - network credentials
-                    logger.warning("Could not load backend noise model: %s", exc)
+            if self.backend is None:
+                self.backend = AerSimulator(noise_model=noise_model)
 
-            self.backend = AerSimulator(noise_model=noise_model)
             self.primitive = None
             return
 
@@ -97,6 +106,8 @@ class RuntimeExecutor:
 
             service = QiskitRuntimeService()
             self.backend = service.backend(self.backend_name)
+            self.target_backend = self.backend
+            self.backend_source = "runtime_service"
             self.primitive = EstimatorV2(
                 backend=self.backend,
                 options={
@@ -179,14 +190,23 @@ class RuntimeExecutor:
 
     def _execute_aer_sampled(self, circuit, hamiltonian, offset: float) -> ExecutionResult:
         """Execute a sampled circuit on Aer, adding measurements if needed."""
+        from qiskit import transpile
+
         measured_circuit = circuit if self._has_measurements(circuit) else circuit.copy()
         if not self._has_measurements(measured_circuit):
             measured_circuit.measure_all()
 
-        job = self.backend.run(
+        transpiled_circuit = transpile(
             measured_circuit,
+            backend=self.backend,
+            optimization_level=self.optimization_level,
+            seed_transpiler=self.seed,
+        )
+
+        job = self.backend.run(
+            transpiled_circuit,
             shots=self.shots,
-            seed_simulator=self.seed,
+            seed_simulator=int(self.rng.integers(0, 2**31 - 1)),
         )
         result = job.result()
         raw_counts = result.get_counts()
@@ -203,7 +223,7 @@ class RuntimeExecutor:
             objective_value=objective_value,
             variance=variance,
             n_shots=self.shots,
-            circuit_depth=measured_circuit.depth(),
+            circuit_depth=transpiled_circuit.depth(),
             runtime=0.0,
             backend_name=self._backend_label(self.backend),
             sampled_bitstring=sampled_bitstring,
@@ -323,12 +343,91 @@ class RuntimeExecutor:
             "shots": self.shots,
             "resilience_level": self.resilience_level,
             "optimization_level": self.optimization_level,
+            "simulate_noise": self.simulate_noise,
+            "noise_model_path": self.noise_model_path,
+            "backend_source": self.backend_source,
         }
 
         if self.backend not in {None, "statevector"}:
-            for attr in ("num_qubits", "coupling_map"):
-                if hasattr(self.backend, attr):
-                    info[attr] = getattr(self.backend, attr)
+            info.update(self._collect_backend_metadata(self.target_backend or self.backend))
+
+        return info
+
+    @classmethod
+    def resolve_backend(cls, backend_name: Optional[str]) -> tuple[Optional[Any], str]:
+        """Resolve a real IBM backend when possible, else fall back to a fake backend."""
+        if not backend_name:
+            return None, "unspecified"
+
+        try:
+            from qiskit_ibm_runtime import QiskitRuntimeService
+
+            service = QiskitRuntimeService()
+            return service.backend(backend_name), "runtime_service"
+        except Exception as exc:
+            logger.info("Runtime backend resolution failed for %s: %s", backend_name, exc)
+
+        fake_backend = cls._resolve_fake_backend(backend_name)
+        if fake_backend is not None:
+            return fake_backend, "fake_provider"
+
+        return None, "unresolved"
+
+    @staticmethod
+    def _resolve_fake_backend(backend_name: str) -> Optional[Any]:
+        """Resolve a local fake backend that matches the requested IBM backend name."""
+        try:
+            from qiskit_ibm_runtime import fake_provider
+        except Exception as exc:
+            logger.info("Fake backend provider unavailable: %s", exc)
+            return None
+
+        sanitized = backend_name.lower().replace("ibm_", "").replace("-", "_")
+        class_name = "Fake" + "".join(part.capitalize() for part in sanitized.split("_"))
+        backend_cls = getattr(fake_provider, class_name, None)
+        if backend_cls is None:
+            return None
+        return backend_cls()
+
+    @staticmethod
+    def _load_noise_model(noise_model_path: Optional[str]):
+        """Load a serialized Aer noise model from JSON if provided."""
+        if not noise_model_path:
+            return None
+
+        from qiskit_aer.noise import NoiseModel
+
+        path = Path(noise_model_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Noise model file not found: {noise_model_path}")
+
+        with path.open("r", encoding="utf-8") as handle:
+            return NoiseModel.from_dict(json.load(handle))
+
+    @staticmethod
+    def _collect_backend_metadata(backend: Any) -> Dict[str, Any]:
+        """Extract useful metadata from a backend-like object."""
+        info: Dict[str, Any] = {}
+
+        for attr in ("num_qubits", "basis_gates"):
+            value = getattr(backend, attr, None)
+            if callable(value):
+                value = value()
+            if value is not None:
+                info[attr] = value
+
+        coupling_map = getattr(backend, "coupling_map", None)
+        if coupling_map is not None:
+            if hasattr(coupling_map, "get_edges"):
+                info["coupling_map"] = list(coupling_map.get_edges())
+            else:
+                info["coupling_map"] = coupling_map
+
+        backend_name = getattr(backend, "name", None)
+        if callable(backend_name):
+            backend_name = backend_name()
+        if backend_name is not None:
+            info["resolved_backend_name"] = str(backend_name)
 
         return info
 

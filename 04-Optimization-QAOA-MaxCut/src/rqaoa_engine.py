@@ -12,7 +12,8 @@ import numpy as np
 from .classical_solver import ClassicalSolver
 from .hamiltonian_builder import HamiltonianBuilder
 from .qaoa_circuit import QAOACircuitBuilder
-from .qaoa_optimizer import QAOAOptimizer
+from .qaoa_optimizer import MaxCutQAOAProblem, QAOAOptimizer
+from .runtime_executor import RuntimeExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,9 @@ class RQAOAEngine:
         optimizer: Optional[QAOAOptimizer] = None,
         qaoa_evaluator: Optional[Callable[[nx.Graph], np.ndarray]] = None,
         force_fallback_elimination: bool = True,
+        executor: Optional[RuntimeExecutor] = None,
+        analysis_shots: int = 2048,
+        correlation_method: str = "auto",
     ) -> None:
         self.p = p
         self.n_eliminate = n_eliminate_per_step
@@ -66,6 +70,9 @@ class RQAOAEngine:
         self.optimizer = optimizer
         self.qaoa_evaluator = qaoa_evaluator
         self.force_fallback_elimination = force_fallback_elimination
+        self.executor = executor
+        self.analysis_shots = analysis_shots
+        self.correlation_method = correlation_method.lower()
 
         logger.info(
             "RQAOA initialized: p=%s, eliminate=%s, threshold=%s",
@@ -151,26 +158,14 @@ class RQAOAEngine:
                 "cut_value": None,
             }
 
-        builder = HamiltonianBuilder()
-        hamiltonian, offset = builder.build_maxcut_hamiltonian(relabeled_graph)
-        total_offset = float(offset) + float(relabeled_graph.graph.get("constant_offset", 0.0))
-        circuit_builder = QAOACircuitBuilder(
-            n_qubits=relabeled_graph.number_of_nodes(),
+        problem = MaxCutQAOAProblem(
+            graph=relabeled_graph,
             p=self.p,
+            executor=self.executor or RuntimeExecutor(mode="local", shots=self.analysis_shots, seed=42),
+            seed=42,
+            analysis_shots=self.analysis_shots,
+            analysis_mode="same_backend",
         )
-
-        def objective_function(params: np.ndarray) -> float:
-            from qiskit.quantum_info import Statevector
-
-            circuit = circuit_builder.build_qaoa_circuit_multilayer(
-                relabeled_graph,
-                gammas=params[0::2].tolist(),
-                betas=params[1::2].tolist(),
-            )
-            expectation = float(
-                np.real(Statevector.from_instruction(circuit).expectation_value(hamiltonian))
-            )
-            return -(expectation + total_offset)
 
         optimizer = self.optimizer or QAOAOptimizer(
             p=self.p,
@@ -180,13 +175,16 @@ class RQAOAEngine:
             seed=42,
         )
         opt_result = optimizer.optimize(
-            objective_function=objective_function,
+            objective_function=problem.objective_function,
             n_qubits=relabeled_graph.number_of_nodes(),
             graph=relabeled_graph,
+            solution_decoder=problem.decode_solution,
+            selection_objective_function=problem.objective_function,
         )
         correlation_matrix = self._compute_pair_correlations(
             relabeled_graph,
             opt_result.optimal_params,
+            counts=opt_result.measurement_counts,
         )
 
         reduced_cut_value = None
@@ -203,8 +201,18 @@ class RQAOAEngine:
             "optimal_params": opt_result.optimal_params,
         }
 
-    def _compute_pair_correlations(self, graph: nx.Graph, params: np.ndarray) -> np.ndarray:
-        """Compute ``<Z_i Z_j>`` correlations for the optimized QAOA state."""
+    def _compute_pair_correlations(
+        self,
+        graph: nx.Graph,
+        params: np.ndarray,
+        counts: Optional[Dict[str, int]] = None,
+    ) -> np.ndarray:
+        """Compute ``<Z_i Z_j>`` correlations from counts or exact statevectors."""
+        if counts and self.correlation_method in {"auto", "counts"}:
+            return self._compute_pair_correlations_from_counts(graph.number_of_nodes(), counts)
+        if self.correlation_method == "counts":
+            raise ValueError("Correlation estimation requested sampled counts, but none were available.")
+
         from qiskit.quantum_info import SparsePauliOp, Statevector
 
         n_qubits = graph.number_of_nodes()
@@ -226,6 +234,28 @@ class RQAOAEngine:
                 corr = float(np.real(statevector.expectation_value(operator)))
                 correlations[i, j] = corr
                 correlations[j, i] = corr
+        return correlations
+
+    @staticmethod
+    def _compute_pair_correlations_from_counts(
+        n_qubits: int,
+        counts: Dict[str, int],
+    ) -> np.ndarray:
+        """Estimate ``<Z_i Z_j>`` from computational-basis measurement counts."""
+        total = sum(counts.values())
+        if total <= 0:
+            return np.eye(n_qubits)
+
+        correlations = np.eye(n_qubits)
+        for i in range(n_qubits):
+            for j in range(i + 1, n_qubits):
+                expectation = 0.0
+                for bitstring, count in counts.items():
+                    zi = 1.0 if bitstring[i] == "0" else -1.0
+                    zj = 1.0 if bitstring[j] == "0" else -1.0
+                    expectation += (count / total) * zi * zj
+                correlations[i, j] = expectation
+                correlations[j, i] = expectation
         return correlations
 
     def _analyze_correlations(self, qaoa_result: Dict[str, Any]) -> List[Dict[str, Any]]:

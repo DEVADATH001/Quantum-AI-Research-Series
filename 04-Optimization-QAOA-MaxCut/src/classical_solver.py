@@ -11,12 +11,14 @@ Methods:
 
 Used as baseline for QAOA performance comparison."""
 
-import logging
-from typing import Dict, List, Optional, Tuple
 import itertools
-import numpy as np
-import networkx as nx
+import logging
+import random
 from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
+
+import networkx as nx
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -271,6 +273,45 @@ class ClassicalSolver:
             n_nodes=n_nodes,
             n_edges=graph.number_of_edges()
         )
+
+    def solve_random(
+        self,
+        graph: nx.Graph,
+        n_trials: int = 64,
+    ) -> ClassicalResult:
+        """
+        Solve Max-Cut with repeated random partitions.
+
+        Args:
+            graph: NetworkX graph.
+            n_trials: Number of random restarts.
+
+        Returns:
+            Best random cut encountered.
+        """
+        import time
+
+        start_time = time.time()
+        n_nodes = graph.number_of_nodes()
+        best_value = float("-inf")
+        best_bitstring = "0" * n_nodes
+
+        for _ in range(max(1, int(n_trials))):
+            bits = self.rng.integers(0, 2, size=n_nodes)
+            bitstring = "".join(str(int(bit)) for bit in bits)
+            value = self._compute_cut(graph, tuple(int(bit) for bit in bitstring))
+            if value > best_value:
+                best_value = value
+                best_bitstring = bitstring
+
+        return ClassicalResult(
+            optimal_value=float(best_value),
+            optimal_bitstrings=[best_bitstring],
+            n_solutions=1,
+            runtime=time.time() - start_time,
+            n_nodes=n_nodes,
+            n_edges=graph.number_of_edges(),
+        )
     
     def compute_cut_value(
         self,
@@ -397,7 +438,8 @@ class ApproximateSolver:
     @staticmethod
     def solve_local_search(
         graph: nx.Graph,
-        max_iterations: int = 1000
+        max_iterations: int = 1000,
+        seed: Optional[int] = None,
     ) -> Tuple[float, str]:
         """
         Local search algorithm for Max-Cut.
@@ -405,16 +447,16 @@ class ApproximateSolver:
         Args:
             graph: NetworkX graph
             max_iterations: Maximum iterations
+            seed: Random seed for the initial assignment
             
         Returns:
             Tuple of (cut_value, bitstring)
         """
-        import random
-        
         n = graph.number_of_nodes()
+        rng = random.Random(seed)
         
         # Random initial assignment
-        assignment = [random.randint(0, 1) for _ in range(n)]
+        assignment = [rng.randint(0, 1) for _ in range(n)]
         
         for _ in range(max_iterations):
             improved = False
@@ -457,7 +499,8 @@ class ApproximateSolver:
     @staticmethod
     def goemans_williamson(
         graph: nx.Graph,
-        num_trials: int = 100
+        num_trials: int = 100,
+        seed: Optional[int] = None,
     ) -> Tuple[float, List[int]]:
         """
         Goemans-Williamson algorithm using Semidefinite Programming (SDP).
@@ -513,10 +556,11 @@ class ApproximateSolver:
             
         best_cut = 0
         best_partition = None
+        rng = np.random.default_rng(seed)
         
         # Random hyperplane rounding
         for _ in range(num_trials):
-            r = np.random.randn(n)
+            r = rng.standard_normal(n)
             r = r / np.linalg.norm(r)
             
             partition = [1 if np.dot(V[:, i], r) > 0 else 0 for i in range(n)]

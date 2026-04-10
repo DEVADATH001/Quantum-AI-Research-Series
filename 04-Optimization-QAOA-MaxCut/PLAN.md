@@ -21,6 +21,20 @@ placeholder "production-grade" scaffold. The main upgrades in this revision are:
    noisy-candidate re-evaluation, and plateau diagnostics in the optimizer.
 8. Split representative sampled bitstrings from best-observed samples so the
    benchmark no longer overstates sampled performance.
+9. Added fake-backend hardware proxy fallback, serialized noise-model loading,
+   and backend-aware noisy execution for NISQ-style benchmarking.
+10. Added a hardware-feasibility report with transpiled depth, entangling-gate
+    growth, and shot-budget estimates.
+11. Switched the default artifact profile from an exact 12-qubit study to a
+    smaller 6-qubit noisy hardware proxy benchmark.
+12. Updated RQAOA so it can estimate elimination correlations from sampled
+    counts instead of exact statevectors.
+13. Added a held-out experimental study across multiple graph families with
+    explicit tuning/evaluation splits, classical heuristic baselines, bootstrap
+    confidence intervals, and paired significance tests.
+14. The study results now show, explicitly and reproducibly, that tuned QAOA
+    underperforms simple classical heuristics on the current 8-node benchmark
+    families.
 
 ## Reproducible Outputs
 
@@ -33,6 +47,12 @@ python generate_artifacts.py
 This writes:
 
 - `results/metrics.csv`
+- `results/hardware_feasibility.csv`
+- `results/study_candidate_search.csv`
+- `results/study_instance_metrics.csv`
+- `results/study_method_summary.csv`
+- `results/study_significance.csv`
+- `results/study_manifest.json`
 - `results/approximation_ratio.png`
 - `results/energy_landscape.png`
 - `results/graph_cut_visualization.png`
@@ -54,3 +74,7 @@ than a conference-ready research contribution. The next meaningful upgrades are:
    generic D-regular graph surrogate.
 5. Add backend-native hardware sampling for representative bitstrings when
    using Runtime-based execution.
+6. Add parameterized-circuit transpilation caching so noisy backend benchmarks
+   scale beyond the current small demonstration setting.
+7. Expand the held-out study to weighted graphs, larger sizes, and stronger
+   approximation baselines before making any serious performance claim.

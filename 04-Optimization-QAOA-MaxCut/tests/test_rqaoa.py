@@ -66,3 +66,23 @@ def test_opposite_elimination_tracks_constant_offset_exactly():
             [node for node, bit in zip(sorted(reduced.nodes()), reduced_bits) if bit == "0"],
         )
         assert original_value == reduced_value
+
+
+def test_count_based_rqaoa_correlations_are_symmetric():
+    graph = nx.Graph()
+    graph.add_edges_from([(0, 1), (1, 2), (2, 3), (3, 0)])
+
+    engine = RQAOAEngine(correlation_method="counts", analysis_shots=512)
+    correlations = engine._compute_pair_correlations_from_counts(
+        4,
+        {
+            "0000": 128,
+            "0011": 128,
+            "1100": 128,
+            "1111": 128,
+        },
+    )
+
+    assert correlations.shape == (4, 4)
+    assert (correlations.diagonal() == 1.0).all()
+    assert correlations[0, 1] == correlations[1, 0]
