@@ -21,6 +21,12 @@ except ImportError:  # pragma: no cover - older Qiskit
     BackendSamplerV2 = None
 
 try:
+    from qiskit_ibm_runtime.fake_provider import FakeBrisbane
+    FAKE_PROVIDER_AVAILABLE = True
+except ImportError:  # pragma: no cover
+    FAKE_PROVIDER_AVAILABLE = False
+
+try:
     from qiskit_aer.primitives import Sampler as AerSamplerV1
 except ImportError:  # pragma: no cover - unexpected environment
     AerSamplerV1 = None
@@ -32,10 +38,17 @@ logger = logging.getLogger(__name__)
 def create_ibm_noise_model(
     backend_name: str = "ibm_brisbane",
     readout_error: float = 0.01,
-    gate_error: float = 0.001,
+    gate_error: float = 0.01,
 ) -> NoiseModel:
-    """Create a lightweight IBM-like noise model with depolarizing and thermal relaxation errors."""
-    logger.info("Creating IBM-style noise model (backend=%s)", backend_name)
+    """Create an IBM-like noise model. Uses real FakeBackend if available, else builds a fallback."""
+    if FAKE_PROVIDER_AVAILABLE and backend_name == "ibm_brisbane":
+        logger.info("Extracting noise model directly from FakeBrisbane")
+        backend = FakeBrisbane()
+        noise_model = NoiseModel.from_backend(backend)
+        logger.info("Real noise model created based on %s", backend_name)
+        return noise_model
+
+    logger.info("FakeBrisbane not available or different backend requested. Creating fallback IBM-style noise model (backend=%s)", backend_name)
 
     noise_model = NoiseModel()
 
@@ -66,7 +79,7 @@ def create_ibm_noise_model(
     )
     noise_model.add_all_qubit_readout_error(readout_error_obj)
 
-    logger.info("Noise model created: gate_error=%s readout_error=%s with T1/T2 thermal relaxation", gate_error, readout_error)
+    logger.info("Fallback noise model created: gate_error=%s readout_error=%s with T1/T2 thermal relaxation", gate_error, readout_error)
     return noise_model
 
 def create_aer_simulator(
@@ -80,7 +93,7 @@ def create_aer_simulator(
 
 def create_noisy_sampler(
     noise_model: NoiseModel,
-    shots: int = 1000,
+    shots: int = 4096,
     seed: int = 42,
 ):
     """Create a noisy sampler primitive for kernel evaluation."""
@@ -89,7 +102,7 @@ def create_noisy_sampler(
     if BackendSamplerV2 is not None:
         return BackendSamplerV2(
             backend=simulator,
-            options={"default_shots": shots, "seed_simulator": seed},
+            options={"default_shots": shots, "seed_simulator": seed, "resilience_level": 1},
         )
 
     if AerSamplerV1 is not None:
@@ -106,12 +119,12 @@ def simulate_noisy_kernel(
     Y: Optional[np.ndarray] = None,
     backend: str = "ibm_brisbane",
     readout_error: float = 0.01,
-    gate_error: float = 0.001,
-    shots: int = 1000,
+    gate_error: float = 0.01,
+    shots: int = 4096,
     seed: int = 42,
 ) -> tuple[np.ndarray, NoiseModel]:
     """Evaluate a quantum kernel matrix under simulated hardware noise."""
-    logger.info("Simulating noisy kernel with %s shots", shots)
+    logger.info("Simulating noisy kernel with %s shots via mitigated sampler primitives", shots)
 
     noise_model = create_ibm_noise_model(
         backend_name=backend,
@@ -175,8 +188,8 @@ def create_noisy_kernel_comparison(
     feature_map: QuantumCircuit,
     X: np.ndarray,
     readout_error: float = 0.01,
-    gate_error: float = 0.001,
-    shots: int = 1000,
+    gate_error: float = 0.01,
+    shots: int = 4096,
 ) -> tuple[np.ndarray, np.ndarray, dict]:
     """Compute noiseless and noisy kernels plus a comparison report."""
     noiseless_kernel = create_quantum_kernel(feature_map=feature_map)

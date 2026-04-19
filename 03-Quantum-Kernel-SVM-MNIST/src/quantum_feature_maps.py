@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 def create_feature_map(
     feature_map_type: str = "ZZFeatureMap",
     feature_dimension: int = 4,
-    reps: int = 3,
+    reps: int = 1,
     entanglement: str = "full",
     parameter_prefix: str = "x",
     decompose: bool = False,
@@ -83,7 +83,7 @@ def create_feature_map(
 
 def create_zz_feature_map(
     feature_dimension: int = 4,
-    reps: int = 3,
+    reps: int = 1,
     entanglement: str = "full",
     parameter_prefix: str = "x",
     decompose: bool = False,

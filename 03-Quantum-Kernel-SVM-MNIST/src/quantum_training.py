@@ -25,6 +25,8 @@ except ImportError as e:  # pragma: no cover - environment-specific
     FidelityQuantumKernel = None  # type: ignore[assignment]
     QML_IMPORT_ERROR = e
 
+from sklearn.model_selection import GridSearchCV
+
 logger = logging.getLogger(__name__)
 
 def create_pegasos_qsvc(
@@ -34,52 +36,71 @@ def create_pegasos_qsvc(
     batch_size: int = 100,
     num_samples: Optional[int] = None,
     random_state: int = 42,
+    precomputed: bool = False,
 ) -> PegasosQSVC:
-    """Create PegasosQSVC while handling API differences across Qiskit ML versions."""
+    """Create PegasosQSVC while handling API differences across Qiskit ML versions.
+
+    When ``precomputed=True`` the current Qiskit ML API requires
+    ``quantum_kernel=None`` — the kernel has already been evaluated and the
+    model receives a plain numpy kernel matrix instead.
+    """
     if not QML_AVAILABLE:
         raise ImportError(
             "Qiskit Machine Learning is required for PegasosQSVC. "
             f"Import error: {QML_IMPORT_ERROR}"
         )
 
+    # Newer Qiskit ML: quantum_kernel must be None when precomputed=True.
+    qk_arg: FidelityQuantumKernel | None = None if precomputed else quantum_kernel
+
     signature = inspect.signature(PegasosQSVC.__init__)
     params = signature.parameters
 
     logger.info(
-        "Creating PegasosQSVC with lambda=%s max_iter=%s batch_size=%s",
+        "Creating PegasosQSVC with lambda=%s max_iter=%s batch_size=%s precomputed=%s",
         lambda_param,
         max_iter,
         batch_size,
+        precomputed,
     )
 
     if "lambda_param" in params:
         return PegasosQSVC(
-            quantum_kernel=quantum_kernel,
+            quantum_kernel=qk_arg,
             lambda_param=lambda_param,
             max_iter=max_iter,
             batch_size=batch_size,
             num_samples=num_samples,
             random_state=random_state,
+            precomputed=precomputed,
         )
 
     if lambda_param <= 0:
         raise ValueError("lambda_param must be > 0")
 
-    C = 1.0 / lambda_param
-    if batch_size != 100 or num_samples is not None:
+    # Mathematically align Pegasos regularization parameter with SVM `C` parameter.
+    if num_samples is not None and num_samples > 0:
+        C = 1.0 / (lambda_param * num_samples)
+    else:
         logger.warning(
-            "Current PegasosQSVC API ignores batch_size/num_samples. "
-            "Using C and num_steps only."
+            "num_samples not provided. Defaulting to unscaled C = 1 / lambda."
+        )
+        C = 1.0 / lambda_param
+
+    if batch_size != 100 or num_samples is not None:
+        logger.info(
+            "Current PegasosQSVC API uses num_steps for iterations. "
+            "Batch size and num_samples apply fundamentally to optimization scaling."
         )
 
     return PegasosQSVC(
-        quantum_kernel=quantum_kernel,
+        quantum_kernel=qk_arg,
         C=C,
         num_steps=max_iter,
         seed=random_state,
+        precomputed=precomputed,
     )
 
-from sklearn.model_selection import GridSearchCV
 
 def train_qsvc(
     quantum_kernel: FidelityQuantumKernel,
@@ -153,6 +174,7 @@ def train_pegasos_qsvc(
     max_iter: int = 1000,
     batch_size: int = 100,
     random_state: int = 42,
+    precomputed: bool = False,
 ) -> tuple[PegasosQSVC, dict[str, Any]]:
     """Train PegasosQSVC and return model plus metadata."""
     if not QML_AVAILABLE:
@@ -161,7 +183,7 @@ def train_pegasos_qsvc(
             f"Import error: {QML_IMPORT_ERROR}"
         )
 
-    logger.info("Training PegasosQSVC on %s samples", len(X_train))
+    logger.info("Training PegasosQSVC on %s samples (precomputed=%s)", len(X_train), precomputed)
 
     model = create_pegasos_qsvc(
         quantum_kernel=quantum_kernel,
@@ -170,6 +192,7 @@ def train_pegasos_qsvc(
         batch_size=batch_size,
         num_samples=len(X_train),
         random_state=random_state,
+        precomputed=precomputed,
     )
 
     start_time = time.time()

@@ -192,3 +192,33 @@ def compute_kernel_matrix(
 
     return pairwise_kernels(X1, X2, metric=kernel, filter_params=True, **params)
 
+
+def compute_rbf_gram_matrix(
+    X: np.ndarray,
+    gamma: str | float = "scale",
+) -> np.ndarray:
+    """Compute the RBF kernel gram matrix K(X, X).
+
+    Used to calculate Kernel-Target Alignment (KTA) for the classical RBF SVM,
+    enabling a direct mechanistic comparison with the quantum kernel's KTA.
+
+    Args:
+        X: Feature matrix of shape (n_samples, n_features).
+        gamma: RBF bandwidth. ``"scale"`` uses 1 / (n_features * X.var()),
+               ``"auto"`` uses 1 / n_features.
+
+    Returns:
+        Square gram matrix of shape (n_samples, n_samples).
+    """
+    n_features = X.shape[1]
+    if gamma == "scale":
+        gamma_val = 1.0 / (n_features * float(np.var(X))) if np.var(X) > 0 else 1.0
+    elif gamma == "auto":
+        gamma_val = 1.0 / n_features
+    else:
+        gamma_val = float(gamma)
+
+    logger.info(
+        "Computing RBF gram matrix for %d samples (gamma=%.4e)", len(X), gamma_val
+    )
+    return pairwise_kernels(X, X, metric="rbf", gamma=gamma_val)

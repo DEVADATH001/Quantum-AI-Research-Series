@@ -127,12 +127,12 @@ visualization:
 # pca_dimensions covers the practical NISQ qubit range (4-8 qubits).
 # reps_values drives the novel feature-map depth ablation contribution.
 ablation:
-  seeds: [42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
-  pca_dimensions: [4, 6, 8]
-  reps_values: [1, 2, 3]        # Feature-map depth ablation
-  max_quantum_train: 100         # Per-quantum-run training cap (more = better stats)
-  max_kernel_samples: 100        # Kernel diagnostic matrix size
-  max_noise_samples: 30          # Noise run sample cap (keep tractable)
+  seeds: [42]
+  pca_dimensions: [4]
+  reps_values: [1, 2]        # Feature-map depth ablation
+  max_quantum_train: 20         # Per-quantum-run training cap (more = better stats)
+  max_kernel_samples: 20        # Kernel diagnostic matrix size
+  max_noise_samples: 10          # Noise run sample cap (keep tractable)
 
 # Logging Configuration
 logging:

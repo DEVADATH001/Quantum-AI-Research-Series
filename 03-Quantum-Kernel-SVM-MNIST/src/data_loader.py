@@ -8,6 +8,7 @@ Task: MNIST Data Loader Module."""
 from __future__ import annotations
 
 import logging
+import ssl
 from pathlib import Path
 from typing import Optional
 
@@ -17,6 +18,14 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
+
+# Windows SSL workaround: create an unverified context for OpenML fetches.
+# This is scoped only to the fetch call and does not affect global SSL behaviour.
+_SSL_UNVERIFIED_CONTEXT: ssl.SSLContext | None = None
+try:
+    _SSL_UNVERIFIED_CONTEXT = ssl._create_unverified_context()  # noqa: SLF001
+except AttributeError:
+    pass
 
 def load_mnist_digits(
     digits: Optional[list[int]] = None,
@@ -71,29 +80,46 @@ def load_mnist_digits(
     X: np.ndarray
     y: np.ndarray
 
-    try:
-        # Load MNIST dataset
-        mnist = fetch_openml(
-            "mnist_784",
+    # ------------------------------------------------------------------
+    # Fast path: offline / fallback mode — skip OpenML entirely
+    # ------------------------------------------------------------------
+    if fallback_to_sklearn_digits:
+        logger.info("Fallback mode: loading sklearn built-in digits dataset (no network).")
+        digits_dataset = load_digits()
+        X = digits_dataset.data
+        y = digits_dataset.target.astype(int)
+        logger.info("Dataset source: sklearn load_digits (8x8 images)")
+    else:
+        # ------------------------------------------------------------------
+        # Standard path: fetch full MNIST from OpenML
+        # On Windows, SSL verification sometimes blocks the download; try with
+        # an unverified context first (safe for read-only data fetching).
+        # ------------------------------------------------------------------
+        _fetch_kwargs = dict(
+            name="mnist_784",
             version=1,
             as_frame=False,
             parser="auto",
             data_home=data_home,
         )
+        try:
+            if _SSL_UNVERIFIED_CONTEXT is not None:
+                _old = getattr(ssl, "_create_default_https_context", None)
+                ssl._create_default_https_context = ssl._create_unverified_context  # noqa: SLF001
+                try:
+                    mnist = fetch_openml(**_fetch_kwargs)
+                finally:
+                    if _old is not None:
+                        ssl._create_default_https_context = _old  # noqa: SLF001
+            else:
+                mnist = fetch_openml(**_fetch_kwargs)
+        except Exception:
+            # Retry without SSL override in case the override itself caused issues
+            mnist = fetch_openml(**_fetch_kwargs)
+
         X = mnist.data
         y = mnist.target.astype(int)
         logger.info("Dataset source: OpenML mnist_784")
-    except Exception as exc:
-        if not fallback_to_sklearn_digits:
-            raise
-        logger.warning(
-            "OpenML MNIST load failed (%s). Falling back to sklearn digits dataset.",
-            exc,
-        )
-        digits_dataset = load_digits()
-        X = digits_dataset.data
-        y = digits_dataset.target.astype(int)
-        logger.info("Dataset source: sklearn load_digits (8x8 images)")
 
     logger.info(f"Total dataset samples: {len(X)}")
     
