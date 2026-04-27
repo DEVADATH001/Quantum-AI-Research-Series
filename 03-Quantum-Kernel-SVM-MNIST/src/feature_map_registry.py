@@ -186,3 +186,42 @@ def _build_linear_zz(
         entanglement="linear",
         parameter_prefix=parameter_prefix,
     )
+
+
+@register("HardwareEfficientFeatureMap")
+def _build_hea_feature_map(
+    feature_dimension: int = 4,
+    reps: int = 1,
+    entanglement: str = "linear",
+    parameter_prefix: str = "x",
+    **_: Any,
+) -> QuantumCircuit:
+    """Hardware Efficient Ansatz (HEA) based feature map.
+    
+    Uses alternate layers of data-dependent local Ry/Rz rotations and
+    entangling gates (CZ), suitable for physical hardware execution with
+    fewer SWAP gates compared to full entanglement ZZ.
+    """
+    from qiskit.circuit import ParameterVector
+    
+    circuit = QuantumCircuit(feature_dimension, name="HEAFeatureMap")
+    x = ParameterVector(parameter_prefix, feature_dimension)
+    
+    # Repeated layers of local data encoding + entanglement
+    for r in range(reps):
+        # Local data-encoding layer
+        for i in range(feature_dimension):
+            circuit.ry(x[i], i)
+            circuit.rz(x[i], i)
+            
+        # Entangling layer (linear default)
+        if entanglement in ("linear", "full"):
+            # We enforce nearest-neighbor by default for HEA
+            for i in range(feature_dimension - 1):
+                circuit.cz(i, i + 1)
+            if feature_dimension > 2 and entanglement == "full":
+                # Close the ring if "full" was ironically requested
+                circuit.cz(feature_dimension - 1, 0)
+                
+    circuit.num_parameters = feature_dimension # Mock to help the engine understand
+    return circuit

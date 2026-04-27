@@ -45,6 +45,9 @@ class ClassicalResult:
     # Number of edges
     n_edges: int
 
+    # Optional number of objective evaluations used by the heuristic.
+    n_objective_evaluations: Optional[int] = None
+
 class ClassicalSolver:
     """
     Classical exact solvers for Max-Cut.
@@ -119,7 +122,8 @@ class ClassicalSolver:
             n_solutions=len(best_bitstrings),
             runtime=runtime,
             n_nodes=n_nodes,
-            n_edges=graph.number_of_edges()
+            n_edges=graph.number_of_edges(),
+            n_objective_evaluations=2 ** n_nodes,
         )
     
     def solve_branch_and_bound(
@@ -213,7 +217,7 @@ class ClassicalSolver:
             n_solutions=1 if best_bitstring else 0,
             runtime=runtime,
             n_nodes=n_nodes,
-            n_edges=graph.number_of_edges()
+            n_edges=graph.number_of_edges(),
         )
     
     def solve_greedy(
@@ -271,7 +275,7 @@ class ClassicalSolver:
             n_solutions=1,
             runtime=runtime,
             n_nodes=n_nodes,
-            n_edges=graph.number_of_edges()
+            n_edges=graph.number_of_edges(),
         )
 
     def solve_random(
@@ -311,6 +315,77 @@ class ClassicalSolver:
             runtime=time.time() - start_time,
             n_nodes=n_nodes,
             n_edges=graph.number_of_edges(),
+            n_objective_evaluations=max(1, int(n_trials)),
+        )
+
+    def solve_goemans_williamson(
+        self,
+        graph: nx.Graph,
+        num_trials: int = 64,
+    ) -> ClassicalResult:
+        """
+        Solve Max-Cut with Goemans-Williamson SDP rounding.
+
+        Args:
+            graph: NetworkX graph.
+            num_trials: Number of random hyperplanes used for rounding.
+
+        Returns:
+            ClassicalResult with the best rounded cut found.
+        """
+        import time
+
+        start_time = time.time()
+        cut_value, partition = ApproximateSolver.goemans_williamson(
+            graph,
+            num_trials=max(1, int(num_trials)),
+            seed=self.seed,
+        )
+        bitstring = "".join(str(int(bit)) for bit in partition)
+
+        return ClassicalResult(
+            optimal_value=float(cut_value),
+            optimal_bitstrings=[bitstring],
+            n_solutions=1,
+            runtime=time.time() - start_time,
+            n_nodes=graph.number_of_nodes(),
+            n_edges=graph.number_of_edges(),
+        )
+
+    def solve_budgeted_hill_climb(
+        self,
+        graph: nx.Graph,
+        evaluation_budget: int,
+        n_restarts: int = 4,
+    ) -> ClassicalResult:
+        """
+        Solve Max-Cut with a black-box hill climber capped by an evaluation budget.
+
+        Args:
+            graph: NetworkX graph.
+            evaluation_budget: Maximum number of objective evaluations.
+            n_restarts: Number of random restarts.
+
+        Returns:
+            ClassicalResult with the best cut found under the budget.
+        """
+        import time
+
+        start_time = time.time()
+        cut_value, bitstring, evaluations_used = ApproximateSolver.solve_budgeted_hill_climb(
+            graph,
+            evaluation_budget=max(1, int(evaluation_budget)),
+            n_restarts=max(1, int(n_restarts)),
+            seed=self.seed,
+        )
+        return ClassicalResult(
+            optimal_value=float(cut_value),
+            optimal_bitstrings=[bitstring],
+            n_solutions=1,
+            runtime=time.time() - start_time,
+            n_nodes=graph.number_of_nodes(),
+            n_edges=graph.number_of_edges(),
+            n_objective_evaluations=evaluations_used,
         )
     
     def compute_cut_value(
@@ -495,6 +570,65 @@ class ApproximateSolver:
         )
         
         return cut_value, ''.join(map(str, assignment))
+
+    @staticmethod
+    def solve_budgeted_hill_climb(
+        graph: nx.Graph,
+        evaluation_budget: int,
+        n_restarts: int = 4,
+        seed: Optional[int] = None,
+    ) -> Tuple[float, str, int]:
+        """
+        Budget-matched stochastic hill climbing for fair black-box comparisons.
+
+        Args:
+            graph: NetworkX graph.
+            evaluation_budget: Maximum number of objective evaluations.
+            n_restarts: Number of random restarts.
+            seed: Random seed.
+
+        Returns:
+            Tuple of ``(best_cut_value, best_bitstring, evaluations_used)``.
+        """
+        if evaluation_budget <= 0:
+            raise ValueError("evaluation_budget must be positive")
+
+        rng = random.Random(seed)
+        n_nodes = graph.number_of_nodes()
+        best_value = float("-inf")
+        best_assignment = [0] * n_nodes
+        evaluations_used = 0
+        restarts_remaining = max(1, int(n_restarts))
+
+        while evaluations_used < evaluation_budget and restarts_remaining > 0:
+            restarts_remaining -= 1
+            assignment = [rng.randint(0, 1) for _ in range(n_nodes)]
+            current_value = ApproximateSolver._cut_from_assignment(graph, assignment)
+            evaluations_used += 1
+
+            if current_value > best_value:
+                best_value = current_value
+                best_assignment = assignment.copy()
+
+            improved = True
+            while improved and evaluations_used < evaluation_budget:
+                improved = False
+                for node in rng.sample(range(n_nodes), n_nodes):
+                    if evaluations_used >= evaluation_budget:
+                        break
+                    assignment[node] = 1 - assignment[node]
+                    candidate_value = ApproximateSolver._cut_from_assignment(graph, assignment)
+                    evaluations_used += 1
+                    if candidate_value > current_value:
+                        current_value = candidate_value
+                        improved = True
+                        if candidate_value > best_value:
+                            best_value = candidate_value
+                            best_assignment = assignment.copy()
+                    else:
+                        assignment[node] = 1 - assignment[node]
+
+        return float(best_value), ''.join(map(str, best_assignment)), evaluations_used
     
     @staticmethod
     def goemans_williamson(
@@ -518,9 +652,7 @@ class ApproximateSolver:
         try:
             import cvxpy as cp
         except ImportError:
-            import logging
-            logging.getLogger(__name__).error("cvxpy is required for Goemans-Williamson.")
-            return 0.0, [0] * graph.number_of_nodes()
+            raise ImportError("cvxpy is required for Goemans-Williamson.") from None
             
         n = graph.number_of_nodes()
         
@@ -575,4 +707,15 @@ class ApproximateSolver:
                 best_partition = partition
                 
         return best_cut, best_partition if best_partition else [0] * n
+
+    @staticmethod
+    def _cut_from_assignment(graph: nx.Graph, assignment: List[int]) -> float:
+        """Compute the weighted cut value for a binary assignment."""
+        return float(
+            sum(
+                float(graph[u][v].get("weight", 1.0))
+                for u, v in graph.edges()
+                if assignment[u] != assignment[v]
+            )
+        )
 

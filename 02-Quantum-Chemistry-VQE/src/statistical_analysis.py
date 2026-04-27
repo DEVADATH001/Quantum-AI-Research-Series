@@ -1,0 +1,2 @@
+"\"\"\"Author: DEVADATH H K\n\nQuantum AI Research Series\n\nProject 02: Quantum Chemistry VQE\nTask: Statistical analysis utilities for multi-seed VQE experiments.\n\nThis module provides the statistical backbone that transforms single-seed\nanecdotal res
+<truncated 14803 bytes>

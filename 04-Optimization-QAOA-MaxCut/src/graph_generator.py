@@ -179,6 +179,67 @@ class GraphGenerator:
         )
         
         return graph
+
+    def generate_communication_mesh_graph(
+        self,
+        n_nodes: int,
+        degree: int,
+        seed: Optional[int] = None,
+        area_size: float = 1.0,
+        reliability_scale: float = 0.35,
+    ) -> nx.Graph:
+        """
+        Generate a weighted communication-style mesh graph.
+
+        Nodes are embedded in 2D space and connected by a symmetric
+        nearest-neighbor rule. Edge weights encode a communication-conflict
+        score built from latency, local interference, and reliability loss.
+        """
+        if degree < 1:
+            raise ValueError(f"degree must be >= 1, got {degree}")
+        if n_nodes < 2:
+            raise ValueError(f"n_nodes must be >= 2, got {n_nodes}")
+
+        seed = seed if seed is not None else self.seed
+        rng = np.random.default_rng(seed)
+        positions = rng.random((n_nodes, 2)) * float(area_size)
+        distances = np.linalg.norm(positions[:, None, :] - positions[None, :, :], axis=-1)
+        np.fill_diagonal(distances, np.inf)
+
+        logger.info(
+            "Generating communication mesh graph: n=%s, degree=%s, seed=%s",
+            n_nodes,
+            degree,
+            seed,
+        )
+
+        graph = nx.Graph()
+        for node in range(n_nodes):
+            graph.add_node(node, position=tuple(float(value) for value in positions[node]))
+
+        neighbor_count = max(1, min(degree, n_nodes - 1))
+        for node in range(n_nodes):
+            nearest_neighbors = np.argsort(distances[node])[:neighbor_count]
+            for neighbor in nearest_neighbors:
+                graph.add_edge(int(node), int(neighbor))
+
+        self._connect_components_by_nearest_links(graph, distances)
+        self._annotate_communication_edges(
+            graph=graph,
+            distances=distances,
+            area_size=float(area_size),
+            reliability_scale=float(reliability_scale),
+        )
+
+        graph.graph["type"] = "communication_mesh"
+        graph.graph["param1"] = n_nodes
+        graph.graph["param2"] = degree
+        graph.graph["description"] = f"Weighted communication mesh with {n_nodes} nodes"
+        graph.graph["weighted"] = True
+        graph.graph["seed"] = seed
+
+        logger.info(f"Generated communication mesh with {graph.number_of_edges()} edges")
+        return graph
     
     def save_adjacency_list(
         self,
@@ -268,4 +329,55 @@ class GraphGenerator:
         graph.graph["param1"] = param1
         graph.graph["param2"] = param2
         return graph
+
+    @staticmethod
+    def _connect_components_by_nearest_links(graph: nx.Graph, distances: np.ndarray) -> None:
+        """Ensure the generated communication mesh is connected."""
+        while graph.number_of_nodes() > 0 and not nx.is_connected(graph):
+            components = [list(component) for component in nx.connected_components(graph)]
+            best_edge: Optional[Tuple[int, int]] = None
+            best_distance = float("inf")
+            for index, left_component in enumerate(components):
+                for right_component in components[index + 1 :]:
+                    for left in left_component:
+                        for right in right_component:
+                            distance = float(distances[left, right])
+                            if distance < best_distance:
+                                best_distance = distance
+                                best_edge = (int(left), int(right))
+            if best_edge is None:
+                break
+            graph.add_edge(*best_edge)
+
+    @staticmethod
+    def _annotate_communication_edges(
+        graph: nx.Graph,
+        distances: np.ndarray,
+        area_size: float,
+        reliability_scale: float,
+    ) -> None:
+        """Attach communication attributes and weighted Max-Cut edge costs."""
+        finite_distances = distances[np.isfinite(distances)]
+        max_distance = float(np.max(finite_distances)) if finite_distances.size else 1.0
+        max_distance = max(max_distance, 1e-9)
+
+        for u, v in graph.edges():
+            distance = float(distances[u, v])
+            latency = distance / max_distance
+            shared_neighbors = len(set(graph.neighbors(u)).intersection(graph.neighbors(v)))
+            interference = float(shared_neighbors / max(1, graph.number_of_nodes() - 2))
+            reliability = float(np.exp(-distance / max(reliability_scale * area_size, 1e-9)))
+            bandwidth = float(1.0 / (1.0 + latency + interference))
+            conflict_weight = float(
+                0.45 * latency
+                + 0.35 * interference
+                + 0.20 * (1.0 - reliability)
+            )
+
+            graph[u][v]["distance"] = distance
+            graph[u][v]["latency"] = latency
+            graph[u][v]["interference"] = interference
+            graph[u][v]["reliability"] = reliability
+            graph[u][v]["bandwidth"] = bandwidth
+            graph[u][v]["weight"] = conflict_weight
 

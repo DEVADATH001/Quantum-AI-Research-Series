@@ -1,0 +1,2 @@
+"\"\"\"Author: DEVADATH H K\n\nQuantum AI Research Series\n\nProject 02: Quantum Chemistry VQE\nTask: Multi-seed CLI runner for publication-grade statistical experiments.\n\nUsage:\n    python scripts/run_experiment.py --molecule H2\n    python scripts/run
+<truncated 4375 bytes>

@@ -154,14 +154,14 @@ def analyze_kernel_properties(kernel_matrix: np.ndarray) -> dict:
 def regularize_kernel_matrix(
     kernel_matrix: np.ndarray, 
     epsilon: float = 1e-10,
-    strategy: str = "shift"
+    strategy: str = "clip"
 ) -> np.ndarray:
     """Project kernel matrix to the nearest PSD matrix if needed.
     
     This is mathematically essential for SVM stability, especially with noisy kernels.
     Strategies:
-    - "shift": Fast eigenvalue shifting K + |min_eig|I + eps*I. Recommended for large/noisy grids.
-    - "clip": O(N^3) eigenvalue clipping and exact reconstruction.
+    - "clip": O(N^3) eigenvalue clipping and exact reconstruction. Recommended to prevent variance squashing.
+    - "shift": Fast eigenvalue shifting K + |min_eig|I + eps*I. Warning: subsequent renormalization alters off-diagonal geometry!
     """
     if strategy == "shift":
         eigenvalues = np.linalg.eigvalsh(kernel_matrix)

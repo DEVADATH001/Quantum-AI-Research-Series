@@ -69,16 +69,24 @@ class MaxCutQAOAProblem:
         objective_repetitions: int = 1,
         report_repetitions: Optional[int] = None,
         analysis_mode: str = "auto",
+        objective_mode: str = "expected",
+        cvar_alpha: float = 1.0,
     ) -> None:
         self.graph = self._relabel_if_needed(graph)
         self.p = p
         self.seed = seed
         self.analysis_mode = analysis_mode
+        self.objective_mode = str(objective_mode).lower()
+        self.cvar_alpha = float(cvar_alpha)
         self.objective_repetitions = max(1, int(objective_repetitions))
         self.report_repetitions = max(
             self.objective_repetitions,
             int(report_repetitions) if report_repetitions is not None else self.objective_repetitions,
         )
+        if self.objective_mode not in {"expected", "cvar"}:
+            raise ValueError(f"Unsupported objective_mode: {objective_mode}")
+        if not 0 < self.cvar_alpha <= 1:
+            raise ValueError(f"cvar_alpha must lie in (0, 1], got {cvar_alpha}")
 
         self.hamiltonian, self.offset = HamiltonianBuilder().build_maxcut_hamiltonian(self.graph)
         self.circuit_builder = QAOACircuitBuilder(
@@ -108,7 +116,7 @@ class MaxCutQAOAProblem:
         )
 
     def objective_function(self, params: np.ndarray) -> float:
-        """Return the minimization objective ``-E[C]``."""
+        """Return the minimization objective for the configured risk measure."""
         stats = self.evaluate_objective_stats(params)
         return -float(stats["objective_value"])
 
@@ -117,7 +125,7 @@ class MaxCutQAOAProblem:
         params: np.ndarray,
         repetitions: Optional[int] = None,
     ) -> Dict[str, float]:
-        """Evaluate the expected objective, optionally averaging repeated calls."""
+        """Evaluate the configured scalar objective, optionally averaging repeated calls."""
         reps = max(1, int(repetitions if repetitions is not None else self.objective_repetitions))
         circuit = self.build_circuit(params)
 
@@ -130,7 +138,7 @@ class MaxCutQAOAProblem:
                 self.hamiltonian,
                 offset=self.offset,
             )
-            objective_values.append(float(result.objective_value))
+            objective_values.append(float(self._extract_primary_objective(result)))
             interaction_values.append(float(result.expectation_value))
             variances.append(float(result.variance))
 
@@ -182,6 +190,7 @@ class MaxCutQAOAProblem:
 
         return {
             "cut_value": float(stats["objective_value"]),
+            "expected_cut_value": float(stats["interaction_value"] + self.offset),
             "interaction_value": float(stats["interaction_value"]),
             "objective_std": float(stats["objective_std"]),
             "objective_stderr": float(stats["objective_stderr"]),
@@ -193,10 +202,17 @@ class MaxCutQAOAProblem:
             "best_sampled_cut_value": best_sampled_cut_value,
             "probability": bitstring_probability,
             "measurement_counts": counts if counts else None,
+            "objective_mode": self.objective_mode,
+            "cvar_alpha": self.cvar_alpha,
         }
 
     def _create_objective_executor(self, base_executor: RuntimeExecutor) -> RuntimeExecutor:
         """Create the executor used inside the optimization loop."""
+        if self.objective_mode == "cvar" and base_executor.mode == "ibm_hardware":
+            raise ValueError(
+                "objective_mode='cvar' is not supported with the current Estimator-only hardware path "
+                "because it does not expose a measurement distribution."
+            )
         if base_executor.mode == "local":
             return RuntimeExecutor(
                 mode="local",
@@ -296,6 +312,55 @@ class MaxCutQAOAProblem:
                 if bitstring[u] != bitstring[v]:
                     cut_value += float(graph[u][v].get("weight", 1.0))
         return float(cut_value)
+
+    def _extract_primary_objective(self, execution_result: Any) -> float:
+        """Return the scalar objective being optimized."""
+        if self.objective_mode == "expected":
+            return float(execution_result.objective_value)
+
+        distribution = execution_result.probability_distribution
+        if not distribution:
+            raise ValueError(
+                "objective_mode='cvar' requires a probability distribution, but the executor did not provide one."
+            )
+        return float(self._compute_cvar(distribution))
+
+    def _compute_cvar(self, probability_distribution: Dict[str, float]) -> float:
+        """
+        Compute CVaR over the best ``alpha`` probability mass of sampled cuts.
+
+        For Max-Cut this focuses optimization on the high-value tail.
+        """
+        scored = sorted(
+            (
+                (self._calculate_cut(self.graph, bitstring), float(probability))
+                for bitstring, probability in probability_distribution.items()
+                if probability > 0
+            ),
+            key=lambda item: item[0],
+            reverse=True,
+        )
+        if not scored:
+            return 0.0
+
+        remaining = self.cvar_alpha
+        weighted_value = 0.0
+        for cut_value, probability in scored:
+            weight = min(probability, remaining)
+            if weight <= 0:
+                continue
+            weighted_value += weight * cut_value
+            remaining -= weight
+            if remaining <= 1e-12:
+                break
+
+        if remaining > 1e-12:
+            total_probability = sum(probability for _, probability in scored)
+            raise ValueError(
+                f"Probability distribution sums to {total_probability}, which is insufficient for CVaR mass {self.cvar_alpha}."
+            )
+
+        return float(weighted_value / self.cvar_alpha)
 
 
 class QAOAOptimizer:

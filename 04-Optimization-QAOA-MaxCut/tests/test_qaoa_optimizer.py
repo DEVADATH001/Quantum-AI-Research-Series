@@ -64,6 +64,35 @@ def test_analysis_mode_none_suppresses_representative_bitstrings():
     assert solution["measurement_counts"] is None
 
 
+def test_cvar_objective_can_exceed_expectation_on_same_state():
+    graph = nx.Graph()
+    graph.add_edge(0, 1)
+
+    expected_problem = MaxCutQAOAProblem(
+        graph=graph,
+        p=1,
+        executor=RuntimeExecutor(mode="local", shots=0, seed=17),
+        seed=17,
+        analysis_shots=0,
+        objective_mode="expected",
+    )
+    cvar_problem = MaxCutQAOAProblem(
+        graph=graph,
+        p=1,
+        executor=RuntimeExecutor(mode="local", shots=0, seed=17),
+        seed=17,
+        analysis_shots=0,
+        objective_mode="cvar",
+        cvar_alpha=0.25,
+    )
+
+    params = np.array([0.41, 0.29], dtype=float)
+    expected_value = expected_problem.evaluate_objective_stats(params)["objective_value"]
+    cvar_value = cvar_problem.evaluate_objective_stats(params)["objective_value"]
+
+    assert cvar_value >= expected_value
+
+
 def test_build_initial_points_includes_warm_start_first():
     optimizer = QAOAOptimizer(p=2, n_initial_points=3, seed=11)
     warm_start = np.array([0.1, 0.2, 0.3, 0.4])

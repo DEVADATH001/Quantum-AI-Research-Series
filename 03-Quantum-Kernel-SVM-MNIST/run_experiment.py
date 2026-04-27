@@ -211,6 +211,8 @@ def run_single_trial(
     X_test_pca = pre["X_test_processed"]
     X_train_quantum = pre["X_train_quantum"]
     X_test_quantum = pre["X_test_quantum"]
+    X_train_raw_std = pre.get("X_train_raw_std", X_train_raw)
+    X_test_raw_std = pre.get("X_test_raw_std", X_test_raw)
     pca_transformer = pre["pca"]
 
     # Only save these plots once (first call per results_dir)
@@ -246,6 +248,9 @@ def run_single_trial(
     X_c_train, y_c_train = _stratified_subset(
         X_train_pca, y_train, max_samples=n_quantum, seed=seed
     )
+    X_c_raw_train, y_c_raw_train = _stratified_subset(
+        X_train_raw_std, y_train, max_samples=n_quantum, seed=seed
+    )
 
     LOGGER.info(
         "Fair comparison: both classical and quantum train on %d samples.", len(X_q_train)
@@ -262,20 +267,37 @@ def run_single_trial(
         y_train=y_c_train,
         kernel=classical_cfg.get("kernel", "rbf"),
         random_state=seed,
-        grid_search=False,  # disabled for speed in multi-seed runs
+        grid_search=bool(gs_cfg.get("enabled", False)),
         cv=int(gs_cfg.get("cv", 3)),
         param_grid=gs_cfg.get("param_grid"),
         n_jobs=int(gs_cfg.get("n_jobs", 1)),
     )
     joblib.dump(classical_model, results_dir / "classical_svm_model.joblib")
 
+    # Train Raw 784-dim baseline
+    classical_model_raw, classical_train_raw = train_classical_svm(
+        X_train=X_c_raw_train,
+        y_train=y_c_raw_train,
+        kernel=classical_cfg.get("kernel", "rbf"),
+        random_state=seed,
+        grid_search=bool(gs_cfg.get("enabled", False)),
+        cv=int(gs_cfg.get("cv", 3)),
+        param_grid=gs_cfg.get("param_grid"),
+        n_jobs=int(gs_cfg.get("n_jobs", 1)),
+    )
+    joblib.dump(classical_model_raw, results_dir / "classical_svm_model_raw.joblib")
+
     y_pred_classical = classical_model.predict(X_test_pca)
+    y_pred_classical_raw = classical_model_raw.predict(X_test_raw_std)
     is_binary = len(np.unique(y_test)) == 2
     pos_label = int(max(digits)) if is_binary else None
     average = "binary" if is_binary else "weighted"
 
     classical_metrics = compute_metrics(
         y_test, y_pred_classical, pos_label=pos_label, average=average
+    )
+    classical_metrics_raw = compute_metrics(
+        y_test, y_pred_classical_raw, pos_label=pos_label, average=average
     )
     classical_cm = compute_confusion_matrix(y_test, y_pred_classical, labels=digits)
 
@@ -286,6 +308,11 @@ def run_single_trial(
     kta_classical = float(compute_kernel_target_alignment(K_rbf, y_c_train))
     ckta_classical = float(compute_centered_kta(K_rbf, y_c_train))
     LOGGER.info("Classical RBF KTA = %.4f | cKTA = %.4f", kta_classical, ckta_classical)
+
+    K_rbf_raw = compute_rbf_gram_matrix(X_c_raw_train, gamma="scale")
+    kta_classical_raw = float(compute_kernel_target_alignment(K_rbf_raw, y_c_raw_train))
+    ckta_classical_raw = float(compute_centered_kta(K_rbf_raw, y_c_raw_train))
+    LOGGER.info("Classical RBF (Raw 784-dim) KTA = %.4f | cKTA = %.4f", kta_classical_raw, ckta_classical_raw)
 
     _save_json(
         results_dir / "classical_svm_results.json",
@@ -354,7 +381,7 @@ def run_single_trial(
         y_train=y_q_train,
         C=float(qsvc_cfg.get("C", 1.0)),
         random_state=seed,
-        grid_search=False,
+        grid_search=bool(qsvc_cfg.get("grid_search", False)),
         cv=int(qsvc_cfg.get("cv", 3)),
         n_jobs=int(qsvc_cfg.get("n_jobs", 1)),
     )
@@ -459,7 +486,8 @@ def run_single_trial(
     )
     plot_metrics_comparison(
         {
-            "classical": {"metrics": classical_metrics},
+            "classical_pca": {"metrics": classical_metrics},
+            "classical_raw": {"metrics": classical_metrics_raw},
             "quantum":   {"metrics": quantum_metrics},
             "pegasos":   {"metrics": pegasos_metrics},
         },
@@ -469,9 +497,12 @@ def run_single_trial(
 
     # Metrics CSV with KTA and cKTA columns
     comparison_df = pd.DataFrame([
-        {"Model": "Classical RBF SVM",
+        {"Model": "Classical RBF SVM (PCA)",
          **classical_metrics, "kta": kta_classical, "ckta": ckta_classical,
          "train_time": classical_train.get("train_time"), "train_n": len(X_c_train)},
+        {"Model": "Classical RBF SVM (Raw 784-dim)",
+         **classical_metrics_raw, "kta": kta_classical_raw, "ckta": ckta_classical_raw,
+         "train_time": classical_train_raw.get("train_time"), "train_n": len(X_c_raw_train)},
         {"Model": "Exact QSVC",
          **quantum_metrics, "kta": kta_quantum, "ckta": ckta_quantum,
          "train_time": quantum_train.get("train_time"), "train_n": len(X_q_train)},
@@ -550,10 +581,14 @@ def run_single_trial(
             "classical": {
                 "train_info": classical_train_summary,
                 "metrics": classical_metrics,
-                "kta_quantum": kta_q,
-                "kta_classical": kta_c,
-                "ckta_quantum": ckta_q,
-                "ckta_classical": ckta_c,
+                "kta_classical": kta_classical,
+                "ckta_classical": ckta_classical,
+            },
+            "classical_raw": {
+                "train_info": {k: v for k, v in classical_train_raw.items() if k not in {"model", "grid_search_results"}},
+                "metrics": classical_metrics_raw,
+                "kta_classical": kta_classical_raw,
+                "ckta_classical": ckta_classical_raw,
             },
             "quantum_exact": {
                 "train_info": quantum_train_summary,

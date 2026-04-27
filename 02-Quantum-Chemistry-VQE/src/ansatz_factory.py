@@ -7,6 +7,9 @@ Task: Ansatz builders for VQE experiments."""
 
 from __future__ import annotations
 
+from typing import List, Optional
+import numpy as np
+
 from qiskit import QuantumCircuit
 from qiskit.circuit.library import efficient_su2
 from qiskit_nature.second_q.circuit.library import HartreeFock, UCCSD
@@ -75,3 +78,8 @@ class AnsatzFactory(AbstractAnsatzFactory):
 
     def build(self, name: str, problem: ElectronicStructureProblem, mapper: QubitMapper, **kwargs) -> QuantumCircuit:
         return get_ansatz(name=name, problem=problem, mapper=mapper, **kwargs)
+
+def get_random_initial_point(ansatz: QuantumCircuit) -> np.ndarray:
+    """Generate a uniform random initial point in [-pi, pi] for the ansatz."""
+    num_params = ansatz.num_parameters
+    return np.random.uniform(-np.pi, np.pi, size=num_params)

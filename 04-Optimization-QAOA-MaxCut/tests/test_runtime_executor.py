@@ -31,6 +31,8 @@ def test_local_runtime_executor_handles_unmeasured_circuit():
     assert sum(result.measurement_counts.values()) == 64
     assert result.sampled_bitstring is not None
     assert len(result.sampled_bitstring) == 2
+    assert result.probability_distribution is not None
+    assert abs(sum(result.probability_distribution.values()) - 1.0) < 1e-9
 
 
 def test_noisy_runtime_executor_resolves_fake_backend_proxy():
@@ -56,5 +58,7 @@ def test_noisy_runtime_executor_resolves_fake_backend_proxy():
 
     assert result.measurement_counts is not None
     assert sum(result.measurement_counts.values()) == 128
+    assert result.probability_distribution is not None
+    assert abs(sum(result.probability_distribution.values()) - 1.0) < 1e-9
     assert backend_info["backend_source"] in {"runtime_service", "fake_provider"}
     assert backend_info.get("resolved_backend_name") is not None

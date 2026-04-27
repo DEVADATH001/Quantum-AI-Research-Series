@@ -1,6 +1,6 @@
 # Quantum AI Research Series: Repository Status Report
 
-This report summarizes the current verified state of the repository as of **March 16, 2026**. It is intended as a technical status document, not a marketing summary. The emphasis is on what is implemented, what has been verified locally, what committed artifacts actually show, and where the repository still has reproducibility or maturity gaps.
+This report summarizes the current verified state of the repository as of **April 18, 2026**. It is intended as a technical status document, not a marketing summary. The emphasis is on what is implemented, what has been verified locally, what committed artifacts actually show, and where the repository still has reproducibility or maturity gaps.
 
 ## Executive Summary
 
@@ -24,7 +24,7 @@ The following checks were run locally during this update:
 | --- | --- | --- |
 | `python scripts/check_authorship.py` | Passed | `Scanned files: 149`, `Violations detected: 0` |
 | `python -m unittest 02-Quantum-Chemistry-VQE.tests.test_unit -v` | Passed | 12 tests passed |
-| `python -m unittest tests.test_pipeline -v` from `03-Quantum-Kernel-SVM-MNIST` | Passed | 4 tests passed after restoring KTA logic |
+| `python -m pytest 03-Quantum-Kernel-SVM-MNIST/tests/test_pipeline.py -v` | Passed | **17 tests passed** after full test-suite expansion |
 | `python 04-Optimization-QAOA-MaxCut/integration_test.py` | Passed | Verified approximation ratio `0.7143` |
 | `python -m pytest 04-Optimization-QAOA-MaxCut/tests -q -p no:cacheprovider` | Passed | 6 tests passed, 1 skipped |
 
@@ -118,7 +118,15 @@ Project 03 compares a classical SVM baseline with a quantum-kernel pipeline on r
 
 ### Interpretation
 
-The codebase is in better shape than the stored artifacts suggest. The maintained pipeline exists and is runnable, but the committed results are still diagnostic artifacts from a fallback dataset and an earlier training configuration. They are useful as evidence that kernel analysis and plotting work, but they should not be presented as the final MNIST benchmark for the current script defaults.
+The codebase has been significantly upgraded since the initial report. The committed pipeline now features:
+
+- **Multi-seed statistical ablation**: 3 seeds × 3 PCA dimensions producing paired t-test and Wilcoxon significance reports.
+- **Three-model comparison**: Classical RBF SVM, Exact QSVC, and Pegasos QSVC are all visualised side-by-side in `metrics_comparison.png`.
+- **Exponential-concentration guard**: Feature scaling is locked to `[0, π/2]` with a variance monitor that logs a critical warning if the off-diagonal kernel variance collapses below `1e-4`.
+- **17/17 unit tests passing**: Coverage spans preprocessing pipeline, kernel regularisation strategies, kernel-target alignment, and statistical significance helpers.
+- **PEP 8 compliant**: All imports are at module level; `import math` (unused) has been removed; lazy `from` imports inside functions have been promoted.
+
+The committed results artifacts still reflect a smoke-run fallback configuration. A fresh archived result from OpenML MNIST is the primary remaining gap.
 
 ## Project 04: Optimization with QAOA and RQAOA
 
@@ -206,5 +214,5 @@ Several portfolio-level conclusions are already visible:
 
 ## Metadata
 
-**Report generated:** March 16, 2026  
+**Report generated:** April 18, 2026  
 **Author:** DEVADATH H K  

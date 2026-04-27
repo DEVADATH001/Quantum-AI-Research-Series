@@ -42,3 +42,14 @@ def test_paired_method_test_detects_positive_advantage():
 
     assert result["mean_difference"] > 0
     assert result["ci_lower"] > 0
+    assert result["probability_a_better"] == 1.0
+    assert result["cohen_d"] > 0
+
+
+def test_holm_bonferroni_correction_is_monotone_and_bounded():
+    metrics = EvaluationMetrics()
+    adjusted = metrics.holm_bonferroni_correction([0.01, 0.04, 0.03])
+
+    assert len(adjusted) == 3
+    assert all(0.0 <= value <= 1.0 for value in adjusted)
+    assert adjusted[0] <= adjusted[1]

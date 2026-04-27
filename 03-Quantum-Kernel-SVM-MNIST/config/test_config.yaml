@@ -48,13 +48,12 @@ classical_model:
 # Quantum Feature Map Configuration
 # reps=1 is intentional: higher reps drastically increase circuit depth and
 # gate count without improving performance on <=8 qubits for statevector sims.
-# entanglement="full" gives maximum pairwise interaction at low cost for
-# small feature dimensions.
+# entanglement="linear" physically executes with 0 SWAPs on heavy-hex topologies.
 quantum_feature_map:
   type: "ZZFeatureMap"
   feature_dimension: 8
   reps: 1
-  entanglement: "full"
+  entanglement: "linear"
   parameter_prefix: "x"
 
 # Quantum Kernel Configuration
@@ -93,7 +92,7 @@ noise_simulation:
   noise_model:
     readout_error: 0.01
     gate_error: 0.001   # Matches realistic IBM Brisbane T1/T2 specs
-  shots: 4096
+  shots: 10240
   method: "density_matrix"
 
 # Evaluation Configuration
@@ -127,11 +126,11 @@ visualization:
 # pca_dimensions covers the practical NISQ qubit range (4-8 qubits).
 # reps_values drives the novel feature-map depth ablation contribution.
 ablation:
-  seeds: [42]
+  seeds: [42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
   pca_dimensions: [4]
   reps_values: [1, 2]        # Feature-map depth ablation
-  max_quantum_train: 20         # Per-quantum-run training cap (more = better stats)
-  max_kernel_samples: 20        # Kernel diagnostic matrix size
+  max_quantum_train: 100        # Per-quantum-run training cap (more = better stats)
+  max_kernel_samples: 100        # Kernel diagnostic matrix size
   max_noise_samples: 10          # Noise run sample cap (keep tractable)
 
 # Logging Configuration
@@ -157,5 +156,5 @@ random_seed: 42
 hardware:
   use_real_hardware: false
   backend_name: "ibm_brisbane"
-  shots: 4096
+  shots: 10240
   ibm_token: null   # override via env var IBM_QUANTUM_TOKEN

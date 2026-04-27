@@ -396,6 +396,8 @@ class EvaluationMetrics:
         rng = np.random.default_rng(seed)
         diffs = np.asarray(values_a, dtype=float) - np.asarray(values_b, dtype=float)
         observed = float(np.mean(diffs))
+        diff_std = float(np.std(diffs))
+        cohen_d = observed / diff_std if diff_std > 0 else 0.0
 
         bootstrap_diffs = []
         for _ in range(max(1, int(n_resamples))):
@@ -412,11 +414,40 @@ class EvaluationMetrics:
 
         return {
             "mean_difference": observed,
+            "median_difference": float(np.median(diffs)),
+            "std_difference": diff_std,
+            "cohen_d": float(cohen_d),
+            "probability_a_better": float(np.mean(diffs > 0)),
             "ci_lower": ci_lower,
             "ci_upper": ci_upper,
             "p_value": p_value,
             "n_pairs": int(diffs.size),
         }
+
+    def holm_bonferroni_correction(self, p_values: List[float]) -> List[float]:
+        """
+        Apply the Holm-Bonferroni multiple-testing correction.
+
+        Args:
+            p_values: Raw p-values.
+
+        Returns:
+            Adjusted p-values in the original order.
+        """
+        if not p_values:
+            return []
+
+        indexed = sorted(enumerate(float(p) for p in p_values), key=lambda item: item[1])
+        m = len(indexed)
+        adjusted = [0.0] * m
+        running_max = 0.0
+
+        for rank, (original_index, p_value) in enumerate(indexed):
+            adjusted_value = min(1.0, (m - rank) * p_value)
+            running_max = max(running_max, adjusted_value)
+            adjusted[original_index] = running_max
+
+        return adjusted
     
     def assess_quality(
         self,

@@ -179,6 +179,8 @@ def preprocess_data(
         "X_test_processed": X_test_pca,
         "X_train_quantum": X_train_quantum,
         "X_test_quantum": X_test_quantum,
+        "X_train_raw_std": X_train_std,
+        "X_test_raw_std": X_test_std,
         "scaler": scaler,
         "pca": pca,
         "variance_explained": pca.explained_variance_ratio_,

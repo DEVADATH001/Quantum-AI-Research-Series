@@ -465,6 +465,120 @@ class Visualizer:
             logger.info(f"Saved correlation heatmap to {save_path}")
         
         return fig
+
+    def plot_significance_heatmap(
+        self,
+        significance_rows: List[Dict],
+        value_key: str = "mean_difference",
+        save_path: Optional[str] = None,
+        title: str = "QAOA vs Baseline Significance Map",
+    ) -> plt.Figure:
+        """Plot a family-by-baseline heatmap of study significance values."""
+        import pandas as pd
+
+        fig, ax = plt.subplots(figsize=self.figsize, dpi=self.dpi)
+        if not significance_rows:
+            ax.text(0.5, 0.5, "No significance rows available", ha="center", va="center")
+            ax.axis("off")
+            return fig
+
+        frame = pd.DataFrame(significance_rows)
+        pivot = frame.pivot(index="family", columns="method_b", values=value_key)
+        sns.heatmap(
+            pivot,
+            cmap="RdBu_r",
+            center=0.0,
+            annot=True,
+            fmt=".3f",
+            linewidths=0.5,
+            ax=ax,
+            cbar_kws={"label": value_key.replace("_", " ").title()},
+        )
+        ax.set_title(title, fontsize=14, fontweight="bold")
+        ax.set_xlabel("Baseline")
+        ax.set_ylabel("Graph Family")
+        plt.tight_layout()
+
+        if save_path:
+            plt.savefig(save_path, dpi=self.dpi, bbox_inches="tight")
+            logger.info(f"Saved significance heatmap to {save_path}")
+
+        return fig
+
+    def plot_budget_fairness(
+        self,
+        budget_rows: List[Dict],
+        save_path: Optional[str] = None,
+        title: str = "Budget-Matched Performance Comparison",
+    ) -> plt.Figure:
+        """Plot budget-matched approximation ratios by family and method."""
+        import pandas as pd
+
+        fig, ax = plt.subplots(figsize=self.figsize, dpi=self.dpi)
+        if not budget_rows:
+            ax.text(0.5, 0.5, "No budget-matched rows available", ha="center", va="center")
+            ax.axis("off")
+            return fig
+
+        frame = pd.DataFrame(budget_rows)
+        ordered_methods = list(dict.fromkeys(frame["method"].tolist()))
+        sns.barplot(
+            data=frame,
+            x="family",
+            y="mean_ratio",
+            hue="method",
+            hue_order=ordered_methods,
+            ax=ax,
+            palette="Set2",
+        )
+        ax.set_ylim(0, 1.05)
+        ax.set_xlabel("Graph Family")
+        ax.set_ylabel("Mean Approximation Ratio")
+        ax.set_title(title, fontsize=14, fontweight="bold")
+        ax.legend(title="Method", loc="lower right")
+        ax.grid(True, axis="y", alpha=0.3)
+        plt.tight_layout()
+
+        if save_path:
+            plt.savefig(save_path, dpi=self.dpi, bbox_inches="tight")
+            logger.info(f"Saved budget fairness plot to {save_path}")
+
+        return fig
+
+    def plot_sample_gap(
+        self,
+        robustness_rows: List[Dict],
+        save_path: Optional[str] = None,
+        title: str = "Sampled-vs-Expected Objective Gap",
+    ) -> plt.Figure:
+        """Plot sampled minus expected cut gaps across repeated benchmark runs."""
+        fig, ax = plt.subplots(figsize=self.figsize, dpi=self.dpi)
+        if not robustness_rows:
+            ax.text(0.5, 0.5, "No robustness rows available", ha="center", va="center")
+            ax.axis("off")
+            return fig
+
+        depths = [str(row["depth"]) for row in robustness_rows]
+        gaps = [
+            float(row.get("sampled_cut_value", 0.0) or 0.0) - float(row.get("expected_cut_value", 0.0) or 0.0)
+            for row in robustness_rows
+        ]
+        positions = list(range(len(depths)))
+        ax.scatter(positions, gaps, color="#D81B60", s=70, alpha=0.8)
+        ax.axhline(y=0.0, color="black", linestyle="--", linewidth=1)
+        ax.set_xticks(positions)
+        ax.set_xticklabels(depths)
+        ax.set_xlabel("QAOA Depth")
+        ax.set_ylabel("Sampled Cut - Optimized Objective")
+        ax.set_title(title, fontsize=14, fontweight="bold")
+        ax.grid(True, axis="y", alpha=0.3)
+        plt.tight_layout()
+
+        if save_path:
+            plt.savefig(save_path, dpi=self.dpi, bbox_inches="tight")
+            logger.info(f"Saved sample-gap plot to {save_path}")
+
+        return fig
     
     def create_dashboard(
         self,

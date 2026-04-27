@@ -19,6 +19,8 @@ from typing import Any, Optional
 import numpy as np
 from qiskit.circuit import QuantumCircuit
 
+from src.quantum_kernel_engine import compute_centered_kta
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,58 +29,85 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 def _compute_kta(K: np.ndarray, y: np.ndarray) -> float:
-    """Centred Kernel-Target Alignment (Cortes et al. 2012).
-
-    KTA(K, y) = <K, yy^T>_F / (||K||_F * n)
-
-    Labels are mapped to {-1, +1}.
-    """
-    unique = np.unique(y)
-    y_pm = np.where(y == unique[0], -1.0, 1.0)
-    Y = np.outer(y_pm, y_pm)
-
-    num = float(np.sum(K * Y))
-    denom = float(np.linalg.norm(K, "fro") * len(y))
-    if denom < 1e-14:
-        return 0.0
-    return num / denom
+    """Delegated Centred Kernel-Target Alignment (Cortes et al. 2012)."""
+    return compute_centered_kta(K, y)
 
 
-def _kta_gradient_fd(
+def _kta_gradient_psr(
     circuit: QuantumCircuit,
     param_values: np.ndarray,
     X: np.ndarray,
     y: np.ndarray,
     kernel_fn: Any,
-    eps: float = 1e-4,
 ) -> np.ndarray:
-    """Finite-difference gradient of KTA w.r.t. circuit parameters.
+    """Exact analytical gradient of cKTA w.r.t. circuit parameters using the Parameter-Shift Rule.
+
+    Since cKTA is a non-linear combination of kernel matrix entries, the PSR cannot be applied
+    macroscopically directly to the cKTA evaluation. Instead, the PSR is applied natively
+    to the kernel matrix limits, and subsequently projected backwards into the cKTA scalar via
+    multivariate Matrix Chain Rule computations.
 
     Args:
-        circuit: Parameterised feature map (parameters in sorted order).
+        circuit: Parameterised feature map.
         param_values: Current parameter values, shape (n_params,).
         X: Training data.
         y: Training labels.
         kernel_fn: Callable(circuit) → FidelityQuantumKernel.
-        eps: Finite-difference step size.
 
     Returns:
-        Gradient array of shape (n_params,).
+        Chain rule projected exact analytical array of shape (n_params,).
     """
+    # 1. Base Kernel Matrix evaluation
+    K = _evaluate_kernel(circuit, param_values, X, kernel_fn)
+    n = K.shape[0]
+    
+    # 2. Setup Centered Matrices
+    unique_y = np.unique(y)
+    if len(unique_y) != 2:
+        return np.zeros_like(param_values)
+    
+    y_mapped = np.where(y == unique_y[0], -1.0, 1.0)
+    Y = np.outer(y_mapped, y_mapped)
+    
+    H = np.eye(n) - np.ones((n, n)) / n
+    K_c = H @ K @ H
+    Y_c = H @ Y @ H
+    
+    # K_c Frobenius norm
+    norm_K_c = np.linalg.norm(K_c, "fro")
+    norm_Y_c = np.linalg.norm(Y_c, "fro")
+    
+    if norm_K_c < 1e-15 or norm_Y_c < 1e-15:
+        return np.zeros_like(param_values)
+        
+    frob_inner = np.sum(K_c * Y_c)
+    
+    # 3. Analytical gradient d(cKTA) / dK_c
+    # cKTA = <K_c, Y_c> / (||K_c||_F ||Y_c||_F)
+    # d(cKTA) / dK_c = Y_c / (||K_c||_F ||Y_c||_F) - <K_c, Y_c> * K_c / (||K_c||_F^3 ||Y_c||_F)
+    d_cKTA_dKc = Y_c / (norm_K_c * norm_Y_c) - (frob_inner / (norm_K_c**3 * norm_Y_c)) * K_c
+
+    # Since K_c = H K H, via matrix trace chain rule: d(cKTA) / dK = H @ (d(cKTA) / dK_c) @ H
+    d_cKTA_dK = H @ d_cKTA_dKc @ H
+
     grad = np.zeros_like(param_values)
+    shift = np.pi / 2.0  # Exact shift for Pauli generator parameter-shift rule
+
     for i in range(len(param_values)):
         p_fwd = param_values.copy()
         p_bwd = param_values.copy()
-        p_fwd[i] += eps
-        p_bwd[i] -= eps
+        p_fwd[i] += shift
+        p_bwd[i] -= shift
 
+        # Applying PSR natively strictly across the actual expectation value boundaries (matrix entries)
         K_fwd = _evaluate_kernel(circuit, p_fwd, X, kernel_fn)
         K_bwd = _evaluate_kernel(circuit, p_bwd, X, kernel_fn)
 
-        kta_fwd = _compute_kta(K_fwd, y)
-        kta_bwd = _compute_kta(K_bwd, y)
-
-        grad[i] = (kta_fwd - kta_bwd) / (2 * eps)
+        dK_dtheta = (K_fwd - K_bwd) / 2.0
+        
+        # Contract exact gradients 
+        grad[i] = np.sum(d_cKTA_dK * dK_dtheta)
+        
     return grad
 
 
@@ -173,7 +202,7 @@ def train_quantum_kernel_alignment(
     )
 
     for step in range(1, max_iter + 1):
-        grad = _kta_gradient_fd(circuit, theta, X_train, y_train, kernel_fn)
+        grad = _kta_gradient_psr(circuit, theta, X_train, y_train, kernel_fn)
 
         if optimizer == "adam":
             m = beta1 * m + (1 - beta1) * grad

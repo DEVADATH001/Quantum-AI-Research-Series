@@ -288,8 +288,13 @@ class HardwareBackendManager:
         from qiskit_ibm_runtime import SamplerV2 as _RuntimeSampler
         sampler = _RuntimeSampler(self._backend)
         sampler.options.default_shots = self.shots
+        
+        # Enable Readout Error Mitigation (TREX/M3) natively 
+        # Extremely critical for surviving 8-qubit spaces on heavy-hex topologies.
+        sampler.options.resilience_level = 1 
+        
         logger.info(
-            "RuntimeSamplerV2 configured for %s, shots=%d.",
+            "RuntimeSamplerV2 configured for %s, shots=%d, resilience_level=1.",
             self.backend_name, self.shots,
         )
         return sampler

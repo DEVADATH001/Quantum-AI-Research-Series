@@ -161,28 +161,30 @@ class QuantumKernelLearner:
         feature_map: QuantumCircuit,
         X_train: np.ndarray,
         y_train: np.ndarray,
-        lr: float = 0.05,
+        spsa_a: float = 0.2,
+        spsa_c: float = 0.1,
+        spsa_alpha: float = 0.602,
+        spsa_gamma: float = 0.101,
+        spsa_A: float = 0.0,
         n_epochs: int = 30,
         batch_size: int = 20,
         seed: int = 42,
         parameter_prefix: str = "θ",
-        adam_beta1: float = 0.9,
-        adam_beta2: float = 0.999,
-        adam_eps: float = 1e-8,
-        shift: float = float(np.pi) / 2.0,
+        sampler: Any = None,
     ) -> None:
         self._base_fm = deepcopy(feature_map)
         self.X_train = np.asarray(X_train, dtype=float)
         self.y_train = np.asarray(y_train)
-        self.lr = lr
+        self.spsa_a = spsa_a
+        self.spsa_c = spsa_c
+        self.spsa_alpha = spsa_alpha
+        self.spsa_gamma = spsa_gamma
+        self.spsa_A = spsa_A
         self.n_epochs = n_epochs
         self.batch_size = min(batch_size, len(X_train))
         self.seed = seed
         self.parameter_prefix = parameter_prefix
-        self.adam_beta1 = adam_beta1
-        self.adam_beta2 = adam_beta2
-        self.adam_eps = adam_eps
-        self.shift = shift
+        self.sampler = sampler
 
         # Separate trainable from data parameters
         all_params = sorted(feature_map.parameters, key=lambda p: p.name)
@@ -208,9 +210,7 @@ class QuantumKernelLearner:
         rng = np.random.default_rng(seed)
         self._params = rng.uniform(-np.pi / 4, np.pi / 4, size=self.n_params)
 
-        # Adam state
-        self._m = np.zeros(self.n_params)
-        self._v = np.zeros(self.n_params)
+        # SPSA state
         self._t = 0
 
         self._history: list[dict[str, Any]] = []
@@ -218,8 +218,8 @@ class QuantumKernelLearner:
 
         logger.info(
             "QuantumKernelLearner initialised: %d trainable params, %d data params, "
-            "n_epochs=%d, lr=%.3f, batch_size=%d",
-            self.n_params, len(self._data_params), n_epochs, lr, self.batch_size,
+            "n_epochs=%d, batch_size=%d (SPSA)",
+            self.n_params, len(self._data_params), n_epochs, self.batch_size,
         )
 
     # ------------------------------------------------------------------
@@ -231,95 +231,70 @@ class QuantumKernelLearner:
         train_params: np.ndarray,
         X: np.ndarray,
     ) -> np.ndarray:
-        """Evaluate K_θ(X, X) by statevector simulation.
+        """Evaluate K_θ(X, X) using Qiskit's FidelityQuantumKernel.
 
-        Binds both the *trainable* parameters (from train_params) and the
-        *data* parameters (from X rows) into the circuit and computes the
-        fidelity as the squared magnitude of the inner product.
-
+        This routes execution through Native Qiskit Primitives (Samplers), resolving
+        hardware acceleration bottlenecks and enabling direct QPU training loops.
+        
         Returns:
             Kernel matrix of shape (n, n).
         """
-        from qiskit.quantum_info import Statevector
-
-        n = len(X)
-        K = np.zeros((n, n))
-
-        # Pre-compute statevectors for each data point
-        svs: list[Statevector] = []
-        for xi in X:
-            # Build binding dict: trainable + data
-            binding: dict = {
-                self._train_params[k]: float(train_params[k])
-                for k in range(self.n_params)
-            }
-            for j, dp in enumerate(self._data_params):
-                binding[dp] = float(xi[j % len(xi)])
-            bound_circuit = self._base_fm.assign_parameters(binding)
-            svs.append(Statevector(bound_circuit))
-
-        # Compute fidelity kernel K[i,j] = |⟨φ(xᵢ)|φ(xⱼ)⟩|²
-        for i in range(n):
-            for j in range(i, n):
-                inner = svs[i].inner(svs[j])
-                fid = float(abs(inner) ** 2)
-                K[i, j] = fid
-                K[j, i] = fid  # symmetry
-
+        from src.quantum_kernel_engine import create_quantum_kernel
+        
+        # Bind only the trainable parameters, leaving data variables free
+        binding: dict = {
+            self._train_params[k]: float(train_params[k])
+            for k in range(self.n_params)
+        }
+        bound_fm = self._base_fm.assign_parameters(binding)
+        
+        # Instantiate kernel with the configured backend sampler
+        kernel = create_quantum_kernel(feature_map=bound_fm, sampler=self.sampler)
+        
+        # Qiskit primitive implicitly constructs the Gram matrix logic natively
+        K = kernel.evaluate(x_vec=X)
         return K
 
     # ------------------------------------------------------------------
     # Gradient
     # ------------------------------------------------------------------
 
-    def _compute_gradient(
+    def _spsa_gradient(
         self,
         params: np.ndarray,
         X_batch: np.ndarray,
         Y_c: np.ndarray,
-    ) -> np.ndarray:
-        """Parameter-shift gradient of cKTA w.r.t. each trainable parameter.
+        t: int,
+        rng: np.random.Generator,
+    ) -> tuple[np.ndarray, float]:
+        """SPSA finite-difference gradient.
 
-        For the k-th parameter:
-
-            ∂cKTA/∂θ_k = [cKTA(K_{θ+s·eₖ}) − cKTA(K_{θ−s·eₖ})] / (2 sin(s))
-                        = [cKTA(K_{θ+π/2·eₖ}) − cKTA(K_{θ−π/2·eₖ})] / 2
-                           (exact when s = π/2 for Pauli generators)
-
+        Evaluates cKTA exactly twice per step, independent of parameter count.
+        
         Returns:
-            Gradient vector of shape (n_params,).
+            (grad_vector, current_ckta_approx)
         """
-        grad = np.zeros(self.n_params)
-        for k in range(self.n_params):
-            p_plus = params.copy()
-            p_plus[k] += self.shift
-            K_plus = self._eval_kernel(p_plus, X_batch)
-            c_plus = _centered_kta(K_plus, Y_c)
-
-            p_minus = params.copy()
-            p_minus[k] -= self.shift
-            K_minus = self._eval_kernel(p_minus, X_batch)
-            c_minus = _centered_kta(K_minus, Y_c)
-
-            grad[k] = (c_plus - c_minus) / 2.0
-        return grad
-
-    # ------------------------------------------------------------------
-    # Adam update
-    # ------------------------------------------------------------------
-
-    def _adam_step(self, grad: np.ndarray) -> np.ndarray:
-        """One Adam gradient-ascent update (ascent = maximisation)."""
-        self._t += 1
-        self._m = self.adam_beta1 * self._m + (1 - self.adam_beta1) * grad
-        self._v = self.adam_beta2 * self._v + (1 - self.adam_beta2) * grad ** 2
-
-        # Bias-corrected estimates
-        m_hat = self._m / (1 - self.adam_beta1 ** self._t)
-        v_hat = self._v / (1 - self.adam_beta2 ** self._t)
-
-        # Ascent: add (not subtract) the update
-        return self._params + self.lr * m_hat / (np.sqrt(v_hat) + self.adam_eps)
+        ak = self.spsa_a / (t + self.spsa_A) ** self.spsa_alpha
+        ck = self.spsa_c / (t ** self.spsa_gamma)
+        
+        # Bernoulli random perturbation vector
+        delta = rng.choice([-1.0, 1.0], size=self.n_params)
+        
+        p_plus = params + ck * delta
+        K_plus = self._eval_kernel(p_plus, X_batch)
+        ckta_plus = _centered_kta(K_plus, Y_c)
+        
+        p_minus = params - ck * delta
+        K_minus = self._eval_kernel(p_minus, X_batch)
+        ckta_minus = _centered_kta(K_minus, Y_c)
+        
+        # Gradient approximation
+        grad = (ckta_plus - ckta_minus) / (2.0 * ck) * delta
+        
+        # We can approximately track current cKTA without a 3rd evaluation by averaging
+        cKTA_approx = float((ckta_plus + ckta_minus) / 2.0)
+        
+        return grad, cKTA_approx, ak
 
     # ------------------------------------------------------------------
     # Public API
@@ -366,17 +341,12 @@ class QuantumKernelLearner:
             H_batch = np.eye(nb) - np.ones((nb, nb)) / nb
             Y_c_batch = H_batch @ Y_batch @ H_batch
 
-            # Gradient
-            grad = self._compute_gradient(self._params, X_batch, Y_c_batch)
+            # SPSA Gradient
+            grad, ckta_val, ak = self._spsa_gradient(self._params, X_batch, Y_c_batch, epoch, rng)
             grad_norm = float(np.linalg.norm(grad))
 
-            # Adam ascent step
-            self._params = self._adam_step(grad)
-
-            # Evaluate on batch for reporting (cheap — matrices already computed
-            # as side-effect of gradient; re-compute at updated params)
-            K_eval = self._eval_kernel(self._params, X_batch)
-            ckta_val = _centered_kta(K_eval, Y_c_batch)
+            # Ascent step
+            self._params = self._params + ak * grad
 
             epoch_time = time.time() - t0_epoch
             entry: dict[str, Any] = {

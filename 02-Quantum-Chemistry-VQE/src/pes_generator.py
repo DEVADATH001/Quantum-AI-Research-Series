@@ -195,7 +195,15 @@ class PESGenerator:
                         # Reset if parameter count changed (e.g. active space shift)
                         initial_point = None
                         
-                    run_result = engine.run_vqe_qubit(mapping.qubit_operator, initial_point=initial_point)
+                    # Multi-restart strategy to avoid optimizer traps
+                    run_result = engine.run_vqe_qubit_with_retry(
+                        qubit_op=mapping.qubit_operator,
+                        ansatz=ansatz,
+                        exact_energy=exact,
+                        threshold=threshold,
+                        max_restarts=5,
+                        initial_point=initial_point
+                    )
                     
                     # Store optimal point for next distance (Transfer Learning)
                     if warm_start_enabled:

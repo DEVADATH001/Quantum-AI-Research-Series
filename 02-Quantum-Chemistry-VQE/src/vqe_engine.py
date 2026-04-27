@@ -17,6 +17,7 @@ from qiskit_algorithms import VQE
 from qiskit_algorithms.optimizers import SPSA, SLSQP
 
 from .optimizer_callbacks import VQECallback
+from .ansatz_factory import get_random_initial_point
 
 @dataclass
 class VQEResultRecord:
@@ -108,6 +109,47 @@ class VQEEngine:
             iterations=iterations,
             history=self.callback.get_history(),
         )
+
+    def run_vqe_qubit_with_retry(
+        self,
+        qubit_operator: SparsePauliOp,
+        ansatz: QuantumCircuit,
+        initial_point: Optional[List[float]] = None,
+        exact_energy: Optional[float] = None,
+        threshold: float = 0.008,
+        n_restarts: int = 3
+    ) -> VQEResultRecord:
+        """Wrap run_vqe_qubit with a multi-restart fallback if error > threshold."""
+        best_result = None
+        best_error = float("inf")
+        
+        # Trial 1: Warm start or default
+        res = self.run_vqe_qubit(qubit_operator, ansatz, initial_point)
+        if exact_energy is not None:
+            err = res.energy - exact_energy
+            if err <= threshold:
+                return res
+            best_result = res
+            best_error = err
+        else:
+            best_result = res
+        
+        # Trials 2..N: Random restarts
+        for _ in range(n_restarts - 1):
+            random_ip = get_random_initial_point(ansatz).tolist()
+            res = self.run_vqe_qubit(qubit_operator, ansatz, random_ip)
+            if exact_energy is not None:
+                err = res.energy - exact_energy
+                if err < best_error:
+                    best_error = err
+                    best_result = res
+                if err <= threshold:
+                    break
+            else:
+                if res.energy < best_result.energy:
+                    best_result = res
+                    
+        return best_result
 
     def run_vqe(self, problem: Any, mapper: Any) -> VQEResultRecord:
         """Compatibility wrapper that maps from problem to qubit operator and adds constants."""

@@ -33,6 +33,7 @@ class ExecutionResult:
     backend_name: str
     sampled_bitstring: Optional[str] = None
     measurement_counts: Optional[Dict[str, int]] = None
+    probability_distribution: Optional[Dict[str, float]] = None
 
 
 class RuntimeExecutor:
@@ -175,6 +176,7 @@ class RuntimeExecutor:
         raw_bitstring = format(best_index, f"0{circuit.num_qubits}b")
         sampled_bitstring = self._canonical_bitstring(raw_bitstring)
         counts = self._sample_counts_from_probabilities(probabilities, circuit.num_qubits)
+        probability_distribution = self._probability_dict_from_vector(probabilities, circuit.num_qubits)
 
         return ExecutionResult(
             expectation_value=expectation_value,
@@ -186,6 +188,7 @@ class RuntimeExecutor:
             backend_name="local_statevector",
             sampled_bitstring=sampled_bitstring,
             measurement_counts=counts,
+            probability_distribution=probability_distribution,
         )
 
     def _execute_aer_sampled(self, circuit, hamiltonian, offset: float) -> ExecutionResult:
@@ -217,6 +220,7 @@ class RuntimeExecutor:
         expectation_value, variance = self._compute_moments_from_counts(counts, hamiltonian)
         objective_value = float(expectation_value + offset)
         sampled_bitstring = max(counts, key=counts.get) if counts else None
+        probability_distribution = self._probabilities_from_counts(counts)
 
         return ExecutionResult(
             expectation_value=expectation_value,
@@ -228,6 +232,7 @@ class RuntimeExecutor:
             backend_name=self._backend_label(self.backend),
             sampled_bitstring=sampled_bitstring,
             measurement_counts=counts,
+            probability_distribution=probability_distribution,
         )
 
     def _execute_estimator(self, circuit, hamiltonian, offset: float) -> ExecutionResult:
@@ -254,6 +259,7 @@ class RuntimeExecutor:
             backend_name=self._backend_label(self.backend),
             sampled_bitstring=None,
             measurement_counts=None,
+            probability_distribution=None,
         )
 
     def _sample_counts_from_probabilities(
@@ -271,6 +277,31 @@ class RuntimeExecutor:
             raw_bitstring = format(index, f"0{n_qubits}b")
             counts[self._canonical_bitstring(raw_bitstring)] = int(count)
         return counts
+
+    @staticmethod
+    def _probability_dict_from_vector(
+        probabilities: np.ndarray,
+        n_qubits: int,
+    ) -> Dict[str, float]:
+        """Convert a statevector probability array into canonical bitstring probabilities."""
+        probability_distribution: Dict[str, float] = {}
+        for index, probability in enumerate(probabilities):
+            if probability <= 0:
+                continue
+            raw_bitstring = format(index, f"0{n_qubits}b")
+            probability_distribution[RuntimeExecutor._canonical_bitstring(raw_bitstring)] = float(probability)
+        return probability_distribution
+
+    @staticmethod
+    def _probabilities_from_counts(counts: Dict[str, int]) -> Dict[str, float]:
+        """Normalize sampled counts into a probability distribution."""
+        total = sum(counts.values())
+        if total <= 0:
+            return {}
+        return {
+            bitstring: float(count / total)
+            for bitstring, count in counts.items()
+        }
 
     def _compute_moments_from_counts(
         self,
