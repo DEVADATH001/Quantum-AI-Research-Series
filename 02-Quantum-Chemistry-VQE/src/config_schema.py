@@ -55,6 +55,7 @@ class OptimizerConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str = "SLSQP"
     maxiter: int = 100
+    tol: Optional[float] = None
 
 class VQEConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -66,6 +67,7 @@ class VQEConfig(BaseModel):
 class RuntimeConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     backend: str = "local"
+    noise_level: Optional[str] = None
     resilience_level: int = 1
     optimization_level: int = 1
     shots: int = 4096
@@ -73,6 +75,8 @@ class RuntimeConfig(BaseModel):
 class AnalysisConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     chemical_accuracy_mhartree: float = 1.6
+    n_bootstrap_resamples: int = 2000
+    n_seeds: int = 10
 
 class SimulationConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")

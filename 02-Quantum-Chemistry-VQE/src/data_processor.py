@@ -10,7 +10,7 @@ from __future__ import annotations
 import csv
 import json
 import os
-from typing import Dict, Iterable, List
+from typing import Any, Dict, Iterable, List
 
 import numpy as np
 

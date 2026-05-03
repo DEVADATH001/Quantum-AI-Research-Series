@@ -1,0 +1,128 @@
+[
+  {
+    "label": "EffSU2_ry_R1_linear",
+    "error": 1.9991806489816355e-05,
+    "cost": 1,
+    "reps": 1,
+    "gates": [
+      "ry"
+    ],
+    "entanglement": "linear"
+  },
+  {
+    "label": "EffSU2_ry_R1_circular",
+    "error": 7.002805668676615e-09,
+    "cost": 1,
+    "reps": 1,
+    "gates": [
+      "ry"
+    ],
+    "entanglement": "circular"
+  },
+  {
+    "label": "EffSU2_ry+rz_R1_linear",
+    "error": 1.8108775658109977e-05,
+    "cost": 1,
+    "reps": 1,
+    "gates": [
+      "ry",
+      "rz"
+    ],
+    "entanglement": "linear"
+  },
+  {
+    "label": "EffSU2_ry+rz_R1_circular",
+    "error": 2.7876710739782595e-07,
+    "cost": 1,
+    "reps": 1,
+    "gates": [
+      "ry",
+      "rz"
+    ],
+    "entanglement": "circular"
+  },
+  {
+    "label": "EffSU2_ry_R2_linear",
+    "error": 2.270634746892597e-08,
+    "cost": 2,
+    "reps": 2,
+    "gates": [
+      "ry"
+    ],
+    "entanglement": "linear"
+  },
+  {
+    "label": "EffSU2_ry_R2_circular",
+    "error": 7.152818493061375e-08,
+    "cost": 2,
+    "reps": 2,
+    "gates": [
+      "ry"
+    ],
+    "entanglement": "circular"
+  },
+  {
+    "label": "EffSU2_ry+rz_R2_linear",
+    "error": 6.034534960619453e-08,
+    "cost": 2,
+    "reps": 2,
+    "gates": [
+      "ry",
+      "rz"
+    ],
+    "entanglement": "linear"
+  },
+  {
+    "label": "EffSU2_ry+rz_R2_circular",
+    "error": 2.941641255027605e-07,
+    "cost": 2,
+    "reps": 2,
+    "gates": [
+      "ry",
+      "rz"
+    ],
+    "entanglement": "circular"
+  },
+  {
+    "label": "EffSU2_ry_R3_linear",
+    "error": 1.1314003978135645e-07,
+    "cost": 3,
+    "reps": 3,
+    "gates": [
+      "ry"
+    ],
+    "entanglement": "linear"
+  },
+  {
+    "label": "EffSU2_ry_R3_circular",
+    "error": 2.58474597281122e-09,
+    "cost": 3,
+    "reps": 3,
+    "gates": [
+      "ry"
+    ],
+    "entanglement": "circular"
+  },
+  {
+    "label": "EffSU2_ry+rz_R3_linear",
+    "error": 2.049395009251498e-08,
+    "cost": 3,
+    "reps": 3,
+    "gates": [
+      "ry",
+      "rz"
+    ],
+    "entanglement": "linear"
+  },
+  {
+    "label": "EffSU2_ry+rz_R3_circular",
+    "error": 2.8566747567460027e-07,
+    "cost": 3,
+    "reps": 3,
+    "gates": [
+      "ry",
+      "rz"
+    ],
+    "entanglement": "circular"
+  }
+]

@@ -1,0 +1,268 @@
+{
+  "overall_label": "weak",
+  "misleading_risk": "medium",
+  "classical_outperformance": [
+    {
+      "family": "communication_mesh_8_3",
+      "qaoa_mean_ratio": 0.7828074848636701,
+      "better_baselines": [
+        "goemans_williamson",
+        "greedy",
+        "hill_climb_budget_matched",
+        "local_search",
+        "random_budget_matched",
+        "random_cut"
+      ]
+    },
+    {
+      "family": "d_regular_8_3",
+      "qaoa_mean_ratio": 0.8631698875699598,
+      "better_baselines": [
+        "goemans_williamson",
+        "greedy",
+        "hill_climb_budget_matched",
+        "local_search",
+        "random_budget_matched",
+        "random_cut"
+      ]
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "qaoa_mean_ratio": 0.8340534437329102,
+      "better_baselines": [
+        "goemans_williamson",
+        "greedy",
+        "hill_climb_budget_matched",
+        "local_search",
+        "random_budget_matched",
+        "random_cut"
+      ]
+    }
+  ],
+  "positive_significance": [],
+  "negative_significance": [],
+  "pairwise_losses": [
+    {
+      "family": "communication_mesh_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "goemans_williamson",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.21715081255223326,
+      "n_pairs": 7
+    },
+    {
+      "family": "communication_mesh_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "greedy",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.16783094856405847,
+      "n_pairs": 7
+    },
+    {
+      "family": "communication_mesh_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "hill_climb_budget_matched",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.21342216941934739,
+      "n_pairs": 7
+    },
+    {
+      "family": "communication_mesh_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "local_search",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.20797921632525945,
+      "n_pairs": 7
+    },
+    {
+      "family": "communication_mesh_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "random_budget_matched",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.15555436405715256,
+      "n_pairs": 7
+    },
+    {
+      "family": "communication_mesh_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "random_cut",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.16873998887789393,
+      "n_pairs": 7
+    },
+    {
+      "family": "d_regular_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "goemans_williamson",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.13683011243004023,
+      "n_pairs": 7
+    },
+    {
+      "family": "d_regular_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "greedy",
+      "wins_a": 1,
+      "ties": 0,
+      "losses_a": 6,
+      "win_rate_a": 0.14285714285714285,
+      "loss_rate_a": 0.8571428571428571,
+      "mean_difference": -0.07968725528718311,
+      "n_pairs": 7
+    },
+    {
+      "family": "d_regular_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "hill_climb_budget_matched",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.13683011243004023,
+      "n_pairs": 7
+    },
+    {
+      "family": "d_regular_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "local_search",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.10825868385861168,
+      "n_pairs": 7
+    },
+    {
+      "family": "d_regular_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "random_budget_matched",
+      "wins_a": 1,
+      "ties": 0,
+      "losses_a": 6,
+      "win_rate_a": 0.14285714285714285,
+      "loss_rate_a": 0.8571428571428571,
+      "mean_difference": -0.06540154100146882,
+      "n_pairs": 7
+    },
+    {
+      "family": "d_regular_8_3",
+      "method_a": "qaoa_tuned",
+      "method_b": "random_cut",
+      "wins_a": 2,
+      "ties": 0,
+      "losses_a": 5,
+      "win_rate_a": 0.2857142857142857,
+      "loss_rate_a": 0.7142857142857143,
+      "mean_difference": -0.06540154100146882,
+      "n_pairs": 7
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "method_a": "qaoa_tuned",
+      "method_b": "goemans_williamson",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.16594655626708965,
+      "n_pairs": 7
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "method_a": "qaoa_tuned",
+      "method_b": "greedy",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.1480894134099468,
+      "n_pairs": 7
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "method_a": "qaoa_tuned",
+      "method_b": "hill_climb_budget_matched",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.16594655626708965,
+      "n_pairs": 7
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "method_a": "qaoa_tuned",
+      "method_b": "local_search",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.10782967315020654,
+      "n_pairs": 7
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "method_a": "qaoa_tuned",
+      "method_b": "random_budget_matched",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.12411338943392282,
+      "n_pairs": 7
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "method_a": "qaoa_tuned",
+      "method_b": "random_cut",
+      "wins_a": 0,
+      "ties": 0,
+      "losses_a": 7,
+      "win_rate_a": 0.0,
+      "loss_rate_a": 1.0,
+      "mean_difference": -0.1480894134099468,
+      "n_pairs": 7
+    }
+  ],
+  "randomness_flags": [],
+  "reasoning": [
+    "The benchmark outputs are internally consistent with the method: expected objectives are tracked separately from representative sampled bitstrings, and sampled summaries obey their own bookkeeping constraints.",
+    "Classical baselines outperform tuned QAOA on the held-out study families.",
+    "There is no corrected statistically significant evidence that QAOA improves over the included classical baselines."
+  ]
+}

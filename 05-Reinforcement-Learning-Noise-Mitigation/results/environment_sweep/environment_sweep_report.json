@@ -1,0 +1,49 @@
+{
+  "base_config_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\config\\tuning_config.yaml",
+  "conditions": [
+    {
+      "condition_index": 1,
+      "condition": "slip_0.00_horizon_6",
+      "slip_probability": 0.0,
+      "max_episode_steps": 6,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\environment_sweep\\slip_0.00_horizon_6",
+      "quantum_mitigated_eval_success": 0.5,
+      "quantum_noisy_eval_success": 0.5625,
+      "tabular_eval_success": 0.40625,
+      "mlp_eval_success": 0.96875
+    },
+    {
+      "condition_index": 2,
+      "condition": "slip_0.00_horizon_8",
+      "slip_probability": 0.0,
+      "max_episode_steps": 8,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\environment_sweep\\slip_0.00_horizon_8",
+      "quantum_mitigated_eval_success": 0.75,
+      "quantum_noisy_eval_success": 0.75,
+      "tabular_eval_success": 0.6875,
+      "mlp_eval_success": 0.96875
+    },
+    {
+      "condition_index": 3,
+      "condition": "slip_0.10_horizon_6",
+      "slip_probability": 0.1,
+      "max_episode_steps": 6,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\environment_sweep\\slip_0.10_horizon_6",
+      "quantum_mitigated_eval_success": 0.46875,
+      "quantum_noisy_eval_success": 0.46875,
+      "tabular_eval_success": 0.34375,
+      "mlp_eval_success": 0.4375
+    },
+    {
+      "condition_index": 4,
+      "condition": "slip_0.10_horizon_8",
+      "slip_probability": 0.1,
+      "max_episode_steps": 8,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\environment_sweep\\slip_0.10_horizon_8",
+      "quantum_mitigated_eval_success": 0.625,
+      "quantum_noisy_eval_success": 0.65625,
+      "tabular_eval_success": 0.53125,
+      "mlp_eval_success": 0.71875
+    }
+  ]
+}

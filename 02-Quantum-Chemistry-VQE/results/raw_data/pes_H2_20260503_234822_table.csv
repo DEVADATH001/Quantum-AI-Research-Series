@@ -1,0 +1,3 @@
+molecule,bond_length,method,energy_hartree,delta_hartree,chemical_accuracy
+H2,0.74,Exact,-0.831401510160718,0.0,True
+H2,0.74,EfficientSU2,-0.8313880752679539,1.3434892764063733e-05,True

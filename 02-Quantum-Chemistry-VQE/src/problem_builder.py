@@ -7,6 +7,8 @@ Task: Fermion-to-qubit mapping utilities."""
 
 from __future__ import annotations
 
+from typing import Optional, Tuple
+
 from dataclasses import dataclass
 
 from qiskit.quantum_info import SparsePauliOp

@@ -57,7 +57,7 @@ def get_ansatz(
     normalized = name.strip().upper()
     if normalized == "UCCSD":
         return build_uccsd_ansatz(problem, mapper)
-    if normalized == "EFFICIENTSU2":
+    if normalized in ["EFFICIENTSU2", "RYRZ"]:
         # Always prepend Hartree-Fock to ensure the optimizer starts from a physical state
         hf = HartreeFock(
             num_spatial_orbitals=problem.num_spatial_orbitals,
@@ -66,8 +66,8 @@ def get_ansatz(
         )
         num_qubits = mapper.map(problem.hamiltonian.second_q_op()).num_qubits
         reps = int(kwargs.get("reps", 3))
-        entanglement = str(kwargs.get("entanglement", "circular"))
-        su2_gates = list(kwargs.get("su2_gates", ["ry"]))
+        entanglement = str(kwargs.get("entanglement", "linear" if normalized == "RYRZ" else "circular"))
+        su2_gates = list(kwargs.get("su2_gates", ["ry", "rz"] if normalized == "RYRZ" else ["ry"]))
         return build_hardware_efficient_ansatz(
             num_qubits, reps=reps, entanglement=entanglement, su2_gates=su2_gates, initial_state=hf
         )

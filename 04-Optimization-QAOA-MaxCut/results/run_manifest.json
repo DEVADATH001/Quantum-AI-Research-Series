@@ -1,0 +1,51 @@
+{
+  "run_id": "20260427T033551Z",
+  "run_output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\04-Optimization-QAOA-MaxCut\\results\\runs\\20260427T033551Z",
+  "stable_output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\04-Optimization-QAOA-MaxCut\\results",
+  "provenance": {
+    "run_id": "20260427T033551Z",
+    "generated_at_utc": "2026-04-27T03:38:35.592565+00:00",
+    "project_root": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\04-Optimization-QAOA-MaxCut",
+    "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "git_commit": "95ff5c073ab27bd69b8904846a9ec0a04a518685",
+    "config_hash": "6c061d8399d823b656d884f2b257f36f5c46de0a43129fc43209d1ebe9a3eee7",
+    "package_versions": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.1",
+      "networkx": "3.6",
+      "pandas": "2.3.3",
+      "matplotlib": "3.10.7",
+      "seaborn": "0.13.2",
+      "PyYAML": "6.0.3",
+      "qiskit": "2.3.0",
+      "qiskit-aer": "0.17.2",
+      "qiskit-ibm-runtime": "0.45.1"
+    }
+  },
+  "artifacts": [
+    "approximation_ratio.png",
+    "benchmark_robustness_runs.csv",
+    "benchmark_robustness_summary.csv",
+    "energy_landscape.png",
+    "graph_cut_visualization.png",
+    "hardware_feasibility.csv",
+    "method_comparison.png",
+    "metrics.csv",
+    "optimization_convergence.png",
+    "publication_positioning.json",
+    "publication_positioning.md",
+    "results_verdict.json",
+    "results_verdict.md",
+    "sample_gap_analysis.png",
+    "study_budget_fairness.png",
+    "study_budget_summary.csv",
+    "study_candidate_search.csv",
+    "study_instance_metrics.csv",
+    "study_manifest.json",
+    "study_method_summary.csv",
+    "study_pairwise_summary.csv",
+    "study_significance.csv",
+    "study_significance_heatmap.png"
+  ]
+}

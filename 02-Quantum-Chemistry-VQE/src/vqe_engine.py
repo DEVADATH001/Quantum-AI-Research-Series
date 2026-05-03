@@ -42,25 +42,29 @@ class VQEEngine:
         estimator: Any,
         ansatz: Optional[QuantumCircuit] = None,
         optimizer: Optional[Any] = None,
+        gradient: Optional[Any] = None,
         maxiter: int = 80,
         energy_shift: float = 0.0,
     ) -> None:
         self.estimator = estimator
         self.ansatz = ansatz
         self.energy_shift = energy_shift
+        self.gradient = gradient
         # Default to SLSQP for stability in statevector simulations if not specified
         self.optimizer = optimizer if optimizer is not None else SLSQP(maxiter=maxiter)
         self.callback = VQECallback(energy_shift=energy_shift)
         self._vqe: Optional[VQE] = None
         if ansatz is not None:
-            self.initialize_vqe(ansatz=ansatz, optimizer=self.optimizer)
+            self.initialize_vqe(ansatz=ansatz, optimizer=self.optimizer, gradient=self.gradient)
 
-    def initialize_vqe(self, ansatz: QuantumCircuit, optimizer: Optional[Any] = None, energy_shift: Optional[float] = None) -> VQE:
-        """Initialize VQE primitive with optional updated energy shift for hybrid monitoring."""
+    def initialize_vqe(self, ansatz: QuantumCircuit, optimizer: Optional[Any] = None, energy_shift: Optional[float] = None, gradient: Optional[Any] = None) -> VQE:
+        """Initialize VQE primitive with optional updated energy shift and gradient for hybrid monitoring."""
         if optimizer is None:
             optimizer = self.optimizer
         if energy_shift is not None:
             self.energy_shift = energy_shift
+        if gradient is not None:
+            self.gradient = gradient
             
         self.callback = VQECallback(energy_shift=self.energy_shift)
         self.ansatz = ansatz
@@ -69,6 +73,7 @@ class VQEEngine:
             estimator=self.estimator,
             ansatz=ansatz,
             optimizer=optimizer,
+            gradient=self.gradient,
             callback=self.callback,
         )
         return self._vqe
@@ -117,29 +122,29 @@ class VQEEngine:
         initial_point: Optional[List[float]] = None,
         exact_energy: Optional[float] = None,
         threshold: float = 0.008,
-        n_restarts: int = 3
+        max_restarts: int = 5,
     ) -> VQEResultRecord:
-        """Wrap run_vqe_qubit with a multi-restart fallback if error > threshold."""
+        """Wrap run_vqe_qubit with a multi-restart fallback if |error| > threshold."""
         best_result = None
         best_error = float("inf")
-        
+
         # Trial 1: Warm start or default
         res = self.run_vqe_qubit(qubit_operator, ansatz, initial_point)
         if exact_energy is not None:
-            err = res.energy - exact_energy
+            err = abs(res.energy - exact_energy)
             if err <= threshold:
                 return res
             best_result = res
             best_error = err
         else:
             best_result = res
-        
+
         # Trials 2..N: Random restarts
-        for _ in range(n_restarts - 1):
+        for _ in range(max(1, max_restarts - 1)):
             random_ip = get_random_initial_point(ansatz).tolist()
             res = self.run_vqe_qubit(qubit_operator, ansatz, random_ip)
             if exact_energy is not None:
-                err = res.energy - exact_energy
+                err = abs(res.energy - exact_energy)
                 if err < best_error:
                     best_error = err
                     best_result = res
@@ -148,7 +153,7 @@ class VQEEngine:
             else:
                 if res.energy < best_result.energy:
                     best_result = res
-                    
+
         return best_result
 
     def run_vqe(self, problem: Any, mapper: Any) -> VQEResultRecord:

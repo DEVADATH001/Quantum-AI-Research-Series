@@ -1,0 +1,5336 @@
+{
+  "molecule": "H2",
+  "runtime": {
+    "mode": "local_statevector",
+    "backend": null,
+    "mitigation": "Noiseless statevector simulation."
+  },
+  "distances": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0,
+    1.1,
+    1.2,
+    1.3,
+    1.4,
+    1.5,
+    1.6,
+    1.7,
+    1.8,
+    1.9,
+    2.0,
+    2.1,
+    2.2,
+    2.3,
+    2.4,
+    2.5
+  ],
+  "exact_energies": [
+    -1.1884595209700355,
+    -1.0068357436586017,
+    -0.874727293108993,
+    -0.7741471707043215,
+    -0.6949143008765731,
+    -0.6308237234452443,
+    -0.5778734426397822,
+    -0.5333639569472131,
+    -0.4954068275794381,
+    -0.46264052025876384,
+    -0.4340581039832632,
+    -0.40889853546689925,
+    -0.38657570412937803,
+    -0.3666307535201356,
+    -0.34869922075960985,
+    -0.3324878784647296,
+    -0.3177580890725067,
+    -0.30431362762434455,
+    -0.291991631506971,
+    -0.2806557774731234,
+    -0.27019107072830123
+  ],
+  "vqe_energies": {
+    "UCCSD": [
+      -1.1884595170343948,
+      -1.006835699561618,
+      -0.8747272437665871,
+      -0.7741470918628424,
+      -0.6949141907028779,
+      -0.6308235906603203,
+      -0.5778731332734053,
+      -0.5333633969830548,
+      -0.49540676378704596,
+      -0.46264034025123507,
+      -0.4340577753184112,
+      -0.4088980419134782,
+      -0.3865750395664195,
+      -0.3666299181203388,
+      -0.3486989804623339,
+      -0.3324875475028326,
+      -0.3177576629487536,
+      -0.3043131046542258,
+      -0.29199101194970994,
+      -0.28065506291876563,
+      -0.27019026366259197
+    ],
+    "EfficientSU2": [
+      -1.1884591673689457,
+      -1.0068354818390775,
+      -0.8747268957856132,
+      -0.7741470589238251,
+      -0.6949138343460842,
+      -0.6308235384127596,
+      -0.5778729963415468,
+      -0.5333631972984004,
+      -0.4954057397284418,
+      -0.46264002166278234,
+      -0.4340573954527353,
+      -0.40889761390628765,
+      -0.3865745735807886,
+      -0.3666294221166107,
+      -0.34869769884416385,
+      -0.33248617742351005,
+      -0.3177571076832445,
+      -0.3043125168463461,
+      -0.29199039712615943,
+      -0.2806544256848351,
+      -0.27018960787755436
+    ]
+  },
+  "histories": {
+    "UCCSD": {
+      "0.500": [
+        {
+          "iteration": 1,
+          "energy": -0.3798174342659111,
+          "electronic_energy": -1.438171434265911,
+          "variance": null,
+          "parameters": [
+            0.691716641367174
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.379817432815037,
+          "electronic_energy": -1.438171432815037,
+          "variance": null,
+          "parameters": [
+            0.6917166562683352
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3798174232049183,
+          "electronic_energy": -1.4381714232049183,
+          "variance": null,
+          "parameters": [
+            0.691716641367174
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.37981741543835956,
+          "electronic_energy": -1.4381714154383596,
+          "variance": null,
+          "parameters": [
+            0.691716641367174
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": 0.15781691676574694,
+          "electronic_energy": -0.9005370832342531,
+          "variance": null,
+          "parameters": [
+            0.5943501295454272
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.914782177534238,
+          "electronic_energy": -1.973136177534238,
+          "variance": null,
+          "parameters": [
+            0.6527470571235046
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.9147821678731871,
+          "electronic_energy": -1.9731361678731871,
+          "variance": null,
+          "parameters": [
+            0.6527470720246658
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.9147821827372711,
+          "electronic_energy": -1.973136182737271,
+          "variance": null,
+          "parameters": [
+            0.6527470571235046
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.9147821763855182,
+          "electronic_energy": -1.9731361763855182,
+          "variance": null,
+          "parameters": [
+            0.6527470571235046
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 10,
+          "energy": -1.0066881492472137,
+          "electronic_energy": -2.0650421492472137,
+          "variance": null,
+          "parameters": [
+            0.007765307129604659
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 11,
+          "energy": -1.0066881542520796,
+          "electronic_energy": -2.0650421542520796,
+          "variance": null,
+          "parameters": [
+            0.007765322030765853
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 12,
+          "energy": -1.0066881543598742,
+          "electronic_energy": -2.0650421543598743,
+          "variance": null,
+          "parameters": [
+            0.007765307129604659
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 13,
+          "energy": -1.0066881619070762,
+          "electronic_energy": -2.0650421619070762,
+          "variance": null,
+          "parameters": [
+            0.007765307129604659
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 14,
+          "energy": -1.1487032089707925,
+          "electronic_energy": -2.2070572089707925,
+          "variance": null,
+          "parameters": [
+            0.24202373916984837
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 15,
+          "energy": -1.1487032086284894,
+          "electronic_energy": -2.2070572086284894,
+          "variance": null,
+          "parameters": [
+            0.24202375407100957
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 16,
+          "energy": -1.1487032131428974,
+          "electronic_energy": -2.2070572131428974,
+          "variance": null,
+          "parameters": [
+            0.24202373916984837
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 17,
+          "energy": -1.1487032043062317,
+          "electronic_energy": -2.2070572043062318,
+          "variance": null,
+          "parameters": [
+            0.24202373916984837
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 18,
+          "energy": -1.1690813497627577,
+          "electronic_energy": -2.2274353497627577,
+          "variance": null,
+          "parameters": [
+            0.33210948962702147
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 19,
+          "energy": -1.1690813463880843,
+          "electronic_energy": -2.2274353463880843,
+          "variance": null,
+          "parameters": [
+            0.33210950452818266
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 20,
+          "energy": -1.1690813472690706,
+          "electronic_energy": -2.2274353472690707,
+          "variance": null,
+          "parameters": [
+            0.33210948962702147
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 21,
+          "energy": -1.1690813484764595,
+          "electronic_energy": -2.2274353484764595,
+          "variance": null,
+          "parameters": [
+            0.33210948962702147
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 22,
+          "energy": -1.1846561110041378,
+          "electronic_energy": -2.243010111004138,
+          "variance": null,
+          "parameters": [
+            0.20002805333597817
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 23,
+          "energy": -1.1846561119721106,
+          "electronic_energy": -2.2430101119721106,
+          "variance": null,
+          "parameters": [
+            0.20002806823713937
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 24,
+          "energy": -1.1846561108023805,
+          "electronic_energy": -2.2430101108023806,
+          "variance": null,
+          "parameters": [
+            0.20002805333597817
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 25,
+          "energy": -1.184656113387684,
+          "electronic_energy": -2.243010113387684,
+          "variance": null,
+          "parameters": [
+            0.20002805333597817
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 26,
+          "energy": -1.1882069345548425,
+          "electronic_energy": -2.2465609345548425,
+          "variance": null,
+          "parameters": [
+            0.21839010762690136
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 27,
+          "energy": -1.1882069345570092,
+          "electronic_energy": -2.2465609345570092,
+          "variance": null,
+          "parameters": [
+            0.21839012252806256
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 28,
+          "energy": -1.1882069349891262,
+          "electronic_energy": -2.2465609349891262,
+          "variance": null,
+          "parameters": [
+            0.21839010762690136
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 29,
+          "energy": -1.1882069343722392,
+          "electronic_energy": -2.2465609343722392,
+          "variance": null,
+          "parameters": [
+            0.21839010762690136
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 30,
+          "energy": -1.1884564520611738,
+          "electronic_energy": -2.246810452061174,
+          "variance": null,
+          "parameters": [
+            0.22087416466935297
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 31,
+          "energy": -1.18845645201772,
+          "electronic_energy": -2.24681045201772,
+          "variance": null,
+          "parameters": [
+            0.22087417957051417
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 32,
+          "energy": -1.1884564520296181,
+          "electronic_energy": -2.246810452029618,
+          "variance": null,
+          "parameters": [
+            0.22087416466935297
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 33,
+          "energy": -1.1884564520461214,
+          "electronic_energy": -2.2468104520461214,
+          "variance": null,
+          "parameters": [
+            0.22087416466935297
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 34,
+          "energy": -1.1884595170343948,
+          "electronic_energy": -2.246813517034395,
+          "variance": null,
+          "parameters": [
+            0.2194254523310348
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 35,
+          "energy": -1.188459517036165,
+          "electronic_energy": -2.246813517036165,
+          "variance": null,
+          "parameters": [
+            0.219425467232196
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 36,
+          "energy": -1.1884595170340124,
+          "electronic_energy": -2.2468135170340124,
+          "variance": null,
+          "parameters": [
+            0.2194254523310348
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 37,
+          "energy": -1.1884595170355716,
+          "electronic_energy": -2.2468135170355716,
+          "variance": null,
+          "parameters": [
+            0.2194254523310348
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.600": [
+        {
+          "iteration": 1,
+          "energy": -1.0068351828175315,
+          "electronic_energy": -1.8887968494841982,
+          "variance": null,
+          "parameters": [
+            0.2194254523310348
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -1.0068351828040225,
+          "electronic_energy": -1.8887968494706893,
+          "variance": null,
+          "parameters": [
+            0.219425467232196
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -1.0068351828022235,
+          "electronic_energy": -1.8887968494688903,
+          "variance": null,
+          "parameters": [
+            0.2194254523310348
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -1.00683518281684,
+          "electronic_energy": -1.8887968494835068,
+          "variance": null,
+          "parameters": [
+            0.2194254523310348
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -1.0068353534850116,
+          "electronic_energy": -1.8887970201516784,
+          "variance": null,
+          "parameters": [
+            0.2185188805851623
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -1.006835699561618,
+          "electronic_energy": -1.8887973662282846,
+          "variance": null,
+          "parameters": [
+            0.2189268917350245
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.700": [
+        {
+          "iteration": 1,
+          "energy": -0.8747268473139681,
+          "electronic_energy": -1.630693990171111,
+          "variance": null,
+          "parameters": [
+            0.2189268917350245
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.8747268473031874,
+          "electronic_energy": -1.6306939901603303,
+          "variance": null,
+          "parameters": [
+            0.2189269066361857
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.8747268473031174,
+          "electronic_energy": -1.6306939901602604,
+          "variance": null,
+          "parameters": [
+            0.2189268917350245
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.8747268473194226,
+          "electronic_energy": -1.6306939901765656,
+          "variance": null,
+          "parameters": [
+            0.2189268917350245
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.8747272437665871,
+          "electronic_energy": -1.63069438662373,
+          "variance": null,
+          "parameters": [
+            0.2182034105567408
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.800": [
+        {
+          "iteration": 1,
+          "energy": -0.7741470918628424,
+          "electronic_energy": -1.4356183418628423,
+          "variance": null,
+          "parameters": [
+            0.2182034105567408
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.7741470918579929,
+          "electronic_energy": -1.4356183418579929,
+          "variance": null,
+          "parameters": [
+            0.218203425457902
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.774147091858024,
+          "electronic_energy": -1.435618341858024,
+          "variance": null,
+          "parameters": [
+            0.2182034105567408
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.7741470918602105,
+          "electronic_energy": -1.4356183418602104,
+          "variance": null,
+          "parameters": [
+            0.2182034105567408
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.900": [
+        {
+          "iteration": 1,
+          "energy": -0.6949138818605959,
+          "electronic_energy": -1.2828883263050403,
+          "variance": null,
+          "parameters": [
+            0.2182034105567408
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.6949138818501338,
+          "electronic_energy": -1.2828883262945783,
+          "variance": null,
+          "parameters": [
+            0.218203425457902
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.6949138818501618,
+          "electronic_energy": -1.2828883262946063,
+          "variance": null,
+          "parameters": [
+            0.2182034105567408
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.6949138818575703,
+          "electronic_energy": -1.2828883263020148,
+          "variance": null,
+          "parameters": [
+            0.2182034105567408
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.6949141907028779,
+          "electronic_energy": -1.2828886351473223,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.000": [
+        {
+          "iteration": 1,
+          "energy": -0.6308235906603203,
+          "electronic_energy": -1.1600005906603204,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.630823590658018,
+          "electronic_energy": -1.160000590658018,
+          "variance": null,
+          "parameters": [
+            0.21750132744593148
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.630823590658014,
+          "electronic_energy": -1.160000590658014,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.6308235906688096,
+          "electronic_energy": -1.1600005906688096,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.100": [
+        {
+          "iteration": 1,
+          "energy": -0.5778731332734053,
+          "electronic_energy": -1.0589431332734052,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.5778731332673357,
+          "electronic_energy": -1.0589431332673356,
+          "variance": null,
+          "parameters": [
+            0.21750132744593148
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.5778731332673324,
+          "electronic_energy": -1.0589431332673322,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.5778731332806828,
+          "electronic_energy": -1.0589431332806827,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.200": [
+        {
+          "iteration": 1,
+          "energy": -0.5333633969830548,
+          "electronic_energy": -0.9743442303163882,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.5333633969741935,
+          "electronic_energy": -0.9743442303075269,
+          "variance": null,
+          "parameters": [
+            0.21750132744593148
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.5333633969741903,
+          "electronic_energy": -0.9743442303075237,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.5333633969893612,
+          "electronic_energy": -0.9743442303226946,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.300": [
+        {
+          "iteration": 1,
+          "energy": -0.49540598650494094,
+          "electronic_energy": -0.9024652172741717,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.4954059864939846,
+          "electronic_energy": -0.9024652172632154,
+          "variance": null,
+          "parameters": [
+            0.21750132744593148
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.4954059864939816,
+          "electronic_energy": -0.9024652172632124,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.4954059865104552,
+          "electronic_energy": -0.902465217279686,
+          "variance": null,
+          "parameters": [
+            0.2175013125447703
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.49540676378704596,
+          "electronic_energy": -0.9024659945562767,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.400": [
+        {
+          "iteration": 1,
+          "energy": -0.46264034025123507,
+          "electronic_energy": -0.8406239116798065,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.4626403402460428,
+          "electronic_energy": -0.8406239116746143,
+          "variance": null,
+          "parameters": [
+            0.21676605944914346
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.46264034024604167,
+          "electronic_energy": -0.8406239116746131,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.46264034025227824,
+          "electronic_energy": -0.8406239116808497,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.500": [
+        {
+          "iteration": 1,
+          "energy": -0.4340577753184112,
+          "electronic_energy": -0.7868424419850779,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.4340577753115264,
+          "electronic_energy": -0.7868424419781931,
+          "variance": null,
+          "parameters": [
+            0.21676605944914346
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.4340577753115252,
+          "electronic_energy": -0.7868424419781919,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.4340577753191583,
+          "electronic_energy": -0.786842441985825,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.600": [
+        {
+          "iteration": 1,
+          "energy": -0.4088980419134782,
+          "electronic_energy": -0.7396336669134782,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.4088980419052477,
+          "electronic_energy": -0.7396336669052477,
+          "variance": null,
+          "parameters": [
+            0.21676605944914346
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.4088980419052466,
+          "electronic_energy": -0.7396336669052466,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.4088980419139815,
+          "electronic_energy": -0.7396336669139815,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.700": [
+        {
+          "iteration": 1,
+          "energy": -0.3865750395664195,
+          "electronic_energy": -0.6978556278017136,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3865750395571129,
+          "electronic_energy": -0.6978556277924071,
+          "variance": null,
+          "parameters": [
+            0.21676605944914346
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3865750395571119,
+          "electronic_energy": -0.6978556277924061,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.3865750395667201,
+          "electronic_energy": -0.6978556278020143,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.800": [
+        {
+          "iteration": 1,
+          "energy": -0.3666299181203388,
+          "electronic_energy": -0.660617140342561,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.36662991811016793,
+          "electronic_energy": -0.6606171403323902,
+          "variance": null,
+          "parameters": [
+            0.21676605944914346
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.36662991811016715,
+          "electronic_energy": -0.6606171403323894,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.36662991812046924,
+          "electronic_energy": -0.6606171403426915,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.900": [
+        {
+          "iteration": 1,
+          "energy": -0.3486982185639979,
+          "electronic_energy": -0.6272124290903137,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3486982185531315,
+          "electronic_energy": -0.6272124290794473,
+          "variance": null,
+          "parameters": [
+            0.21676605944914346
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3486982185531305,
+          "electronic_energy": -0.6272124290794463,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.3486982185639848,
+          "electronic_energy": -0.6272124290903006,
+          "variance": null,
+          "parameters": [
+            0.21676604454798226
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.3486989804623339,
+          "electronic_energy": -0.6272131909886497,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.000": [
+        {
+          "iteration": 1,
+          "energy": -0.3324875475028326,
+          "electronic_energy": -0.5970760475028326,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3324875474972643,
+          "electronic_energy": -0.5970760474972643,
+          "variance": null,
+          "parameters": [
+            0.21603682642263894
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.33248754749726406,
+          "electronic_energy": -0.5970760474972641,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.3324875475056095,
+          "electronic_energy": -0.5970760475056095,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.100": [
+        {
+          "iteration": 1,
+          "energy": -0.3177576629487536,
+          "electronic_energy": -0.5697467105678012,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.31775766294245855,
+          "electronic_energy": -0.5697467105615062,
+          "variance": null,
+          "parameters": [
+            0.21603682642263894
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3177576629424582,
+          "electronic_energy": -0.5697467105615058,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.3177576629512887,
+          "electronic_energy": -0.5697467105703363,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.200": [
+        {
+          "iteration": 1,
+          "energy": -0.3043131046542258,
+          "electronic_energy": -0.5448481046542257,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3043131046473182,
+          "electronic_energy": -0.5448481046473181,
+          "variance": null,
+          "parameters": [
+            0.21603682642263894
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.30431310464731787,
+          "electronic_energy": -0.5448481046473178,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.30431310465654626,
+          "electronic_energy": -0.5448481046565462,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.300": [
+        {
+          "iteration": 1,
+          "energy": -0.29199101194970994,
+          "electronic_energy": -0.5220679684714491,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.2919910119422851,
+          "electronic_energy": -0.5220679684640243,
+          "variance": null,
+          "parameters": [
+            0.21603682642263894
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.2919910119422848,
+          "electronic_energy": -0.5220679684640239,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.291991011951839,
+          "electronic_energy": -0.5220679684735782,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.400": [
+        {
+          "iteration": 1,
+          "energy": -0.28065506291876563,
+          "electronic_energy": -0.5011454795854323,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.28065506291090325,
+          "electronic_energy": -0.5011454795775699,
+          "variance": null,
+          "parameters": [
+            0.21603682642263894
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.28065506291090303,
+          "electronic_energy": -0.5011454795775697,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.2806550629207235,
+          "electronic_energy": -0.5011454795873902,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.500": [
+        {
+          "iteration": 1,
+          "energy": -0.27019026366259197,
+          "electronic_energy": -0.48186106366259196,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.2701902636543592,
+          "electronic_energy": -0.4818610636543592,
+          "variance": null,
+          "parameters": [
+            0.21603682642263894
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.27019026365435894,
+          "electronic_energy": -0.48186106365435893,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.27019026366439586,
+          "electronic_energy": -0.48186106366439585,
+          "variance": null,
+          "parameters": [
+            0.21603681152147775
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ]
+    },
+    "EfficientSU2": {
+      "0.500": [
+        {
+          "iteration": 1,
+          "energy": -0.15357107851905383,
+          "electronic_energy": -1.2119250785190538,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.15357107983012397,
+          "electronic_energy": -1.211925079830124,
+          "variance": null,
+          "parameters": [
+            0.20376950226468882
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.15357106903096707,
+          "electronic_energy": -1.211925069030967,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.1535710802626935,
+          "electronic_energy": -1.2119250802626935,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.15357108756783044,
+          "electronic_energy": -1.2119250875678305,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.15357107550017335,
+          "electronic_energy": -1.2119250755001734,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.15357108392409424,
+          "electronic_energy": -1.2119250839240943,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.15357107052363728,
+          "electronic_energy": -1.2119250705236373,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.15357107101919598,
+          "electronic_energy": -1.211925071019196,
+          "variance": null,
+          "parameters": [
+            0.20376948736352762
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 10,
+          "energy": -0.707572604709894,
+          "electronic_energy": -1.765926604709894,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 11,
+          "energy": -0.7075725944789133,
+          "electronic_energy": -1.7659265944789133,
+          "variance": null,
+          "parameters": [
+            0.2917539300744041
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 12,
+          "energy": -0.7075726096519905,
+          "electronic_energy": -1.7659266096519906,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 13,
+          "energy": -0.7075725928212069,
+          "electronic_energy": -1.765926592821207,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 14,
+          "energy": -0.7075726020294244,
+          "electronic_energy": -1.7659266020294244,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 15,
+          "energy": -0.7075726152345474,
+          "electronic_energy": -1.7659266152345474,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 16,
+          "energy": -0.7075725989639488,
+          "electronic_energy": -1.7659265989639488,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 17,
+          "energy": -0.7075726050576323,
+          "electronic_energy": -1.7659266050576323,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 18,
+          "energy": -0.707572602694728,
+          "electronic_energy": -1.765926602694728,
+          "variance": null,
+          "parameters": [
+            0.2917539151732429
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 19,
+          "energy": -1.0580363404806898,
+          "electronic_energy": -2.11639034048069,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 20,
+          "energy": -1.058036342815707,
+          "electronic_energy": -2.116390342815707,
+          "variance": null,
+          "parameters": [
+            -0.1337613251472342
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 21,
+          "energy": -1.0580363450050005,
+          "electronic_energy": -2.1163903450050006,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 22,
+          "energy": -1.0580363429061133,
+          "electronic_energy": -2.1163903429061133,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 23,
+          "energy": -1.0580363360868934,
+          "electronic_energy": -2.1163903360868934,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 24,
+          "energy": -1.0580363390391776,
+          "electronic_energy": -2.1163903390391776,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 25,
+          "energy": -1.0580363367290588,
+          "electronic_energy": -2.116390336729059,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 26,
+          "energy": -1.058036343209075,
+          "electronic_energy": -2.116390343209075,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 27,
+          "energy": -1.058036344842555,
+          "electronic_energy": -2.116390344842555,
+          "variance": null,
+          "parameters": [
+            -0.1337613400483954
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 28,
+          "energy": -1.1247773516985946,
+          "electronic_energy": -2.1831313516985946,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 29,
+          "energy": -1.1247773520037923,
+          "electronic_energy": -2.1831313520037923,
+          "variance": null,
+          "parameters": [
+            -0.02553768679212183
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 30,
+          "energy": -1.1247773475756144,
+          "electronic_energy": -2.1831313475756144,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 31,
+          "energy": -1.12477735280835,
+          "electronic_energy": -2.18313135280835,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 32,
+          "energy": -1.1247773558639778,
+          "electronic_energy": -2.1831313558639778,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 33,
+          "energy": -1.1247773500882454,
+          "electronic_energy": -2.1831313500882454,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 34,
+          "energy": -1.124777355765223,
+          "electronic_energy": -2.183131355765223,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 35,
+          "energy": -1.1247773500548366,
+          "electronic_energy": -2.1831313500548366,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 36,
+          "energy": -1.124777348899006,
+          "electronic_energy": -2.183131348899006,
+          "variance": null,
+          "parameters": [
+            -0.025537701693283024
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 37,
+          "energy": -1.187227389586742,
+          "electronic_energy": -2.245581389586742,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 38,
+          "energy": -1.1872273891055722,
+          "electronic_energy": -2.2455813891055723,
+          "variance": null,
+          "parameters": [
+            -0.03696705984735953
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 39,
+          "energy": -1.1872273900247787,
+          "electronic_energy": -2.2455813900247787,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 40,
+          "energy": -1.187227388973339,
+          "electronic_energy": -2.245581388973339,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 41,
+          "energy": -1.1872273891325524,
+          "electronic_energy": -2.2455813891325525,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 42,
+          "energy": -1.1872273901127044,
+          "electronic_energy": -2.2455813901127044,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 43,
+          "energy": -1.1872273891011305,
+          "electronic_energy": -2.2455813891011305,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 44,
+          "energy": -1.187227389692917,
+          "electronic_energy": -2.245581389692917,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 45,
+          "energy": -1.1872273895950523,
+          "electronic_energy": -2.2455813895950523,
+          "variance": null,
+          "parameters": [
+            -0.03696707474852073
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 46,
+          "energy": -1.188416039269916,
+          "electronic_energy": -2.246770039269916,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 47,
+          "energy": -1.1884160393618801,
+          "electronic_energy": -2.24677003936188,
+          "variance": null,
+          "parameters": [
+            -0.05115646597441395
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 48,
+          "energy": -1.188416039279911,
+          "electronic_energy": -2.246770039279911,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 49,
+          "energy": -1.188416039389316,
+          "electronic_energy": -2.246770039389316,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 50,
+          "energy": -1.1884160392645233,
+          "electronic_energy": -2.2467700392645233,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 51,
+          "energy": -1.1884160391605745,
+          "electronic_energy": -2.2467700391605745,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 52,
+          "energy": -1.1884160392913339,
+          "electronic_energy": -2.246770039291334,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 53,
+          "energy": -1.188416039309986,
+          "electronic_energy": -2.246770039309986,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 54,
+          "energy": -1.1884160393258902,
+          "electronic_energy": -2.2467700393258903,
+          "variance": null,
+          "parameters": [
+            -0.051156480875575144
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 55,
+          "energy": -1.1884591673689457,
+          "electronic_energy": -2.2468131673689458,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 56,
+          "energy": -1.188459167365313,
+          "electronic_energy": -2.246813167365313,
+          "variance": null,
+          "parameters": [
+            -0.04874127196314029
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 57,
+          "energy": -1.18845916736112,
+          "electronic_energy": -2.24681316736112,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 58,
+          "energy": -1.1884591673645524,
+          "electronic_energy": -2.2468131673645524,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 59,
+          "energy": -1.1884591673766294,
+          "electronic_energy": -2.2468131673766294,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 60,
+          "energy": -1.1884591673728009,
+          "electronic_energy": -2.246813167372801,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 61,
+          "energy": -1.1884591673744098,
+          "electronic_energy": -2.24681316737441,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 62,
+          "energy": -1.188459167363364,
+          "electronic_energy": -2.246813167363364,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 63,
+          "energy": -1.188459167361894,
+          "electronic_energy": -2.246813167361894,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.600": [
+        {
+          "iteration": 1,
+          "energy": -1.0068347622182767,
+          "electronic_energy": -1.8887964288849435,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -1.006834762208689,
+          "electronic_energy": -1.8887964288753558,
+          "variance": null,
+          "parameters": [
+            -0.04874127196314029
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -1.0068347622104898,
+          "electronic_energy": -1.8887964288771566,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -1.0068347622118952,
+          "electronic_energy": -1.888796428878562,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -1.006834762226365,
+          "electronic_energy": -1.8887964288930317,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -1.0068347622147389,
+          "electronic_energy": -1.8887964288814056,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -1.0068347622303278,
+          "electronic_energy": -1.8887964288969945,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -1.0068347622211469,
+          "electronic_energy": -1.8887964288878136,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -1.0068347622048486,
+          "electronic_energy": -1.8887964288715153,
+          "variance": null,
+          "parameters": [
+            -0.048741286864301486
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 10,
+          "energy": -1.0068354818390775,
+          "electronic_energy": -1.8887971485057442,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.700": [
+        {
+          "iteration": 1,
+          "energy": -0.8747268957856132,
+          "electronic_energy": -1.6306940386427562,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.8747268957819848,
+          "electronic_energy": -1.6306940386391278,
+          "variance": null,
+          "parameters": [
+            -0.04938468920232944
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.8747268957910445,
+          "electronic_energy": -1.6306940386481874,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.8747268957841986,
+          "electronic_energy": -1.6306940386413415,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.8747268957804358,
+          "electronic_energy": -1.6306940386375788,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.8747268957813493,
+          "electronic_energy": -1.6306940386384923,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.8747268957850823,
+          "electronic_energy": -1.6306940386422253,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.8747268957937425,
+          "electronic_energy": -1.6306940386508855,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.8747268957852342,
+          "electronic_energy": -1.6306940386423772,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.800": [
+        {
+          "iteration": 1,
+          "energy": -0.7741462099024066,
+          "electronic_energy": -1.4356174599024065,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.7741462098957541,
+          "electronic_energy": -1.435617459895754,
+          "variance": null,
+          "parameters": [
+            -0.04938468920232944
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.7741462099065055,
+          "electronic_energy": -1.4356174599065055,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.7741462098997287,
+          "electronic_energy": -1.4356174598997287,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.7741462098987544,
+          "electronic_energy": -1.4356174598987543,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.7741462098950811,
+          "electronic_energy": -1.435617459895081,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.7741462099059067,
+          "electronic_energy": -1.4356174599059066,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.774146209913527,
+          "electronic_energy": -1.435617459913527,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.7741462098980803,
+          "electronic_energy": -1.4356174598980802,
+          "variance": null,
+          "parameters": [
+            -0.049384704103490634
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 10,
+          "energy": -0.7741470589238251,
+          "electronic_energy": -1.435618308923825,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "0.900": [
+        {
+          "iteration": 1,
+          "energy": -0.6949138343460842,
+          "electronic_energy": -1.2828882787905287,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.6949138343426305,
+          "electronic_energy": -1.282888278787075,
+          "variance": null,
+          "parameters": [
+            -0.049831127991697116
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.6949138343459466,
+          "electronic_energy": -1.282888278790391,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.6949138343457025,
+          "electronic_energy": -1.282888278790147,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.6949138343465838,
+          "electronic_energy": -1.2828882787910283,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.6949138343398592,
+          "electronic_energy": -1.2828882787843037,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.694913834351171,
+          "electronic_energy": -1.2828882787956155,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.6949138343523172,
+          "electronic_energy": -1.2828882787967617,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.6949138343418558,
+          "electronic_energy": -1.2828882787863003,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.000": [
+        {
+          "iteration": 1,
+          "energy": -0.6308227877703683,
+          "electronic_energy": -1.1599997877703683,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.6308227877651194,
+          "electronic_energy": -1.1599997877651194,
+          "variance": null,
+          "parameters": [
+            -0.049831127991697116
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.6308227877698389,
+          "electronic_energy": -1.159999787769839,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.6308227877691384,
+          "electronic_energy": -1.1599997877691384,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.6308227877713628,
+          "electronic_energy": -1.1599997877713628,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.6308227877625572,
+          "electronic_energy": -1.1599997877625572,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.6308227877773875,
+          "electronic_energy": -1.1599997877773875,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.6308227877784409,
+          "electronic_energy": -1.159999787778441,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.6308227877641022,
+          "electronic_energy": -1.1599997877641022,
+          "variance": null,
+          "parameters": [
+            -0.04983114289285831
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 10,
+          "energy": -0.6308235384127596,
+          "electronic_energy": -1.1600005384127596,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.100": [
+        {
+          "iteration": 1,
+          "energy": -0.5778729963415468,
+          "electronic_energy": -1.0589429963415466,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.5778729963372975,
+          "electronic_energy": -1.0589429963372974,
+          "variance": null,
+          "parameters": [
+            -0.05018337654115848
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.5778729963428455,
+          "electronic_energy": -1.0589429963428454,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.5778729963396809,
+          "electronic_energy": -1.0589429963396808,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.5778729963405154,
+          "electronic_energy": -1.0589429963405153,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.5778729963373268,
+          "electronic_energy": -1.0589429963373267,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.5778729963445834,
+          "electronic_energy": -1.0589429963445833,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.5778729963475415,
+          "electronic_energy": -1.0589429963475414,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.5778729963380438,
+          "electronic_energy": -1.0589429963380437,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.200": [
+        {
+          "iteration": 1,
+          "energy": -0.5333631972984004,
+          "electronic_energy": -0.9743440306317338,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.5333631972930631,
+          "electronic_energy": -0.9743440306263965,
+          "variance": null,
+          "parameters": [
+            -0.05018337654115848
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.5333631972993187,
+          "electronic_energy": -0.9743440306326521,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.5333631972960928,
+          "electronic_energy": -0.9743440306294262,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.5333631972978218,
+          "electronic_energy": -0.9743440306311552,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.5333631972930445,
+          "electronic_energy": -0.9743440306263779,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.5333631973028278,
+          "electronic_energy": -0.9743440306361612,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.5333631973055556,
+          "electronic_energy": -0.974344030638889,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.5333631972935324,
+          "electronic_energy": -0.9743440306268658,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.300": [
+        {
+          "iteration": 1,
+          "energy": -0.4954057397284418,
+          "electronic_energy": -0.9024649704976726,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.49540573972230095,
+          "electronic_energy": -0.9024649704915317,
+          "variance": null,
+          "parameters": [
+            -0.05018337654115848
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.49540573972906055,
+          "electronic_energy": -0.9024649704982913,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.4954057397258088,
+          "electronic_energy": -0.9024649704950396,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.4954057397282168,
+          "electronic_energy": -0.9024649704974476,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.49540573972224533,
+          "electronic_energy": -0.9024649704914761,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.4954057397339128,
+          "electronic_energy": -0.9024649705031436,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.4954057397364442,
+          "electronic_energy": -0.902464970505675,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.4954057397225532,
+          "electronic_energy": -0.902464970491784,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.400": [
+        {
+          "iteration": 1,
+          "energy": -0.4626391090481557,
+          "electronic_energy": -0.8406226804767272,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.4626391090414172,
+          "electronic_energy": -0.8406226804699887,
+          "variance": null,
+          "parameters": [
+            -0.05018337654115848
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.46263910904853484,
+          "electronic_energy": -0.8406226804771063,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.46263910904528144,
+          "electronic_energy": -0.8406226804738529,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.4626391090482101,
+          "electronic_energy": -0.8406226804767816,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.46263910904133293,
+          "electronic_energy": -0.8406226804699044,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.4626391090544167,
+          "electronic_energy": -0.8406226804829882,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.4626391090567788,
+          "electronic_energy": -0.8406226804853503,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.46263910904149735,
+          "electronic_energy": -0.8406226804700688,
+          "variance": null,
+          "parameters": [
+            -0.050183391442319675
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 10,
+          "energy": -0.46264002166278234,
+          "electronic_energy": -0.8406235930913538,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.500": [
+        {
+          "iteration": 1,
+          "energy": -0.4340573954527353,
+          "electronic_energy": -0.786842062119402,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.4340573954484101,
+          "electronic_energy": -0.7868420621150768,
+          "variance": null,
+          "parameters": [
+            -0.05063558953048877
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.4340573954536128,
+          "electronic_energy": -0.7868420621202795,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.43405739545109273,
+          "electronic_energy": -0.7868420621177594,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.43405739545216665,
+          "electronic_energy": -0.7868420621188333,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.4340573954478156,
+          "electronic_energy": -0.7868420621144823,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.4340573954565555,
+          "electronic_energy": -0.7868420621232222,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.4340573954590384,
+          "electronic_energy": -0.7868420621257051,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.4340573954487473,
+          "electronic_energy": -0.786842062115414,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.600": [
+        {
+          "iteration": 1,
+          "energy": -0.40889761390628765,
+          "electronic_energy": -0.7396332389062876,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.40889761390145607,
+          "electronic_energy": -0.739633238901456,
+          "variance": null,
+          "parameters": [
+            -0.05063558953048877
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.40889761390696444,
+          "electronic_energy": -0.7396332389069644,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.40889761390442625,
+          "electronic_energy": -0.7396332389044262,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.4088976139059526,
+          "electronic_energy": -0.7396332389059526,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.4088976139008743,
+          "electronic_energy": -0.7396332389008743,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.4088976139107543,
+          "electronic_energy": -0.7396332389107543,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.4088976139130913,
+          "electronic_energy": -0.7396332389130913,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.4088976139016566,
+          "electronic_energy": -0.7396332389016566,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.700": [
+        {
+          "iteration": 1,
+          "energy": -0.3865745735807886,
+          "electronic_energy": -0.6978551618160828,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3865745735755586,
+          "electronic_energy": -0.6978551618108527,
+          "variance": null,
+          "parameters": [
+            -0.05063558953048877
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3865745735812971,
+          "electronic_energy": -0.6978551618165912,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.3865745735787538,
+          "electronic_energy": -0.6978551618140479,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.38657457358064695,
+          "electronic_energy": -0.6978551618159411,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.3865745735749896,
+          "electronic_energy": -0.6978551618102837,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.3865745735857701,
+          "electronic_energy": -0.6978551618210642,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.38657457358797787,
+          "electronic_energy": -0.697855161823272,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.38657457357564595,
+          "electronic_energy": -0.6978551618109401,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.800": [
+        {
+          "iteration": 1,
+          "energy": -0.3666294221166107,
+          "electronic_energy": -0.6606166443388329,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.36662942211106714,
+          "electronic_energy": -0.6606166443332894,
+          "variance": null,
+          "parameters": [
+            -0.05063558953048877
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3666294221169774,
+          "electronic_energy": -0.6606166443391996,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.36662942211443866,
+          "electronic_energy": -0.6606166443366609,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.3666294221166308,
+          "electronic_energy": -0.660616644338853,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.3666294221105108,
+          "electronic_energy": -0.660616644332733,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.36662942212200383,
+          "electronic_energy": -0.6606166443442261,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.36662942212409616,
+          "electronic_energy": -0.6606166443463184,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.3666294221110597,
+          "electronic_energy": -0.6606166443332819,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "1.900": [
+        {
+          "iteration": 1,
+          "energy": -0.34869769884416385,
+          "electronic_energy": -0.6272119093704797,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3486976988383736,
+          "electronic_energy": -0.6272119093646894,
+          "variance": null,
+          "parameters": [
+            -0.05063558953048877
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3486976988444099,
+          "electronic_energy": -0.6272119093707257,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.3486976988418831,
+          "electronic_energy": -0.6272119093681989,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.34869769884431995,
+          "electronic_energy": -0.6272119093706358,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.3486976988378295,
+          "electronic_energy": -0.6272119093641453,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.3486976988498865,
+          "electronic_energy": -0.6272119093762023,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.3486976988518751,
+          "electronic_energy": -0.6272119093781909,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.34869769883828655,
+          "electronic_energy": -0.6272119093646024,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.000": [
+        {
+          "iteration": 1,
+          "energy": -0.33248617742351005,
+          "electronic_energy": -0.5970746774235101,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3324861774175266,
+          "electronic_energy": -0.5970746774175266,
+          "variance": null,
+          "parameters": [
+            -0.05063558953048877
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.33248617742365305,
+          "electronic_energy": -0.597074677423653,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.3324861774211434,
+          "electronic_energy": -0.5970746774211434,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.3324861774237813,
+          "electronic_energy": -0.5970746774237813,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.3324861774169947,
+          "electronic_energy": -0.5970746774169947,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.3324861774294966,
+          "electronic_energy": -0.5970746774294966,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.3324861774313915,
+          "electronic_energy": -0.5970746774313915,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.3324861774173722,
+          "electronic_energy": -0.5970746774173722,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.100": [
+        {
+          "iteration": 1,
+          "energy": -0.31775622061258013,
+          "electronic_energy": -0.5697452682316277,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.3177562206064465,
+          "electronic_energy": -0.5697452682254941,
+          "variance": null,
+          "parameters": [
+            -0.05063558953048877
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.3177562206126343,
+          "electronic_energy": -0.5697452682316819,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.31775622061014575,
+          "electronic_energy": -0.5697452682291934,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.31775622061294917,
+          "electronic_energy": -0.5697452682319968,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.3177562206059261,
+          "electronic_energy": -0.5697452682249737,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.3177562206187772,
+          "electronic_energy": -0.5697452682378248,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.31775622062058717,
+          "electronic_energy": -0.5697452682396348,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.31775622060623465,
+          "electronic_energy": -0.5697452682252823,
+          "variance": null,
+          "parameters": [
+            -0.050635604431649966
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 10,
+          "energy": -0.3177571076832445,
+          "electronic_energy": -0.5697461553022921,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.200": [
+        {
+          "iteration": 1,
+          "energy": -0.3043125168463461,
+          "electronic_energy": -0.544847516846346,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.30431251684179816,
+          "electronic_energy": -0.5448475168417981,
+          "variance": null,
+          "parameters": [
+            -0.05104721175672702
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.30431251684695304,
+          "electronic_energy": -0.544847516846953,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.30431251684458194,
+          "electronic_energy": -0.5448475168445819,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.3043125168460614,
+          "electronic_energy": -0.5448475168460614,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.3043125168412818,
+          "electronic_energy": -0.5448475168412817,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.30431251685055494,
+          "electronic_energy": -0.5448475168505549,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.3043125168527091,
+          "electronic_energy": -0.544847516852709,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.3043125168419749,
+          "electronic_energy": -0.5448475168419749,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.300": [
+        {
+          "iteration": 1,
+          "energy": -0.29199039712615943,
+          "electronic_energy": -0.5220673536478986,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.2919903971214512,
+          "electronic_energy": -0.5220673536431903,
+          "variance": null,
+          "parameters": [
+            -0.05104721175672702
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.2919903971266728,
+          "electronic_energy": -0.522067353648412,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.29199039712432356,
+          "electronic_energy": -0.5220673536460627,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.29199039712597813,
+          "electronic_energy": -0.5220673536477173,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.29199039712094627,
+          "electronic_energy": -0.5220673536426854,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.29199039713059255,
+          "electronic_energy": -0.5220673536523317,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.2919903971326579,
+          "electronic_energy": -0.522067353654397,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.2919903971215673,
+          "electronic_energy": -0.5220673536433065,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.400": [
+        {
+          "iteration": 1,
+          "energy": -0.2806544256848351,
+          "electronic_energy": -0.5011448423515018,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.2806544256799962,
+          "electronic_energy": -0.5011448423466629,
+          "variance": null,
+          "parameters": [
+            -0.05104721175672702
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.28065442568526566,
+          "electronic_energy": -0.5011448423519324,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.2806544256829403,
+          "electronic_energy": -0.501144842349607,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.2806544256847445,
+          "electronic_energy": -0.5011448423514112,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.28065442567950194,
+          "electronic_energy": -0.5011448423461686,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.28065442568945576,
+          "electronic_energy": -0.5011448423561224,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.28065442569143917,
+          "electronic_energy": -0.5011448423581059,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.28065442568005894,
+          "electronic_energy": -0.5011448423467256,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ],
+      "2.500": [
+        {
+          "iteration": 1,
+          "energy": -0.27018960787755436,
+          "electronic_energy": -0.48186040787755435,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 2,
+          "energy": -0.2701896078726092,
+          "electronic_energy": -0.4818604078726092,
+          "variance": null,
+          "parameters": [
+            -0.05104721175672702
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 3,
+          "energy": -0.27018960787791146,
+          "electronic_energy": -0.48186040787791146,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 4,
+          "energy": -0.2701896078756112,
+          "electronic_energy": -0.4818604078756112,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 5,
+          "energy": -0.27018960787754376,
+          "electronic_energy": -0.48186040787754375,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 6,
+          "energy": -0.2701896078721253,
+          "electronic_energy": -0.4818604078721253,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 7,
+          "energy": -0.27018960788233143,
+          "electronic_energy": -0.4818604078823314,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 8,
+          "energy": -0.27018960788423946,
+          "electronic_energy": -0.48186040788423945,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        },
+        {
+          "iteration": 9,
+          "energy": -0.27018960787262497,
+          "electronic_energy": -0.48186040787262496,
+          "variance": null,
+          "parameters": [
+            -0.05104722665788822
+          ],
+          "metadata": {
+            "target_precision": 0.0,
+            "circuit_metadata": {}
+          }
+        }
+      ]
+    }
+  },
+  "mapping_stats": {
+    "0.500": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 0.5,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "0.600": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 0.6,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "0.700": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 0.7,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "0.800": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 0.8,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "0.900": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 0.9,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.000": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.0,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.100": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.1,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.200": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.2,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.300": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.3,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.400": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.4,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.500": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.5,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.600": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.6,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.700": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.7,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.800": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.8,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.900": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.9,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "2.000": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 2.0,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "2.100": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 2.1,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "2.200": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 2.2,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "2.300": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 2.3,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "2.400": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 2.4,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "2.500": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 2.5,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    }
+  },
+  "source_info": {
+    "0.500": "synthetic_INVALID_FOR_RESEARCH",
+    "0.600": "synthetic_INVALID_FOR_RESEARCH",
+    "0.700": "synthetic_INVALID_FOR_RESEARCH",
+    "0.800": "synthetic_INVALID_FOR_RESEARCH",
+    "0.900": "synthetic_INVALID_FOR_RESEARCH",
+    "1.000": "synthetic_INVALID_FOR_RESEARCH",
+    "1.100": "synthetic_INVALID_FOR_RESEARCH",
+    "1.200": "synthetic_INVALID_FOR_RESEARCH",
+    "1.300": "synthetic_INVALID_FOR_RESEARCH",
+    "1.400": "synthetic_INVALID_FOR_RESEARCH",
+    "1.500": "synthetic_INVALID_FOR_RESEARCH",
+    "1.600": "synthetic_INVALID_FOR_RESEARCH",
+    "1.700": "synthetic_INVALID_FOR_RESEARCH",
+    "1.800": "synthetic_INVALID_FOR_RESEARCH",
+    "1.900": "synthetic_INVALID_FOR_RESEARCH",
+    "2.000": "synthetic_INVALID_FOR_RESEARCH",
+    "2.100": "synthetic_INVALID_FOR_RESEARCH",
+    "2.200": "synthetic_INVALID_FOR_RESEARCH",
+    "2.300": "synthetic_INVALID_FOR_RESEARCH",
+    "2.400": "synthetic_INVALID_FOR_RESEARCH",
+    "2.500": "synthetic_INVALID_FOR_RESEARCH"
+  },
+  "chemical_accuracy_hartree": 0.0016,
+  "failures": []
+}

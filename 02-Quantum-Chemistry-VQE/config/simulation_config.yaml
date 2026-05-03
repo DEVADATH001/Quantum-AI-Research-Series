@@ -1,5 +1,7 @@
 general:
   random_seed: 7
+  # IMPORTANT: set to false for ALL research and publication runs.
+  # Synthetic fallback produces physically invalid results.
   allow_synthetic_fallback: true
 
 molecules:
@@ -10,7 +12,7 @@ molecules:
       step: 0.1
     charge: 0
     spin: 0
-    basis: "sto3g"
+    basis: "sto-3g"
     active_space: null
 
   LiH:
@@ -20,15 +22,28 @@ molecules:
       step: 0.1
     charge: 0
     spin: 0
-    basis: "sto3g"
+    basis: "sto-3g"
     active_space:
       freeze_core: true
       active_electrons: 2
       active_spatial_orbitals: 2
 
+  BeH2:
+    distances:
+      start: 1.0
+      end: 2.5
+      step: 0.1
+    charge: 0
+    spin: 0
+    basis: "sto-3g"
+    active_space:
+      freeze_core: true
+      active_electrons: 4
+      active_spatial_orbitals: 3
+
 vqe:
-  mapping: "parity"    # options: parity, jordan_wigner, bravyi_kitaev
-  warm_start: true     # Use optimal parameters from previous point as next initial point
+  mapping: "parity"          # options: parity, jordan_wigner, bravyi_kitaev
+  warm_start: true           # Parameter transfer across bond lengths (research subject)
   ansatz:
     - name: "UCCSD"
       reps: 1
@@ -37,13 +52,17 @@ vqe:
       entanglement: "circular"
   optimizer:
     name: "SLSQP"
-    maxiter: 100
+    maxiter: 200              # Increased from 100 for harder molecules (LiH, BeH2)
+    tol: 1.0e-6
 
 runtime:
-  backend: "local"
+  backend: "local"           # "local" | "noisy_local" | IBM backend name
+  noise_level: "light"       # "light" | "medium" (noisy_local only)
   resilience_level: 1
   optimization_level: 1
   shots: 4096
 
 analysis:
-  chemical_accuracy_mhartree: 1.6
+  chemical_accuracy_mhartree: 1.6   # 1 mHa = 1e-3 Hartree = 0.627 kcal/mol
+  n_bootstrap_resamples: 2000       # For 95% CI estimation
+  n_seeds: 10                       # Seeds for multi-seed experiments

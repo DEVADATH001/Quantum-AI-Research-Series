@@ -1,0 +1,3 @@
+Model,accuracy,precision,recall,f1_score,train_time
+Classical RBF SVM,1.0,1.0,1.0,1.0,0.19466710090637207
+Quantum Kernel SVM (Pegasos),0.4945054945054945,0.4945054945054945,1.0,0.6617647058823529,291.280969619751

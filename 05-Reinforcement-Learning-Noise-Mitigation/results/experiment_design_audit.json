@@ -1,0 +1,785 @@
+{
+  "config_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\config\\training_config.yaml",
+  "summary_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\summary.json",
+  "convincing_experiment": true,
+  "ratings": {
+    "dataset_choice": {
+      "score": 5,
+      "assessment": "The project still centers on a single handcrafted RL environment, but it now includes a saved environment sweep over difficulty and stochasticity, which makes the evidence materially stronger than a single fixed-task report."
+    },
+    "baseline_comparisons": {
+      "score": 7,
+      "assessment": "Random, tabular, and MLP baselines are present. This is materially better than the old setup, though stronger budget-matched comparisons and more baseline diversity would still help."
+    },
+    "evaluation_metrics": {
+      "score": 7,
+      "assessment": "Reward, success rate, convergence, runtime, AUC, and compute-normalized efficiency metrics are all present. The remaining gap is breadth over more tasks and budgets, not the total absence of efficiency reporting."
+    },
+    "hyperparameter_tuning": {
+      "score": 7,
+      "assessment": "A sweep workflow is available."
+    },
+    "reproducibility": {
+      "score": 8,
+      "assessment": "Config files, pinned requirements, and per-seed logs make the project fairly reproducible. The upgraded summaries now include provenance metadata."
+    },
+    "statistical_significance": {
+      "score": 6,
+      "assessment": "The seed count is at least large enough to attempt pairwise significance checks, though stronger power would still be preferable."
+    }
+  },
+  "pairwise_statistics": {
+    "ideal_vs_noisy": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.85,
+        "mean_b": 0.665625,
+        "mean_difference": 0.184375,
+        "difference_sem": 0.018957188610128874,
+        "difference_ci95": [
+          0.146875,
+          0.221875
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.15625,
+          0.203125,
+          0.1875,
+          0.25,
+          0.125
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 1.046875,
+        "mean_b": 0.7920624999999999,
+        "mean_difference": 0.2548125,
+        "difference_sem": 0.0261405979154074,
+        "difference_ci95": [
+          0.20587499999999995,
+          0.3037500000000001
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.17249999999999988,
+          0.24531250000000004,
+          0.29718750000000016,
+          0.33953125000000006,
+          0.21953124999999996
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9894102564102564,
+        "mean_b": 0.7831538461538461,
+        "mean_difference": 0.2062564102564104,
+        "difference_sem": 0.016419444543158346,
+        "difference_ci95": [
+          0.17064102564102562,
+          0.23407692307692324
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.13961538461538459,
+          0.2433333333333335,
+          0.21397435897435946,
+          0.23487179487179488,
+          0.19948717948717942
+        ]
+      }
+    },
+    "mitigated_vs_noisy": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.75,
+        "mean_b": 0.665625,
+        "mean_difference": 0.084375,
+        "difference_sem": 0.02404423007708918,
+        "difference_ci95": [
+          0.034375,
+          0.121875
+        ],
+        "sign_flip_pvalue": 0.125,
+        "wins_a": 4,
+        "wins_b": 1,
+        "ties": 0,
+        "paired_differences": [
+          0.140625,
+          0.078125,
+          0.109375,
+          0.109375,
+          -0.015625
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9295312499999999,
+        "mean_b": 0.7920624999999999,
+        "mean_difference": 0.13746874999999997,
+        "difference_sem": 0.02344830584232046,
+        "difference_ci95": [
+          0.08656249999999995,
+          0.17871874999999995
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.18249999999999988,
+          0.11203125000000003,
+          0.16484374999999996,
+          0.181875,
+          0.04609374999999993
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9053846153846153,
+        "mean_b": 0.7831538461538461,
+        "mean_difference": 0.1222307692307693,
+        "difference_sem": 0.07090492008533457,
+        "difference_ci95": [
+          -0.013794871794871577,
+          0.25825641025641016
+        ],
+        "sign_flip_pvalue": 0.25,
+        "wins_a": 4,
+        "wins_b": 1,
+        "ties": 0,
+        "paired_differences": [
+          0.10769230769230798,
+          -0.10769230769230753,
+          0.2666666666666666,
+          0.32512820512820484,
+          0.0193589743589746
+        ]
+      }
+    },
+    "ideal_vs_tabular": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.85,
+        "mean_b": 0.79375,
+        "mean_difference": 0.05625,
+        "difference_sem": 0.019565594803123157,
+        "difference_ci95": [
+          0.01875,
+          0.090625
+        ],
+        "sign_flip_pvalue": 0.125,
+        "wins_a": 4,
+        "wins_b": 1,
+        "ties": 0,
+        "paired_differences": [
+          0.046875,
+          -0.015625,
+          0.09375,
+          0.109375,
+          0.046875
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 1.046875,
+        "mean_b": 0.946875,
+        "mean_difference": 0.09999999999999998,
+        "difference_sem": 0.032785494839562834,
+        "difference_ci95": [
+          0.028999999999999936,
+          0.15575000000000006
+        ],
+        "sign_flip_pvalue": 0.125,
+        "wins_a": 4,
+        "wins_b": 1,
+        "ties": 0,
+        "paired_differences": [
+          0.07124999999999981,
+          -0.03109375000000003,
+          0.1518750000000002,
+          0.16703124999999996,
+          0.14093749999999994
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9894102564102564,
+        "mean_b": 0.5492307692307692,
+        "mean_difference": 0.4401794871794872,
+        "difference_sem": 0.053464872305815724,
+        "difference_ci95": [
+          0.3540000000000002,
+          0.5583589743589743
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.4479487179487176,
+          0.40666666666666684,
+          0.331666666666667,
+          0.3500000000000001,
+          0.6646153846153846
+        ]
+      }
+    },
+    "mitigated_vs_tabular": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.75,
+        "mean_b": 0.79375,
+        "mean_difference": -0.04375,
+        "difference_sem": 0.029114536747130288,
+        "difference_ci95": [
+          -0.1,
+          0.0125
+        ],
+        "sign_flip_pvalue": 0.375,
+        "wins_a": 2,
+        "wins_b": 3,
+        "ties": 0,
+        "paired_differences": [
+          0.03125,
+          -0.140625,
+          0.015625,
+          -0.03125,
+          -0.09375
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9295312499999999,
+        "mean_b": 0.946875,
+        "mean_difference": -0.01734375000000008,
+        "difference_sem": 0.03668366675033998,
+        "difference_ci95": [
+          -0.10121875000000005,
+          0.04615624999999988
+        ],
+        "sign_flip_pvalue": 0.75,
+        "wins_a": 3,
+        "wins_b": 2,
+        "ties": 0,
+        "paired_differences": [
+          0.08124999999999982,
+          -0.16437500000000005,
+          0.01953125,
+          0.009374999999999911,
+          -0.032500000000000084
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9053846153846153,
+        "mean_b": 0.5492307692307692,
+        "mean_difference": 0.35615384615384615,
+        "difference_sem": 0.0687694124168235,
+        "difference_ci95": [
+          0.19975769230769255,
+          0.45561538461538464
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.416025641025641,
+          0.0556410256410258,
+          0.38435897435897415,
+          0.44025641025641005,
+          0.48448717948717973
+        ]
+      }
+    },
+    "noisy_vs_tabular": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.665625,
+        "mean_b": 0.79375,
+        "mean_difference": -0.128125,
+        "difference_sem": 0.022273162101506826,
+        "difference_ci95": [
+          -0.178125,
+          -0.090625
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.109375,
+          -0.21875,
+          -0.09375,
+          -0.140625,
+          -0.078125
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.7920624999999999,
+        "mean_b": 0.946875,
+        "mean_difference": -0.15481250000000005,
+        "difference_sem": 0.030897493071849705,
+        "difference_ci95": [
+          -0.2205937500000001,
+          -0.10100000000000002
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.10125000000000006,
+          -0.2764062500000001,
+          -0.14531249999999996,
+          -0.1725000000000001,
+          -0.07859375000000002
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.7831538461538461,
+        "mean_b": 0.5492307692307692,
+        "mean_difference": 0.23392307692307684,
+        "difference_sem": 0.06053013224772996,
+        "difference_ci95": [
+          0.12579487179487175,
+          0.36428205128205116
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.308333333333333,
+          0.16333333333333333,
+          0.11769230769230754,
+          0.11512820512820521,
+          0.46512820512820513
+        ]
+      }
+    },
+    "ideal_vs_mlp": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.85,
+        "mean_b": 0.990625,
+        "mean_difference": -0.140625,
+        "difference_sem": 0.01976423537605237,
+        "difference_ci95": [
+          -0.178125,
+          -0.103125
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.171875,
+          -0.203125,
+          -0.078125,
+          -0.109375,
+          -0.140625
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 1.046875,
+        "mean_b": 1.2479999999999998,
+        "mean_difference": -0.20112500000000005,
+        "difference_sem": 0.030409940038168482,
+        "difference_ci95": [
+          -0.2608750000000001,
+          -0.14137499999999995
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.26421875000000017,
+          -0.2920312500000001,
+          -0.11624999999999974,
+          -0.1412500000000001,
+          -0.19187500000000002
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9894102564102564,
+        "mean_b": 0.7053076923076923,
+        "mean_difference": 0.2841025641025642,
+        "difference_sem": 0.04563985881539316,
+        "difference_ci95": [
+          0.18089743589743595,
+          0.34220512820512833
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 5,
+        "wins_b": 0,
+        "ties": 0,
+        "paired_differences": [
+          0.3361538461538459,
+          0.341923076923077,
+          0.34551282051282084,
+          0.3158974358974359,
+          0.08102564102564103
+        ]
+      }
+    },
+    "mitigated_vs_mlp": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.75,
+        "mean_b": 0.990625,
+        "mean_difference": -0.240625,
+        "difference_sem": 0.02781074432660874,
+        "difference_ci95": [
+          -0.29382812499999966,
+          -0.1875
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.1875,
+          -0.328125,
+          -0.15625,
+          -0.25,
+          -0.28125
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9295312499999999,
+        "mean_b": 1.2479999999999998,
+        "mean_difference": -0.3184687500000001,
+        "difference_sem": 0.03033360734194006,
+        "difference_ci95": [
+          -0.3790937500000001,
+          -0.26090625000000006
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.25421875000000016,
+          -0.4253125000000001,
+          -0.24859374999999995,
+          -0.29890625000000015,
+          -0.36531250000000004
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.9053846153846153,
+        "mean_b": 0.7053076923076923,
+        "mean_difference": 0.2000769230769231,
+        "difference_sem": 0.0950441857172692,
+        "difference_ci95": [
+          0.017173717948719795,
+          0.3825897435897434
+        ],
+        "sign_flip_pvalue": 0.25,
+        "wins_a": 3,
+        "wins_b": 2,
+        "ties": 0,
+        "paired_differences": [
+          0.3042307692307693,
+          -0.009102564102564048,
+          0.398205128205128,
+          0.40615384615384587,
+          -0.0991025641025638
+        ]
+      }
+    },
+    "noisy_vs_mlp": {
+      "eval_success": {
+        "metric": "eval_success",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.665625,
+        "mean_b": 0.990625,
+        "mean_difference": -0.325,
+        "difference_sem": 0.024366985862022406,
+        "difference_ci95": [
+          -0.371875,
+          -0.278125
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.328125,
+          -0.40625,
+          -0.265625,
+          -0.359375,
+          -0.265625
+        ]
+      },
+      "eval_reward": {
+        "metric": "eval_reward",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.7920624999999999,
+        "mean_b": 1.2479999999999998,
+        "mean_difference": -0.4559375000000001,
+        "difference_sem": 0.021356808779637502,
+        "difference_ci95": [
+          -0.5012500000000001,
+          -0.41728124999999994
+        ],
+        "sign_flip_pvalue": 0.0625,
+        "wins_a": 0,
+        "wins_b": 5,
+        "ties": 0,
+        "paired_differences": [
+          -0.43671875000000004,
+          -0.5373437500000001,
+          -0.4134374999999999,
+          -0.48078125000000016,
+          -0.41140625
+        ]
+      },
+      "reward_auc": {
+        "metric": "reward_auc",
+        "paired_seed_count": 5,
+        "shared_seeds": [
+          7,
+          21,
+          33,
+          47,
+          63
+        ],
+        "mean_a": 0.7831538461538461,
+        "mean_b": 0.7053076923076923,
+        "mean_difference": 0.07784615384615376,
+        "difference_sem": 0.04730659299674719,
+        "difference_ci95": [
+          -0.028564102564102557,
+          0.1573634615384613
+        ],
+        "sign_flip_pvalue": 0.25,
+        "wins_a": 4,
+        "wins_b": 1,
+        "ties": 0,
+        "paired_differences": [
+          0.19653846153846133,
+          0.09858974358974348,
+          0.13153846153846138,
+          0.08102564102564103,
+          -0.1184615384615384
+        ]
+      }
+    }
+  },
+  "missing_experiments": [
+    "Promote the environment sweep into a named multi-scenario benchmark suite with cross-condition leaderboards and robust aggregate reporting."
+  ],
+  "meta": {
+    "default_seed_count": 5,
+    "default_eval_episodes": 64,
+    "random_baseline_present": true,
+    "tabular_baseline_present": true,
+    "mlp_baseline_present": true,
+    "tuning_artifact_present": true,
+    "mitigation_ablation_present": true,
+    "environment_sweep_present": true,
+    "benchmark_suite_present": false,
+    "resource_efficiency_present": true,
+    "results_root": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results"
+  }
+}

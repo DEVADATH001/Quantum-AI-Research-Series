@@ -76,7 +76,7 @@ def run_ablation_study(molecule: str = "LiH"):
                 from src.molecule_driver import get_molecule_problem
                 from src.problem_builder import build_mapped_hamiltonian
                 
-                problem, _ = get_molecule_problem(molecule, target_bond)
+                problem, _ = get_molecule_problem(molecule, target_bond, allow_synthetic_fallback=True)
                 mapping = build_mapped_hamiltonian(problem)
                 ansatz = get_ansatz("EfficientSU2", problem, mapping.mapper, 
                                    reps=reps, entanglement=ent, su2_gates=gates)

@@ -1,0 +1,195 @@
+{
+  "molecule": "H2",
+  "runtime": {
+    "mode": "local_statevector",
+    "backend": null,
+    "mitigation": "Noiseless statevector simulation."
+  },
+  "distances": [
+    0.6,
+    0.9,
+    1.2,
+    1.5
+  ],
+  "exact_energies": [
+    -1.0068357436586028,
+    -0.6949143008765722,
+    -0.5333639569472135,
+    -0.43405810398326256
+  ],
+  "vqe_energies": {
+    "UCCSD": [
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "EfficientSU2": [
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ]
+  },
+  "histories": {
+    "UCCSD": {
+      "0.600": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ],
+      "0.900": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ],
+      "1.200": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ],
+      "1.500": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ]
+    },
+    "EfficientSU2": {
+      "0.600": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ],
+      "0.900": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ],
+      "1.200": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ],
+      "1.500": [
+        {
+          "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+        }
+      ]
+    }
+  },
+  "mapping_stats": {
+    "0.600": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 0.6,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "0.900": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 0.9,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.200": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.2,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    },
+    "1.500": {
+      "mapping": "parity",
+      "qubits_full": 4,
+      "qubits_reduced": 2,
+      "two_qubit_reduction_used": true,
+      "molecule_metadata": {
+        "molecule": "H2",
+        "bond_length": 1.5,
+        "basis": "sto-3g",
+        "source": "synthetic_INVALID_FOR_RESEARCH",
+        "freeze_core_applied": false,
+        "active_space_applied": false
+      }
+    }
+  },
+  "source_info": {
+    "0.600": "synthetic_INVALID_FOR_RESEARCH",
+    "0.900": "synthetic_INVALID_FOR_RESEARCH",
+    "1.200": "synthetic_INVALID_FOR_RESEARCH",
+    "1.500": "synthetic_INVALID_FOR_RESEARCH"
+  },
+  "chemical_accuracy_hartree": 0.0016,
+  "failures": [
+    {
+      "stage": "vqe",
+      "ansatz": "UCCSD",
+      "bond_length": 0.6,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    },
+    {
+      "stage": "vqe",
+      "ansatz": "EfficientSU2",
+      "bond_length": 0.6,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    },
+    {
+      "stage": "vqe",
+      "ansatz": "UCCSD",
+      "bond_length": 0.9,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    },
+    {
+      "stage": "vqe",
+      "ansatz": "EfficientSU2",
+      "bond_length": 0.9,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    },
+    {
+      "stage": "vqe",
+      "ansatz": "UCCSD",
+      "bond_length": 1.2,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    },
+    {
+      "stage": "vqe",
+      "ansatz": "EfficientSU2",
+      "bond_length": 1.2,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    },
+    {
+      "stage": "vqe",
+      "ansatz": "UCCSD",
+      "bond_length": 1.5,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    },
+    {
+      "stage": "vqe",
+      "ansatz": "EfficientSU2",
+      "bond_length": 1.5,
+      "error": "VQEEngine.run_vqe_qubit_with_retry() got an unexpected keyword argument 'qubit_op'"
+    }
+  ]
+}

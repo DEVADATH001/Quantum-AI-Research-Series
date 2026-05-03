@@ -1,0 +1,2 @@
+depth,mean_ratio,std_ratio,sem_ratio,ci_lower,ci_upper,mean_expected_cut_value,mean_sampled_cut_value,mean_sample_gap,exact_sample_hit_rate,mean_representative_probability,iteration_budget_hit_rate,plateau_warning_rate,mean_runtime_sec,n_runs
+1,0.685576811875876,0.02360497579636108,0.013628339130243671,0.6525774838958294,0.7064440367606283,3.0661877849147174,2.8383903909586388,-0.22779739395607876,0.0,0.046875,1.0,0.6666666666666666,25.255820989608765,3

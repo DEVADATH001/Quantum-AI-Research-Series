@@ -1,0 +1,26 @@
+{
+  "model": "Classical RBF SVM",
+  "best_params": {
+    "C": 10,
+    "gamma": "scale"
+  },
+  "best_cv_score": 0.9447561815568474,
+  "train_time": 120.343181848526,
+  "metrics": {
+    "accuracy": 0.9419616947185142,
+    "precision": 0.9461181923522596,
+    "recall": 0.9385057471264368,
+    "f1_score": 0.9422965954991345
+  },
+  "confusion_matrix": [
+    [
+      1613,
+      93
+    ],
+    [
+      107,
+      1633
+    ]
+  ],
+  "classification_report": "              precision    recall  f1-score   support\n\n           4       0.94      0.95      0.94      1706\n           9       0.95      0.94      0.94      1740\n\n    accuracy                           0.94      3446\n   macro avg       0.94      0.94      0.94      3446\nweighted avg       0.94      0.94      0.94      3446\n"
+}

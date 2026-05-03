@@ -1,0 +1,60 @@
+{
+  "config_path": "config\\experiment_config.yaml",
+  "dataset": {
+    "source": "openml_mnist_784",
+    "digits": [
+      4,
+      9
+    ],
+    "train_samples": 10336,
+    "test_samples": 3446,
+    "pca_components": 4
+  },
+  "classical": {
+    "train_info": {
+      "params": {
+        "C": 1.0,
+        "gamma": "scale",
+        "kernel": "rbf"
+      },
+      "train_time": 2.8947603702545166
+    },
+    "metrics": {
+      "accuracy": 0.7666860127684272,
+      "precision": 0.7836363636363637,
+      "recall": 0.743103448275862,
+      "f1_score": 0.7628318584070797
+    }
+  },
+  "quantum": {
+    "train_subset_size": 30,
+    "train_info": {
+      "train_time": 4.075254201889038,
+      "params": {
+        "C": 1.0
+      }
+    },
+    "metrics": {
+      "accuracy": 0.6430644225188624,
+      "precision": 0.6401098901098901,
+      "recall": 0.6695402298850575,
+      "f1_score": 0.6544943820224719
+    },
+    "kernel_properties": {
+      "shape": [
+        30,
+        30
+      ],
+      "is_symmetric": true,
+      "is_positive_semidefinite": true,
+      "min_eigenvalue": -3.173465345523754e-16,
+      "max_eigenvalue": 7.866950817792519,
+      "condition_number": Infinity,
+      "diagonal_mean": 1.0011294363574914,
+      "off_diagonal_mean": 0.21735295106039965,
+      "off_diagonal_std": 0.17470816173751388,
+      "kta": 0.09759136043689749
+    }
+  },
+  "noise": null
+}

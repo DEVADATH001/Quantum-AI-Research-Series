@@ -1,0 +1,10 @@
+molecule,bond_length,method,energy_hartree,delta_hartree,chemical_accuracy,converged,source
+H2,0.6,FCI,-1.0068357436586026,0.0,True,True,synthetic
+H2,0.6,UCCSD,-1.0068357164196273,2.7238975297549928e-08,True,True,synthetic
+H2,0.6,EfficientSU2,-1.0068357257672256,1.7891377046552748e-08,True,True,synthetic
+H2,0.9,FCI,-0.6949143008765718,0.0,True,True,synthetic
+H2,0.9,UCCSD,-0.6949139617633026,3.391132692431853e-07,True,True,synthetic
+H2,0.9,EfficientSU2,-0.6949142765425312,2.4334040560347603e-08,True,True,synthetic
+H2,1.2,FCI,-0.5333639569472128,0.0,True,True,synthetic
+H2,1.2,UCCSD,-0.533363883421323,7.352588982101338e-08,True,True,synthetic
+H2,1.2,EfficientSU2,-0.5333638626591071,9.42881057675038e-08,True,True,synthetic

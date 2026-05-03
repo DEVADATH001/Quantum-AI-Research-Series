@@ -1,0 +1,7 @@
+# Results directory
+# Contains output files from experiments:
+# - energy_landscape.png
+# - approximation_ratio.png
+# - graph_cut_visualization.png
+# - metrics.csv
+

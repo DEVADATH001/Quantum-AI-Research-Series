@@ -1,0 +1,189 @@
+{
+  "backend_name": "ibm_osaka",
+  "single_circuit_ibm_hardware_feasible": true,
+  "full_training_ibm_hardware_realistic": false,
+  "why_full_training_is_not_realistic": [
+    "Full parameter-shift training is too shot-heavy for routine IBM hardware use. The current default config is about 679,936 shots per seed even before ZNE.",
+    "In-loop ZNE is not a realistic default for hardware training. The current mitigated path expands each logical policy query into 3 circuit executions and about 2,039,808 shots per seed.",
+    "Validation inside training adds repeated hardware evaluations after each optimizer update.",
+    "128 shots per circuit is low for stable hardware policy-gradient estimation.",
+    "The default noisy simulation uses a compact averaged noise model, so it does not fully capture layout-specific heterogeneity, crosstalk, or scheduling effects."
+  ],
+  "suggested_modifications": [
+    "Keep the 3-qubit, 1-repetition policy. The per-circuit footprint is already small enough for IBM hardware.",
+    "Do not train the policy end-to-end on hardware. Train in simulation or on the fake backend, then run only held-out evaluation episodes on hardware.",
+    "For hardware rehearsal, set `compact_noise_model: false` so the fake backend preserves qubit-specific noise and coupling constraints.",
+    "Disable in-loop ZNE on hardware. Use readout-focused mitigation only, or reserve ZNE for a tiny final calibration study.",
+    "Use more shots for hardware evaluation, typically 512 to 2048, but cut evaluation episode count and remove in-training validation to keep queue cost bounded.",
+    "Use the provided `config/hardware_realistic.yaml` as a starting point for simulator-train and hardware-eval workflows."
+  ],
+  "policy": {
+    "parameter_count": 6,
+    "action_register_qubits": 1,
+    "latent_qubits": 2,
+    "state_count": 8,
+    "action_count": 2
+  },
+  "base_circuit": {
+    "logical_qubits": 3,
+    "logical_depth": 6,
+    "logical_size": 14,
+    "logical_ops": {
+      "ry": 9,
+      "rz": 3,
+      "cx": 2
+    },
+    "transpiled_depth": 20,
+    "transpiled_size": 48,
+    "transpiled_ops": {
+      "rz": 28,
+      "sx": 18,
+      "ecr": 2
+    },
+    "transpiled_two_qubit_gates": 2
+  },
+  "zne_scale_circuits": [
+    {
+      "logical_qubits": 3,
+      "logical_depth": 6,
+      "logical_size": 14,
+      "logical_ops": {
+        "ry": 9,
+        "rz": 3,
+        "cx": 2
+      },
+      "transpiled_depth": 37,
+      "transpiled_size": 88,
+      "transpiled_ops": {
+        "rz": 56,
+        "sx": 28,
+        "ecr": 2,
+        "x": 2
+      },
+      "transpiled_two_qubit_gates": 2,
+      "requested_scale": 1.0,
+      "achieved_scale": 1.0
+    },
+    {
+      "logical_qubits": 3,
+      "logical_depth": 14,
+      "logical_size": 28,
+      "logical_ops": {
+        "ry": 21,
+        "cx": 4,
+        "rz": 3
+      },
+      "transpiled_depth": 86,
+      "transpiled_size": 188,
+      "transpiled_ops": {
+        "rz": 118,
+        "sx": 62,
+        "ecr": 4,
+        "x": 4
+      },
+      "transpiled_two_qubit_gates": 4,
+      "requested_scale": 2.0,
+      "achieved_scale": 2.0
+    },
+    {
+      "logical_qubits": 3,
+      "logical_depth": 18,
+      "logical_size": 42,
+      "logical_ops": {
+        "ry": 27,
+        "rz": 9,
+        "cx": 6
+      },
+      "transpiled_depth": 117,
+      "transpiled_size": 264,
+      "transpiled_ops": {
+        "rz": 168,
+        "sx": 84,
+        "ecr": 6,
+        "x": 6
+      },
+      "transpiled_two_qubit_gates": 6,
+      "requested_scale": 3.0,
+      "achieved_scale": 3.0
+    }
+  ],
+  "worst_case_workloads": {
+    "ideal_or_noisy": {
+      "label": "worst_case",
+      "steps_per_episode_assumption": 8.0,
+      "parameter_bindings_per_timestep": 14,
+      "optimizer_updates_per_seed": 10,
+      "training_parameter_bindings_per_seed": 4800.0,
+      "evaluation_parameter_bindings_per_seed": 512.0,
+      "total_parameter_bindings_per_seed": 5312.0,
+      "circuit_executions_per_logical_query": 1,
+      "estimated_total_circuit_executions_per_seed": 5312.0,
+      "estimated_total_shots_per_seed": 679936.0,
+      "estimated_total_two_qubit_gate_executions_per_seed": 1359872.0
+    },
+    "mitigated": {
+      "label": "worst_case",
+      "steps_per_episode_assumption": 8.0,
+      "parameter_bindings_per_timestep": 14,
+      "optimizer_updates_per_seed": 10,
+      "training_parameter_bindings_per_seed": 4800.0,
+      "evaluation_parameter_bindings_per_seed": 512.0,
+      "total_parameter_bindings_per_seed": 5312.0,
+      "circuit_executions_per_logical_query": 3,
+      "estimated_total_circuit_executions_per_seed": 15936.0,
+      "estimated_total_shots_per_seed": 2039808.0,
+      "estimated_total_two_qubit_gate_executions_per_seed": 8159232.0
+    }
+  },
+  "empirical_workloads_from_latest_summary": {
+    "ideal": {
+      "label": "empirical",
+      "steps_per_episode_assumption": 6.11,
+      "parameter_bindings_per_timestep": 14,
+      "optimizer_updates_per_seed": 10,
+      "training_parameter_bindings_per_seed": 3666.0,
+      "evaluation_parameter_bindings_per_seed": 391.04,
+      "total_parameter_bindings_per_seed": 4057.04,
+      "circuit_executions_per_logical_query": 1,
+      "estimated_total_circuit_executions_per_seed": 4057.04,
+      "estimated_total_shots_per_seed": 519301.12,
+      "estimated_total_two_qubit_gate_executions_per_seed": 1038602.24
+    },
+    "noisy": {
+      "label": "empirical",
+      "steps_per_episode_assumption": 6.6,
+      "parameter_bindings_per_timestep": 14,
+      "optimizer_updates_per_seed": 10,
+      "training_parameter_bindings_per_seed": 3960.0,
+      "evaluation_parameter_bindings_per_seed": 422.4,
+      "total_parameter_bindings_per_seed": 4382.4,
+      "circuit_executions_per_logical_query": 1,
+      "estimated_total_circuit_executions_per_seed": 4382.4,
+      "estimated_total_shots_per_seed": 560947.2,
+      "estimated_total_two_qubit_gate_executions_per_seed": 1121894.4
+    },
+    "mitigated": {
+      "label": "empirical",
+      "steps_per_episode_assumption": 6.325,
+      "parameter_bindings_per_timestep": 14,
+      "optimizer_updates_per_seed": 10,
+      "training_parameter_bindings_per_seed": 3795.0,
+      "evaluation_parameter_bindings_per_seed": 404.8,
+      "total_parameter_bindings_per_seed": 4199.8,
+      "circuit_executions_per_logical_query": 3,
+      "estimated_total_circuit_executions_per_seed": 12599.400000000001,
+      "estimated_total_shots_per_seed": 1612723.2000000002,
+      "estimated_total_two_qubit_gate_executions_per_seed": 6450892.800000001
+    }
+  },
+  "noise_model_review": {
+    "compact_noise_model": true,
+    "readout_correction_enabled": true,
+    "zne_enabled": true,
+    "zne_scale_factors": [
+      1.0,
+      2.0,
+      3.0
+    ]
+  }
+}

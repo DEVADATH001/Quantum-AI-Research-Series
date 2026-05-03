@@ -1,0 +1,102 @@
+{
+  "selected_candidate": {
+    "depth": 2,
+    "n_initial_points": 2,
+    "maxiter": 40
+  },
+  "candidate_search": [
+    {
+      "depth": 1,
+      "n_initial_points": 1,
+      "maxiter": 40,
+      "split": "tuning",
+      "mean_ratio": 0.7749509936558956,
+      "std_ratio": 0.04282908189654781,
+      "ci_lower": 0.7436497860957266,
+      "ci_upper": 0.7996044919271766,
+      "n_instances": 9
+    },
+    {
+      "depth": 1,
+      "n_initial_points": 2,
+      "maxiter": 40,
+      "split": "tuning",
+      "mean_ratio": 0.7926261132017278,
+      "std_ratio": 0.030410911548622875,
+      "ci_lower": 0.7695874221960716,
+      "ci_upper": 0.8101566818311016,
+      "n_instances": 9
+    },
+    {
+      "depth": 2,
+      "n_initial_points": 1,
+      "maxiter": 40,
+      "split": "tuning",
+      "mean_ratio": 0.7749838350028315,
+      "std_ratio": 0.0721495575541573,
+      "ci_lower": 0.7301482517572601,
+      "ci_upper": 0.8173679916480122,
+      "n_instances": 9
+    },
+    {
+      "depth": 2,
+      "n_initial_points": 2,
+      "maxiter": 40,
+      "split": "tuning",
+      "mean_ratio": 0.8049604075384522,
+      "std_ratio": 0.06345136069763495,
+      "ci_lower": 0.7615125741831961,
+      "ci_upper": 0.8431331655315009,
+      "n_instances": 9
+    }
+  ],
+  "tuning_seeds": [
+    101,
+    202,
+    303
+  ],
+  "evaluation_seeds": [
+    404,
+    505,
+    606,
+    707,
+    808,
+    909,
+    1001
+  ],
+  "graph_families": [
+    {
+      "name": "communication_mesh_8_3",
+      "type": "communication_mesh",
+      "n_nodes": 8,
+      "degree": 3,
+      "area_size": 1.0,
+      "reliability_scale": 0.35
+    },
+    {
+      "name": "d_regular_8_3",
+      "type": "d_regular",
+      "n_nodes": 8,
+      "degree": 3
+    },
+    {
+      "name": "erdos_renyi_8_0.5",
+      "type": "erdos_renyi",
+      "n_nodes": 8,
+      "edge_probability": 0.5
+    }
+  ],
+  "study_backend_mode": "local",
+  "baseline_methods": [
+    "greedy",
+    "local_search",
+    "random_cut",
+    "goemans_williamson",
+    "random_budget_matched",
+    "hill_climb_budget_matched"
+  ],
+  "budget_matched_methods": [
+    "random_budget_matched",
+    "hill_climb_budget_matched"
+  ]
+}

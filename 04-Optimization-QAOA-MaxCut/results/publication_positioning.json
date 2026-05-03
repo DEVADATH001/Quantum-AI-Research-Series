@@ -1,0 +1,49 @@
+{
+  "contribution_type": "benchmark_negative_results_artifact",
+  "algorithmic_novelty": "none",
+  "research_insight": "The repo now contributes a reproducible and honest QAOA Max-Cut benchmark showing that sampled outputs can overstate expected performance and that classical baselines remain stronger on the current study.",
+  "tutorial_assessment": "No longer just a tutorial, but still not an algorithmic research contribution.",
+  "workshop_fit": "Plausible as a benchmark, software-artifact, or negative-results workshop paper.",
+  "publishable_as": "benchmark_artifact_or_negative_results_workshop_paper",
+  "main_missing_components": "A genuine algorithmic novelty claim beyond standard QAOA/RQAOA benchmarking. | Larger and harder instance families, including weighted graphs and medium-scale regimes. | Live hardware evidence or broader noisy studies beyond the configured proxy benchmark. | Budget-matched comparisons against even stronger classical methods across larger scales. | Either theoretical analysis or decisive empirical advantages, rather than only negative or neutral results.",
+  "families_where_classical_is_stronger": [
+    {
+      "family": "communication_mesh_8_3",
+      "methods": [
+        "goemans_williamson",
+        "greedy",
+        "hill_climb_budget_matched",
+        "local_search",
+        "random_budget_matched",
+        "random_cut"
+      ]
+    },
+    {
+      "family": "d_regular_8_3",
+      "methods": [
+        "goemans_williamson",
+        "greedy",
+        "hill_climb_budget_matched",
+        "local_search",
+        "random_budget_matched",
+        "random_cut"
+      ]
+    },
+    {
+      "family": "erdos_renyi_8_0.5",
+      "methods": [
+        "goemans_williamson",
+        "greedy",
+        "hill_climb_budget_matched",
+        "local_search",
+        "random_budget_matched",
+        "random_cut"
+      ]
+    }
+  ],
+  "budget_matched_failures": [
+    "hill_climb_budget_matched",
+    "random_budget_matched"
+  ],
+  "negative_significance_count": 0
+}

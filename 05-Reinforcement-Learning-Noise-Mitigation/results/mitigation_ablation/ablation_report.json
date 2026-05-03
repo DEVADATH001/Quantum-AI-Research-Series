@@ -1,0 +1,49 @@
+{
+  "base_config_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\config\\tuning_config.yaml",
+  "conditions": [
+    {
+      "condition": "none",
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\mitigation_ablation\\none",
+      "mitigated_eval_success": 0.4375,
+      "mitigated_eval_reward": 0.629375,
+      "mitigated_reward_auc": 0.5522368421052632,
+      "mitigation_gain_over_noisy": {
+        "eval_success_delta": 0.0,
+        "reward_auc_delta": 0.0
+      }
+    },
+    {
+      "condition": "readout_only",
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\mitigation_ablation\\readout_only",
+      "mitigated_eval_success": 0.4375,
+      "mitigated_eval_reward": 0.6487499999999999,
+      "mitigated_reward_auc": 0.5601315789473684,
+      "mitigation_gain_over_noisy": {
+        "eval_success_delta": 0.0,
+        "reward_auc_delta": 0.007894736842105177
+      }
+    },
+    {
+      "condition": "zne_only",
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\mitigation_ablation\\zne_only",
+      "mitigated_eval_success": 0.46875,
+      "mitigated_eval_reward": 0.6809375,
+      "mitigated_reward_auc": 0.5693421052631579,
+      "mitigation_gain_over_noisy": {
+        "eval_success_delta": 0.03125,
+        "reward_auc_delta": 0.017105263157894623
+      }
+    },
+    {
+      "condition": "both",
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\mitigation_ablation\\both",
+      "mitigated_eval_success": 0.46875,
+      "mitigated_eval_reward": 0.683125,
+      "mitigated_reward_auc": 0.5914473684210526,
+      "mitigation_gain_over_noisy": {
+        "eval_success_delta": 0.03125,
+        "reward_auc_delta": 0.03921052631578936
+      }
+    }
+  ]
+}

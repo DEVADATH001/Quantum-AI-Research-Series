@@ -1,0 +1,67 @@
+{
+  "base_config_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\config\\tuning_config.yaml",
+  "objective": "quantum.mitigated.eval_success_mean",
+  "trial_count": 4,
+  "leaderboard": [
+    {
+      "trial_index": 1,
+      "config_overrides": {
+        "training.learning_rate": 0.015,
+        "training.entropy_coeff": 0.01,
+        "baselines.learning_rate": 0.05,
+        "mlp_baseline.learning_rate": 0.02
+      },
+      "objective": "quantum.mitigated.eval_success_mean",
+      "objective_value": 0.46875,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\trial_001"
+    },
+    {
+      "trial_index": 2,
+      "config_overrides": {
+        "training.learning_rate": 0.015,
+        "training.entropy_coeff": 0.01,
+        "baselines.learning_rate": 0.05,
+        "mlp_baseline.learning_rate": 0.03
+      },
+      "objective": "quantum.mitigated.eval_success_mean",
+      "objective_value": 0.46875,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\trial_002"
+    },
+    {
+      "trial_index": 3,
+      "config_overrides": {
+        "training.learning_rate": 0.02,
+        "training.entropy_coeff": 0.01,
+        "baselines.learning_rate": 0.05,
+        "mlp_baseline.learning_rate": 0.02
+      },
+      "objective": "quantum.mitigated.eval_success_mean",
+      "objective_value": 0.46875,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\trial_003"
+    },
+    {
+      "trial_index": 4,
+      "config_overrides": {
+        "training.learning_rate": 0.02,
+        "training.entropy_coeff": 0.01,
+        "baselines.learning_rate": 0.05,
+        "mlp_baseline.learning_rate": 0.03
+      },
+      "objective": "quantum.mitigated.eval_success_mean",
+      "objective_value": 0.46875,
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\trial_004"
+    }
+  ],
+  "best_trial": {
+    "trial_index": 1,
+    "config_overrides": {
+      "training.learning_rate": 0.015,
+      "training.entropy_coeff": 0.01,
+      "baselines.learning_rate": 0.05,
+      "mlp_baseline.learning_rate": 0.02
+    },
+    "objective": "quantum.mitigated.eval_success_mean",
+    "objective_value": 0.46875,
+    "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\trial_001"
+  }
+}

@@ -68,7 +68,7 @@ class TestQuantumChemistryVQE(unittest.TestCase):
 
     def test_problem_build_and_mapping(self):
         problem, metadata = get_molecule_problem("H2", 0.74, allow_synthetic_fallback=True)
-        self.assertIn(metadata.source, {"pyscf", "synthetic"})
+        self.assertIn(metadata.source, {"pyscf", "synthetic", "synthetic_INVALID_FOR_RESEARCH"})
         mapping = build_mapped_hamiltonian(problem)
         self.assertGreater(mapping.qubit_operator.num_qubits, 0)
 
@@ -109,7 +109,7 @@ class TestQuantumChemistryVQE(unittest.TestCase):
         driver = MoleculeDriver()
         problem, metadata = driver.get_problem("H2", 0.74, allow_synthetic_fallback=True)
         self.assertIsInstance(problem, ElectronicStructureProblem)
-        self.assertIn(metadata.source, {"synthetic", "pyscf"})
+        self.assertIn(metadata.source, {"synthetic", "synthetic_INVALID_FOR_RESEARCH", "pyscf"})
 
     def test_mocked_pyscf_driver_path(self):
         class FakePySCFDriver:

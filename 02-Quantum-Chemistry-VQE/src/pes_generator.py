@@ -197,7 +197,7 @@ class PESGenerator:
                         
                     # Multi-restart strategy to avoid optimizer traps
                     run_result = engine.run_vqe_qubit_with_retry(
-                        qubit_op=mapping.qubit_operator,
+                        qubit_operator=mapping.qubit_operator,
                         ansatz=ansatz,
                         exact_energy=exact,
                         threshold=threshold,

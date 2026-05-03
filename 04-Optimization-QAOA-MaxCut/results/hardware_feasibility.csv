@@ -1,0 +1,2 @@
+method,depth,logical_qubits,logical_depth,logical_size,logical_two_qubit_gates,transpiled_depth,transpiled_size,transpiled_two_qubit_gates,entangling_gate_multiplier,estimated_total_shots,backend_name,status,issues
+qaoa_p1,1,6,11,23,11,126,255,43,3.909090909090909,13312,fake_brisbane,small_scale_feasible,
