@@ -1,0 +1,193 @@
+{
+  "timestamp_utc": "2026-05-03T21:23:29.372422+00:00",
+  "config_source": "in_memory_mapping",
+  "resolved_config": {
+    "seed": 42,
+    "experiment": {
+      "seeds": [
+        7,
+        21,
+        33,
+        47,
+        63,
+        77,
+        91,
+        105,
+        119,
+        133
+      ],
+      "n_eval_episodes": 64,
+      "run_tabular_baseline": true,
+      "run_mlp_baseline": true,
+      "run_mlp_actor_critic": true,
+      "run_random_baseline": true,
+      "run_quantum_actor_critic": true
+    },
+    "results": {
+      "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\benchmark_suite\\default_4pos",
+      "log_level": "INFO"
+    },
+    "environment": {
+      "n_positions": 4,
+      "start_positions": [
+        1,
+        2
+      ],
+      "key_position": 0,
+      "goal_position": 3,
+      "max_episode_steps": 8,
+      "step_penalty": -0.02,
+      "wall_penalty": -0.05,
+      "locked_goal_penalty": -0.25,
+      "key_reward": 0.15,
+      "goal_reward": 1.0,
+      "progress_reward_scale": 0.05,
+      "slip_probability": 0.05,
+      "seed": 42
+    },
+    "quantum_policy": {
+      "num_qubits": 3,
+      "reuploads": 1,
+      "ansatz": "RealAmplitudes",
+      "ansatz_reps": 1,
+      "entanglement": "linear",
+      "state_encoding": "hybrid",
+      "seed": 42
+    },
+    "training": {
+      "n_episodes": 40,
+      "gamma": 0.99,
+      "learning_rate": 0.02,
+      "max_episode_steps": 8,
+      "baseline_decay": 0.9,
+      "episodes_per_update": 4,
+      "probability_floor": null,
+      "log_every": 10,
+      "seed": 42,
+      "entropy_coeff": 0.01,
+      "grad_clip": 0.75,
+      "shift": 1.5707963267948966,
+      "selection_eval_episodes": 4,
+      "track_best_parameters": true,
+      "lr_plateau_patience": 3,
+      "lr_decay": 0.5,
+      "min_learning_rate": 0.002
+    },
+    "baselines": {
+      "n_episodes": 40,
+      "gamma": 0.99,
+      "learning_rate": 0.05,
+      "max_episode_steps": 8,
+      "baseline_decay": 0.9,
+      "log_every": 10,
+      "seed": 42,
+      "entropy_coeff": 0.01,
+      "grad_clip": 1.0,
+      "temperature": 1.0
+    },
+    "mlp_baseline": {
+      "n_episodes": 40,
+      "gamma": 0.99,
+      "learning_rate": 0.03,
+      "max_episode_steps": 8,
+      "baseline_decay": 0.9,
+      "log_every": 10,
+      "seed": 42,
+      "entropy_coeff": 0.01,
+      "grad_clip": 1.0,
+      "hidden_dim": 16,
+      "init_scale": 0.1,
+      "temperature": 1.0
+    },
+    "mlp_actor_critic": {
+      "n_episodes": 40,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "actor_learning_rate": 0.03,
+      "critic_learning_rate": 0.02,
+      "max_episode_steps": 8,
+      "baseline_decay": null,
+      "log_every": 10,
+      "seed": 42,
+      "entropy_coeff": 0.01,
+      "grad_clip": 1.0,
+      "actor_hidden_dim": 16,
+      "critic_hidden_dim": 16,
+      "init_scale": 0.1,
+      "temperature": 1.0,
+      "value_loss_coeff": 0.5
+    },
+    "quantum_actor_critic": {
+      "n_episodes": 40,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "actor_learning_rate": 0.02,
+      "critic_learning_rate": 0.02,
+      "max_episode_steps": 8,
+      "episodes_per_update": 4,
+      "probability_floor": null,
+      "log_every": 10,
+      "seed": 42,
+      "entropy_coeff": 0.01,
+      "grad_clip": 0.75,
+      "shift": 1.5707963267948966,
+      "selection_eval_episodes": 4,
+      "track_best_parameters": true,
+      "critic_hidden_dim": 16,
+      "critic_init_scale": 0.1,
+      "value_loss_coeff": 0.5,
+      "lr_plateau_patience": 3,
+      "lr_decay": 0.5,
+      "min_learning_rate": 0.002
+    },
+    "mitigation": {
+      "enabled": true,
+      "method": "both",
+      "readout_correction": true,
+      "zne": {
+        "scale_factors": [
+          1.0,
+          2.0,
+          3.0
+        ],
+        "extrapolation": "linear",
+        "degree": 1
+      }
+    },
+    "quantum_execution": {
+      "shots": 128,
+      "backend_name": "ibm_osaka",
+      "optimization_level": 1,
+      "resilience_level": 2,
+      "compact_noise_model": false
+    },
+    "evaluation": {
+      "convergence_threshold": 0.9,
+      "moving_avg_window": 6
+    }
+  },
+  "output_dir": "results\\benchmark_suite\\default_4pos",
+  "command": [
+    "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\src\\benchmark_suite.py",
+    "--suite",
+    "config/benchmark_suite.yaml"
+  ],
+  "python_executable": "C:\\Python314\\python.exe",
+  "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "git": {
+    "commit": "2bf1ea2a5a770d14f5a593f7cf87e98c6189176a",
+    "branch": "main",
+    "dirty": true,
+    "status_short": [
+      "M ../01-Classical-vs-Quantum-Visualization/README.md",
+      " M ../02-Quantum-Chemistry-VQE/README.md",
+      " M ../03-Quantum-Kernel-SVM-MNIST/README.md",
+      " M ../04-Optimization-QAOA-MaxCut/README.md",
+      " M README.md",
+      " M ../README.md",
+      "?? ../docs/",
+      "?? ../scripts/smoke_all.py"
+    ]
+  },
+  "schema_version": "0.3.0"
+}

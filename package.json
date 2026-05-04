@@ -6,6 +6,7 @@
   "author": "DEVADATH H K",
   "license": "MIT",
   "scripts": {
-    "authorship:check": "python scripts/check_authorship.py"
+    "authorship:check": "python scripts/check_authorship.py",
+    "smoke:all": "python -m scripts.smoke_all"
   }
 }

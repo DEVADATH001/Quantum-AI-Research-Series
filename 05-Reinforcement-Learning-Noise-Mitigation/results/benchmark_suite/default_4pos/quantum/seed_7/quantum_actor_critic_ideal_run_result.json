@@ -1,0 +1,76 @@
+{
+  "schema_version": "0.3.0",
+  "result_type": "run_result",
+  "scenario_spec": {
+    "name": "default_4pos",
+    "description": "Auto-generated scenario spec for default_4pos.",
+    "seeds": [
+      7,
+      21,
+      33,
+      47,
+      63,
+      77,
+      91,
+      105,
+      119,
+      133
+    ],
+    "n_eval_episodes": 64,
+    "environment": {
+      "n_positions": 4,
+      "start_positions": [
+        1,
+        2
+      ],
+      "key_position": 0,
+      "goal_position": 3,
+      "max_episode_steps": 8,
+      "step_penalty": -0.02,
+      "wall_penalty": -0.05,
+      "locked_goal_penalty": -0.25,
+      "key_reward": 0.15,
+      "goal_reward": 1.0,
+      "progress_reward_scale": 0.05,
+      "slip_probability": 0.05,
+      "seed": 42
+    },
+    "quantum_policy": {
+      "num_qubits": 3,
+      "reuploads": 1,
+      "ansatz": "RealAmplitudes",
+      "ansatz_reps": 1,
+      "entanglement": "linear",
+      "state_encoding": "hybrid",
+      "seed": 42
+    }
+  },
+  "method_spec": {
+    "name": "quantum_actor_critic",
+    "family": "quantum",
+    "training_algorithm": "actor_critic",
+    "execution_mode": "ideal",
+    "config": {}
+  },
+  "seed": 7,
+  "output_dir": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\benchmark_suite\\default_4pos\\quantum\\seed_7",
+  "training_log_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\benchmark_suite\\default_4pos\\quantum\\seed_7\\quantum_actor_critic_ideal_training_log.json",
+  "weights_path": "C:\\Users\\devad\\PycharmProjects\\Quantum-AI-Research-Series\\05-Reinforcement-Learning-Noise-Mitigation\\results\\benchmark_suite\\default_4pos\\quantum\\seed_7\\quantum_actor_critic_ideal_weights.npy",
+  "evaluation": {
+    "avg_reward": 1.03734375,
+    "std_reward": 0.4701869381809085,
+    "success_rate": 0.875,
+    "avg_length": 5.984375
+  },
+  "summary_metrics": {
+    "convergence_episode": 19,
+    "convergence_runtime_sec": 3.0385106000012456,
+    "final_avg_reward": 1.25,
+    "final_success_rate": 1.0,
+    "reward_auc": 0.9541025641025641,
+    "success_auc": 0.782051282051282,
+    "grad_norm_final": 0.21366316368277047,
+    "total_runtime_sec": 6.049632600001132
+  },
+  "resource_metrics": null
+}
