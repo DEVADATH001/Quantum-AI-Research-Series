@@ -9,9 +9,16 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 30          # hard cap on the whole job
+
     strategy:
+      fail-fast: false           # let both matrix jobs report independently
       matrix:
         python-version: ["3.10", "3.11"]
+
+    env:
+      MPLBACKEND: Agg            # non-interactive backend — prevents Tkinter crashes
+      PYTHONUNBUFFERED: "1"      # flush output immediately so logs are readable
 
     steps:
       - uses: actions/checkout@v4
@@ -25,14 +32,22 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles('requirements-ci.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-py${{ matrix.python-version }}-pip-
 
-      - name: Install dependencies
+      - name: Install CI dependencies
+        # requirements-ci.txt is the lean install:
+        #   - excludes pyscf (requires a C compiler, 5+ min build time)
+        #   - excludes jupyter/notebook (not needed for smoke tests)
+        #   - includes everything else the five modules actually use
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-ci.txt
 
-      - name: Run smoke tests
+      - name: Run smoke tests (CI mode)
+        # $CI=true is set automatically by GitHub Actions, so smoke_all.py
+        # auto-selects CI mode (fast Iris grid, 300 s per-module timeout).
+        # Module 02 uses a synthetic fallback when pyscf is absent — it prints
+        # a warning but still exits 0.
         run: python scripts/smoke_all.py
