@@ -1,14 +1,11 @@
 # Quantum AI Research Series
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-blue)
 ![Qiskit](https://img.shields.io/badge/Qiskit-1.1+-6929C4)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-research%20portfolio-orange)
 ![Claim](https://img.shields.io/badge/quantum%20advantage-not%20claimed-red)
-<!-- CI badges — uncomment when GitHub Actions is configured
-![CI](https://github.com/<OWNER>/Quantum-AI-Research-Series/actions/workflows/ci.yml/badge.svg)
-![Lint](https://github.com/<OWNER>/Quantum-AI-Research-Series/actions/workflows/lint.yml/badge.svg)
--->
+![CI](https://github.com/DEVADATH001/Quantum-AI-Research-Series/actions/workflows/ci.yml/badge.svg)
 
 Five independent research experiments studying near-term quantum computing — with real baselines, real noise, and no inflated claims.
 
@@ -71,7 +68,7 @@ Each module also has its own `requirements.txt`, `src/`, `config/`, `results/`, 
 Python 3.11 recommended. Project 05 requires it; the others work on 3.10+.
 
 ```powershell
-git clone <repository-url>
+git clone https://github.com/DEVADATH001/Quantum-AI-Research-Series.git
 cd Quantum-AI-Research-Series
 python -m venv .venv
 .\.venv\Scripts\activate

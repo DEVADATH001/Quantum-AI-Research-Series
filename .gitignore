@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.egg-info/
+dist/
+build/
+*.egg
 
 # Environments
 venv/
@@ -11,6 +15,7 @@ wsl_venv/
 
 # Jupyter
 .ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # IDE
 .idea/
@@ -26,4 +31,16 @@ wsl_venv/
 02-Quantum-Chemistry-VQE/wsl_venv/
 02-Quantum-Chemistry-VQE/test_output.txt
 02-Quantum-Chemistry-VQE/out.txt
+
+# Pytest cache (all variants)
 pytest-cache-files-*/
+.pytest_cache/
+**/.pytest_cache/
+
+# Sklearn / OpenML cache
+**/results/.cache/
+.cache/
+
+# Compiled artifacts
+*.npy.bak
+*.log
