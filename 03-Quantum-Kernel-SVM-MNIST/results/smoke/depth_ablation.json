@@ -1,0 +1,13 @@
+{
+  "best_pca_dim": 4,
+  "depth_stats": [
+    {
+      "reps": 1,
+      "mean_f1": NaN,
+      "std_f1": NaN,
+      "mean_kta": NaN,
+      "std_kta": NaN
+    }
+  ],
+  "git_sha": "f5ea028"
+}

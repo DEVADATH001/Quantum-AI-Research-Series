@@ -1,25 +1,29 @@
 {
   "model": "Classical RBF SVM",
   "train_n": 20,
-  "best_params": null,
-  "best_cv_score": null,
-  "train_time": 0.001340627670288086,
-  "metrics": {
-    "accuracy": 0.5351131746952988,
-    "precision": 0.5644859813084112,
-    "recall": 0.3471264367816092,
-    "f1_score": 0.4298932384341637
+  "best_params": {
+    "C": 1,
+    "gamma": "scale"
   },
-  "kta": 0.09488619981514372,
+  "best_cv_score": 1.0,
+  "train_time": 0.11008286476135254,
+  "metrics": {
+    "accuracy": 0.967032967032967,
+    "precision": 0.9565217391304348,
+    "recall": 0.9777777777777777,
+    "f1_score": 0.967032967032967
+  },
+  "kta": 0.46992445463203775,
+  "ckta": 0.7187443204011034,
   "confusion_matrix": [
     [
-      1240,
-      466
+      44,
+      2
     ],
     [
-      1136,
-      604
+      1,
+      44
     ]
   ],
-  "classification_report": "              precision    recall  f1-score   support\n\n           4       0.52      0.73      0.61      1706\n           9       0.56      0.35      0.43      1740\n\n    accuracy                           0.54      3446\n   macro avg       0.54      0.54      0.52      3446\nweighted avg       0.54      0.54      0.52      3446\n"
+  "classification_report": "              precision    recall  f1-score   support\n\n           4       0.98      0.96      0.97        46\n           9       0.96      0.98      0.97        45\n\n    accuracy                           0.97        91\n   macro avg       0.97      0.97      0.97        91\nweighted avg       0.97      0.97      0.97        91\n"
 }

@@ -1,6 +1,6 @@
 {
   "overall_label": "weak",
-  "misleading_risk": "medium",
+  "misleading_risk": "high",
   "classical_outperformance": [
     {
       "family": "communication_mesh_8_3",
@@ -259,10 +259,14 @@
       "n_pairs": 7
     }
   ],
-  "randomness_flags": [],
+  "randomness_flags": [
+    "Depth 1 shows a sampled-vs-expected gap of 0.2269, which makes single sampled outcomes look better than the optimized objective."
+  ],
   "reasoning": [
     "The benchmark outputs are internally consistent with the method: expected objectives are tracked separately from representative sampled bitstrings, and sampled summaries obey their own bookkeeping constraints.",
     "Classical baselines outperform tuned QAOA on the held-out study families.",
+    "Repeated benchmark runs show materially unstable behavior across optimizer and backend seeds.",
+    "Sampled headline outputs can look materially better than the optimized expected objective.",
     "There is no corrected statistically significant evidence that QAOA improves over the included classical baselines."
   ]
 }

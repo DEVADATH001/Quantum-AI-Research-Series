@@ -1,0 +1,36 @@
+{
+  "ablation_stats": [
+    {
+      "dimension": 4,
+      "classical_mean_f1": NaN,
+      "classical_std_f1": NaN,
+      "quantum_mean_f1": NaN,
+      "quantum_std_f1": NaN,
+      "mean_kta_quantum": NaN,
+      "std_kta_quantum": NaN,
+      "mean_kta_classical": NaN,
+      "std_kta_classical": NaN,
+      "geometric_difference": NaN,
+      "significance": {
+        "paired_t_test_p_value": NaN,
+        "wilcoxon_p_value": NaN,
+        "t_statistic": NaN,
+        "w_statistic": NaN,
+        "significant_advantage": false,
+        "cohens_d": null,
+        "effect_size_label": "unknown",
+        "classical_bootstrap_ci_95": [
+          NaN,
+          NaN
+        ],
+        "quantum_bootstrap_ci_95": [
+          NaN,
+          NaN
+        ],
+        "classical_mean": NaN,
+        "quantum_mean": NaN
+      }
+    }
+  ],
+  "git_sha": "f5ea028"
+}

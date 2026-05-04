@@ -23,6 +23,11 @@ import importlib.util
 import sys
 from pathlib import Path
 
+# Force UTF-8 so Unicode glyphs don't crash on Windows CP1252 consoles.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 import numpy as np
 import yaml
 
@@ -38,10 +43,10 @@ HAS_PYSCF = importlib.util.find_spec("pyscf") is not None
 
 def _check_pyscf() -> None:
     if HAS_PYSCF:
-        print("✓ PySCF detected — will use real molecular integrals.")
+        print("[OK] PySCF detected -- will use real molecular integrals.")
     else:
         print(
-            "\n⚠ WARNING: PySCF not found!\n"
+            "\n[WARNING] PySCF not found!\n"
             "  Results from this smoke test use synthetic surrogate Hamiltonians.\n"
             "  They are NOT valid for research or publication.\n"
             "  Install with: pip install 'pyscf>=2.3'\n"
@@ -63,17 +68,17 @@ def _validate_fci_agreement(distances, exact_energies, vqe_energies) -> None:
         try:
             fci_energy = run_fci("H2", bond, basis="sto-3g")
             delta_mha = abs(exact - fci_energy) * 1000
-            status = "✓" if delta_mha < 1.0 else "✗"
-            print(f"    d={bond:.2f}Å  NumPy={exact:.6f}  PySCF-FCI={fci_energy:.6f}  "
-                  f"Δ={delta_mha:.3f} mHa  {status}")
+            status = "[OK]" if delta_mha < 1.0 else "[WARN]"
+            print(f"    d={bond:.2f}A  NumPy={exact:.6f}  PySCF-FCI={fci_energy:.6f}  "
+                  f"delta={delta_mha:.3f} mHa  {status}")
             if delta_mha >= 1.0:
                 all_ok = False
         except Exception as exc:
-            print(f"    d={bond:.2f}Å  FCI check failed: {exc}")
+            print(f"    d={bond:.2f}A  FCI check failed: {exc}")
     if all_ok:
-        print("  ✓ NumPy exact diagonalization agrees with PySCF FCI within 1 mHa.")
+        print("  [OK] NumPy exact diagonalization agrees with PySCF FCI within 1 mHa.")
     else:
-        print("  ✗ WARNING: Discrepancy detected — check active-space settings.")
+        print("  [WARN] Discrepancy detected -- check active-space settings.")
 
 
 def _validate_no_nans(distances, exact_energies, vqe_energies) -> None:
@@ -81,13 +86,13 @@ def _validate_no_nans(distances, exact_energies, vqe_energies) -> None:
     exact_arr = np.array(exact_energies, dtype=float)
     nan_count = int(np.isnan(exact_arr).sum())
     if nan_count > 0:
-        print(f"  ✗ Exact energies have {nan_count}/{len(distances)} NaN values — pipeline error!")
+        print(f"  [FAIL] Exact energies have {nan_count}/{len(distances)} NaN values -- pipeline error!")
         sys.exit(1)
-    print(f"  ✓ All {len(distances)} exact energies are finite.")
+    print(f"  [OK] All {len(distances)} exact energies are finite.")
     for name, energies in vqe_energies.items():
         arr = np.array(energies, dtype=float)
         nc = int(np.isnan(arr).sum())
-        status = "✓" if nc == 0 else "✗"
+        status = "[OK]" if nc == 0 else "[FAIL]"
         print(f"  {status} {name}: {nc}/{len(distances)} NaN VQE energies.")
 
 
@@ -127,7 +132,7 @@ def main() -> None:
     if history and "iteration" in history[0]:
         plot_vqe_convergence(history, first_ansatz, distances[0], "H2_Verification")
 
-    print("\n✓ Smoke test passed. Figures saved to results/figures/")
+    print("\n[PASS] Smoke test passed. Figures saved to results/figures/")
     print("  Next step: python scripts/run_experiment.py --molecule H2 --seeds 10\n")
 
 

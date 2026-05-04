@@ -10,10 +10,17 @@ Usage:
     python scripts/smoke_all.py          # also works
 """
 
+import io
+import os
 import subprocess
 import sys
 import time
 from pathlib import Path
+
+# Force UTF-8 output so Unicode glyphs don't crash on Windows CP1252 consoles.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -35,9 +42,12 @@ SMOKE_TESTS = [
         [
             sys.executable,
             "run_experiment.py",
+            "--config", "config/smoke_config.yaml",
             "--fallback",
-            "--max-quantum-train", "20",
+            "--max-quantum-train", "15",
+            "--max-kernel-samples", "15",
             "--disable-noise",
+            "--results-dir", "results/smoke",
         ],
     ),
     (
@@ -75,6 +85,10 @@ def main() -> int:
     print(f"Repo root: {REPO_ROOT}")
     print(f"Timeout:   {MODULE_TIMEOUT}s per module\n")
 
+    # Force non-interactive matplotlib backend for all child processes.
+    # This prevents Tkinter threading crashes when running under subprocess.
+    child_env = {**os.environ, "MPLBACKEND": "Agg"}
+
     for label, rel_dir, cmd in SMOKE_TESTS:
         cwd = REPO_ROOT / rel_dir
         _banner(f"Running: {label}")
@@ -83,7 +97,7 @@ def main() -> int:
 
         if not cwd.is_dir():
             msg = f"Directory not found: {cwd}"
-            print(f"  ✗ SKIP — {msg}")
+            print(f"  [SKIP] {msg}")
             results.append((label, False, 0.0, msg))
             continue
 
@@ -95,16 +109,17 @@ def main() -> int:
                 timeout=MODULE_TIMEOUT,
                 capture_output=True,
                 text=True,
+                env=child_env,
             )
             elapsed = time.perf_counter() - t0
 
             if proc.returncode == 0:
-                print(f"  ✓ PASS  ({elapsed:.1f}s)")
+                print(f"  [PASS]  ({elapsed:.1f}s)")
                 results.append((label, True, elapsed, ""))
             else:
                 # Show last 20 lines of stderr for diagnosis
                 tail = "\n".join(proc.stderr.strip().splitlines()[-20:])
-                print(f"  ✗ FAIL  (exit {proc.returncode}, {elapsed:.1f}s)")
+                print(f"  [FAIL]  (exit {proc.returncode}, {elapsed:.1f}s)")
                 if tail:
                     print(f"\n  --- stderr (last 20 lines) ---\n{tail}\n")
                 results.append(
@@ -113,12 +128,12 @@ def main() -> int:
 
         except subprocess.TimeoutExpired:
             elapsed = time.perf_counter() - t0
-            print(f"  ✗ TIMEOUT after {MODULE_TIMEOUT}s")
+            print(f"  [TIMEOUT] after {MODULE_TIMEOUT}s")
             results.append((label, False, elapsed, "timeout"))
 
         except Exception as exc:
             elapsed = time.perf_counter() - t0
-            print(f"  ✗ ERROR — {exc}")
+            print(f"  [ERROR] {exc}")
             results.append((label, False, elapsed, str(exc)))
 
     # ── Summary ──────────────────────────────────────────────
@@ -128,7 +143,7 @@ def main() -> int:
     total_time = sum(t for _, _, t, _ in results)
 
     for label, ok, elapsed, err in results:
-        status = "✓ PASS" if ok else f"✗ FAIL ({err})"
+        status = "PASS" if ok else f"FAIL ({err})"
         print(f"  [{elapsed:6.1f}s] {status:30s}  {label}")
 
     print(f"\n  {passed}/{total} passed  —  total wall-clock: {total_time:.1f}s\n")

@@ -1,0 +1,102 @@
+# Smoke-test configuration for Quantum Kernel SVM (Module 03)
+# ==============================================================
+# Intentionally minimal: 1 seed × 1 dim × 1 reps with tiny kernel matrices
+# so the sanity check completes in < 60 s on a laptop CPU.
+# Do NOT use for research — use experiment_config.yaml instead.
+
+dataset:
+  name: "MNIST"
+  digits: [4, 9]
+  test_size: 0.25
+  random_state: 42
+  stratify: true
+  fallback_to_sklearn_digits: true  # no internet required for smoke test
+
+preprocessing:
+  normalize: true
+  standardize: true
+  pca:
+    n_components: 4
+    variance_threshold: 0.95
+    random_state: 42
+  quantum_scaling: true
+  feature_range: "pi/2"
+
+classical_model:
+  kernel: "rbf"
+  grid_search:
+    enabled: false   # skip grid search to keep smoke fast
+    cv: 2
+    param_grid:
+      C: [1]
+      gamma: ["scale"]
+    n_jobs: 1
+  random_state: 42
+
+quantum_feature_map:
+  type: "ZZFeatureMap"
+  feature_dimension: 4
+  reps: 1
+  entanglement: "linear"
+  parameter_prefix: "x"
+
+quantum_kernel:
+  type: "FidelityQuantumKernel"
+  sampler: "SamplerV2"
+  shots: null   # statevector — fastest
+  cache: true
+
+qsvc:
+  C: 1.0
+  random_state: 42
+  grid_search: false
+  cv: 2
+  n_jobs: 1
+
+pegasos_svc:
+  lambda_param: 0.001
+  max_iter: 200   # far fewer iterations for smoke
+  batch_size: 16
+  random_state: 42
+
+noise_simulation:
+  enabled: false  # disabled for smoke
+
+evaluation:
+  metrics:
+    - accuracy
+    - f1_score
+  confusion_matrix: true
+  save_results: true
+  results_dir: "results/smoke"
+
+visualization:
+  figures:
+    pca_scatter: true
+    kernel_heatmap: true
+    metrics_comparison: true
+    confusion_matrix: true
+    depth_ablation: false
+  save_format: "png"
+  dpi: 100
+  style: "seaborn-v0_8-darkgrid"
+
+# 1 seed × 1 dim × 1 reps = 1 trial total
+ablation:
+  seeds: [42]
+  pca_dimensions: [4]
+  reps_values: [1]
+  max_quantum_train: 15   # tiny kernel matrices
+  max_kernel_samples: 15
+  max_noise_samples: 10
+
+quantum_kernel_learning:
+  enabled: false
+
+random_seed: 42
+
+hardware:
+  use_real_hardware: false
+  backend_name: "ibm_brisbane"
+  shots: 1024
+  ibm_token: null
