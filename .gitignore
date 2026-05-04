@@ -32,15 +32,29 @@ wsl_venv/
 02-Quantum-Chemistry-VQE/test_output.txt
 02-Quantum-Chemistry-VQE/out.txt
 
-# Pytest cache (all variants)
+# Pytest cache (all variants — including the stray root-level dirs)
 pytest-cache-files-*/
 .pytest_cache/
 **/.pytest_cache/
 
-# Sklearn / OpenML cache
-**/results/.cache/
+# Sklearn / OpenML downloaded dataset caches (nested at any depth)
+**/.cache/
 .cache/
+**/results/.cache/
+**/results/*/.cache/
+**/results/**/.cache/
+
+# Large binary result blobs that shouldn't be version-controlled
+03-Quantum-Kernel-SVM-MNIST/results/final_validation/
+03-Quantum-Kernel-SVM-MNIST/results/multi_seed/
 
 # Compiled artifacts
 *.npy.bak
 *.log
+
+# Grok / hidden tool dirs
+**/.grok/
+**/.test_tmp/
+
+# Duplicate nested module (05 has an inner copy of itself)
+05-Reinforcement-Learning-Noise-Mitigation/05-reinforcement-learning-noise-mitigation/

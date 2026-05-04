@@ -3,7 +3,7 @@
   "train_n": 15,
   "best_params": null,
   "best_cv_score": null,
-  "train_time": 0.001020669937133789,
+  "train_time": 0.0010437965393066406,
   "metrics": {
     "accuracy": 0.945054945054945,
     "precision": 0.9347826086956522,
